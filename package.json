@@ -63,11 +63,10 @@
     "url": "git+https://github.com/catamphetamine/imageboard.git"
   },
   "keywords": [
-    "react",
-    "sortable",
-    "drag",
-    "drop",
-    "list"
+    "imageboard",
+    "4chan",
+    "8ch",
+    "chan"
   ],
   "author": "catamphetamine <purecatamphetamine@gmail.com>",
   "license": "MIT",
