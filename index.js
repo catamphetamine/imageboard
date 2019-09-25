@@ -4,6 +4,7 @@
 export { default as default } from './modules/Chan'
 export { getConfig } from './modules/chan/index'
 export { default as compileWordPatterns } from 'social-components/modules/utility/post/compileWordPatterns'
+export { default as getCommentText } from './modules/getCommentText'
 export { default as generateQuotes } from './modules/generateQuotes'
 export { default as generatePreview } from './modules/generatePreview'
 export { default as generateThreadTitle } from './modules/generateThreadTitle'
