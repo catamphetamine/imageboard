@@ -2,6 +2,8 @@
 
 An easy uniform wrapper over the popular imageboards' API.
 
+Originally created as part of the [`captchan`](https://github.com/catamphetamine/captchan) imageboard GUI.
+
 Supported engines:
 
 * [4chan](https://github.com/4chan/4chan-API) ([4chan.org](https://www.4chan.org/)). See [`4chan.org` demo](https://catamphetamine.github.io/captchan/?chan=4chan).
@@ -17,74 +19,206 @@ Features:
 * (optional) [Censor](#censorship) certain words using regular expression syntax.
 * (optional) Automatically generate thread title when it's missing.
 
+To do:
+
+* Add methods for creating threads and posting comments.
+
 ## Install
 
 ```
 npm install imageboard --save
 ```
 
-This library uses `async`/`await` syntax so including `regenerator-runtime` is required when using it. That usually means either including `babel-polyfill` (Babel 6) or `@babel/polyfill` (Babel 7). Since Babel `7.4.0` `@babel/polyfill` [has been deprecated](https://babeljs.io/docs/en/babel-polyfill) and should be replaced with `core-js` and `regenerator-runtime`:
-
-```
-npm install core-js regenerator-runtime --save
-```
-
-```js
-import "core-js/stable"
-import "regenerator-runtime/runtime"
-```
+This library uses `async`/`await` syntax so including `regenerator-runtime/runtime` is required when using it. In Node.js that usually means including `@babel/runtime`. In a web browser that usually means including `@babel/polyfill` (though starting from Babel `7.4.0` `@babel/polyfill` [has been deprecated](https://babeljs.io/docs/en/babel-polyfill) in favor of manually including `core-js/stable` and `regenerator-runtime/runtime`).
 
 ## Example
 
+This example will be using [`fetch()`](https://developer.mozilla.org/docs/Web/API/Fetch_API/Using_Fetch) for making HTTP requests (though any other library could be used). Node.js doesn't have `fetch()` yet so first install a "polyfill" for it, and also install `regenerator-runtime` (because `imageboard` package requires it).
+
 ```
-npm install superagent --save
+npm install node-fetch regenerator-runtime/runtime --save
 ```
+
+Then, create an imageboard instance. This example will use `4chan.org` as a data source.
 
 ```js
-import request from 'superagent'
-import Chan from './imageboard'
+require('regenerator-runtime/runtime')
+var fetch = require('node-fetch')
+var imageboard = require('imageboard')
 
-const chan = Chan('4chan', {
-  request(method, url, parameters) {
+var fourChan = imageboard('4chan', {
+  request: function(method, url, parameters) {
     // Sends an HTTP request.
     // Any HTTP request library can be used here.
     // Must return a `Promise` resolving to response JSON.
     switch (method) {
       case 'POST':
-        return request.post(url).send(parameters)
+        return fetch(url, {
+          method: 'POST',
+          body: JSON.stringify(parameters)
+        }).then(function(response) {
+          return response.json()
+        })
       case 'GET':
-        return request.get(url)
+        return fetch(url).then(function(response) {
+          return response.json()
+        })
       default:
-        throw new Error('Not supported')
+        throw new Error(`Method not supported: ${method}`)
     }
   }
 })
-
-// Get the list of boards.
-chan.getBoards().then((boards) => console.log(boards))
-
-// Get the list of threads on "/a/" board.
-chan.getThreads({ boardId: 'a' }).then((threads) => console.log(threads))
-
-// Get thread info and comments list for thread "12345" on "/a/" board.
-chan.getThread({ boardId: 'a', threadId: 12345 }).then((thread) => console.log(thread))
 ```
 
-## `Chan`
-
-To use the package first construct a `Chan` instance using the default exported function.
+Now, print the first ten of `4chan.org` boards:
 
 ```js
-import Chan from './imageboard'
+// Prints the first 10 boards.
+fourChan.getBoards().then((boards) => {
+  const boardsList = boards.slice(0, 10).map(({
+    id,
+    title,
+    category,
+    description
+  }) => {
+    return `* [${category}] /${id}/ — ${title} — ${description}`
+  })
+  console.log(boardsList.join('\n'))
+})
 ```
 
-### `Chan(chanIdOrChanConfig, options)`
+The output:
 
-The default exported function, creates a new `Chan` instance.
+```
+* [Creative] /3/ — 3DCG — "/3/ - 3DCG" is 4chan's board for 3D modeling and imagery.
+* [Japanese Culture] /a/ — Anime & Manga — "/a/ - Anime & Manga" is 4chan's imageboard dedicated to the discussion of Japanese animation and manga.
+* [Other] /adv/ — Advice — "/adv/ - Advice" is 4chan's board for giving and receiving advice.
+... the other boards ...
+```
 
-If a `chanId` is supported by the library out-of-the-box (see the `./chan` directory) then such `chanId` can be passed as a string. Otherwise, `chanConfig` object should be supplied.
+Now, print the first five threads on `4chan.org` `/a/` board:
 
-`chanId`s supported out-of-the-box:
+```js
+var getCommentText = require('imageboard').getCommentText
+
+// Prints the first five threads on `/a/` board.
+fourChan.getThreads({ boardId: 'a' }).then((threads) => {
+  const threadsList = threads.slice(0, 5).map(({
+    id,
+    title,
+    createdAt,
+    commentsCount,
+    commentAttachmentsCount,
+    comments
+  }) => {
+    return [
+      `#${id}`,
+      createdAt,
+      title,
+      getCommentText(comments[0]) || '(empty)',
+      `${commentsCount} comments, ${commentAttachmentsCount} attachments`
+    ].join('\n\n')
+  })
+  console.log(threadsList.join('\n\n~~~~~~~~~~~~~~~~~~~~~~~~~\n\n'))
+})
+```
+
+The output:
+
+```
+#193605320
+
+Wed Sep 25 2019 20:48:54 GMT+0300 (Moscow Standard Time)
+
+Facebook announces Horizon, a VR massive-multiplayer world
+
+DATABASE DATABASE JUST LIVING IN THE DATABE WO-OH
+
+12 comments, 5 attachments
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+... the other threads ...
+```
+
+Now, print the first five comments of the thread:
+
+```js
+var getCommentText = require('imageboard').getCommentText
+
+// Prints the first five comments of thread #193605320 on `/a/` board.
+fourChan.getThread({ boardId: 'a', threadId: 193605320 }).then((thread) => {
+  const commentsList = thread.comments.slice(0, 5).map((comment) => {
+    const {
+      id,
+      title,
+      createdAt,
+      replies,
+      attachments
+    } = comment
+    const parts = []
+    parts.push(`#${id}`)
+    parts.push(createdAt)
+    if (title) {
+      parts.push(title)
+    }
+    parts.push(getCommentText(comment) || '(empty)')
+    if (attachments) {
+      parts.push(`${attachments.length} attachments`)
+    }
+    if (title) {
+      parts.push(`${replies.length} replies`)
+    }
+    return parts.join('\n\n')
+  })
+  console.log(commentsList.join('\n\n~~~~~~~~~~~~~~~~~~~~~~~~~\n\n'))
+})
+```
+
+The output:
+
+```
+#193605320
+
+Wed Sep 25 2019 20:48:54 GMT+0300 (Moscow Standard Time)
+
+Facebook announces Horizon, a VR massive-multiplayer world
+
+DATABASE DATABASE JUST LIVING IN THE DATABE WO-OH
+
+1 attachments
+
+3 replies
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#193605743
+
+Wed Sep 25 2019 21:02:00 GMT+0300 (Moscow Standard Time)
+
+«DATABASE DATABASE JUST LIVING IN THE DATABE WO-OH»
+Fuck you OP I saw horizon and now I am mad that it’s bait
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+... the other comments ...
+```
+
+## `imageboard` API
+
+To use the package first construct an `imageboard` instance using the default exported function.
+
+```js
+import imageboard from './imageboard'
+```
+
+### `imageboard(idOrConfig, options)`
+
+The default exported function, creates a new `imageboard` instance.
+
+If an imageboard `id` is supported by the library out-of-the-box (see the `./chan` directory) then such imageboard `id` can be passed as a string. Otherwise, imageboard `config` object should be supplied.
+
+Imageboard `id`s supported out-of-the-box:
 
 * `"2ch"`
 * `"4chan"`
@@ -94,11 +228,11 @@ If a `chanId` is supported by the library out-of-the-box (see the `./chan` direc
 * `"arisuchan"`
 * `"endchan"`
 
-See [Chan config](#chan-config) for the available `chanConfig` properties.
+See [Imageboard config](#imageboard-config) for the available imageboard `config` properties.
 
 Available `options`:
 
-* `request(method: string, url: string, parameters: object?): Promise` — (required) Sends HTTP requests to chan API. Must return a `Promise` resolving to response JSON. Example: `request("GET", "https://8ch.net/boards.json")`.
+* `request(method: string, url: string, parameters: object?): Promise` — (required) Sends HTTP requests to imageboard API. Must return a `Promise` resolving to response JSON. Example: `request("GET", "https://8ch.net/boards.json")`.
 
 * `commentUrl: string?` — (optional) A template for the `url` of all `type: "post-link"`s (links to other comments) in parsed comments' `content`. Is `"/{boardId}/{threadId}#{commentId}"` by default.
 
@@ -108,57 +242,77 @@ Available `options`:
 
 * `commentLengthLimit` — (optional) A `number` telling the maximum comment length (in "points" which can be thought of as "characters and character equivalents for non-text content") upon exceeding which a preview is generated for a comment (as `comment.contentPreview`).
 
-* `useRelativeUrls` — (optional) Determines whether to use relative or absolute URLs for attachments. Relative URLs are for the cases when a chan is temporarily hosted on an alternative domain and so all attachments are too meaning that the default chan domain name shouldn't be present in attachment URLs. Is `false` by default.
+* `useRelativeUrls` — (optional) Determines whether to use relative or absolute URLs for attachments. Relative URLs are for the cases when an imageboard is temporarily hosted on an alternative domain and so all attachments are too meaning that the default imageboard domain name shouldn't be present in attachment URLs. Is `false` by default.
 
-* `parseContent` — (optional) Can be set to `false` to skip parsing comment HTML into [`Content`](#content). The rationale is that when there're 500-some comments in a thread parsing all of them up-front can take up to a second on a modern desktop CPU which results in subpar user experience. By deferring parsing comments' HTML an application could first only parse the first N comments' HTML and only as the user starts scrolling would it proceed to parsing the next comments. Or maybe a developer wants to use their own HTML parser or even render comments' HTML as is. If `parseContent` is set to `false` then each non-empty comment will have their `content` being the original unmodified HTML string. In such cases `thread.title` won't be autogenerated when it's missing. `Chan.parseCommentContent(comment, { boardId, threadId })` method can be used to parse comment content later (for example, as the user scrolls).
+* `parseContent` — (optional) Can be set to `false` to skip parsing comment HTML into [`Content`](#content). The rationale is that when there're 500-some comments in a thread parsing all of them up-front can take up to a second on a modern desktop CPU which results in subpar user experience. By deferring parsing comments' HTML an application could first only parse the first N comments' HTML and only as the user starts scrolling would it proceed to parsing the next comments. Or maybe a developer wants to use their own HTML parser or even render comments' HTML as is. If `parseContent` is set to `false` then each non-empty comment will have their `content` being the original unmodified HTML string. In such cases `thread.title` won't be autogenerated when it's missing. `imageboard.parseCommentContent(comment, { boardId, threadId })` method can be used to parse comment content later (for example, as the user scrolls).
 
 * `expandReplies` — (optional) Set to `true` to expand the optional `comment.replies[]` array from a list of comment ids to the list of the actual comment objects.
 
-## `Chan` methods
+## `imageboard` methods
 
-### `getBoards(options)`
+### `getBoards(): Board[]`
 
 Returns a list of [Boards](#board). For some imageboards this isn't gonna be a full list of boards because, for example, `8ch.net` has about `20,000` boards so `getBoards()` returns just the "top 20 boards" list.
 
-### `getAllBoards(options)`
+### `getAllBoards(): Board[]`
 
 Returns a list of all [Boards](#board). For example, `8ch.net` has about `20,000` boards so `getBoards()` returns just the "top 20 boards" list while `getAllBoards()` returns all `20,000` boards.
 
-### `hasMoreBoards()`
+### `hasMoreBoards(): boolean`
 
 Returns `true` if an imageboard has a "get all boards" API endpoint that's different from the regular "get boards" API endpoint. In other words, returns `true` if an imageboard provides separate API endpoints for getting a list of "most popular boards" and a list of "all boards available".
 
-### `getThreads({ boardId }, options)`
+### `getThreads({ boardId: string }, options: object?): Thread[]`
 
 Returns a list of [Threads](#thread).
 
-### `getThread({ boardId, threadId }, options)`
+### `getThread({ boardId: string, threadId: number }, options: object?): Thread`
 
 Returns a [Thread](#thread).
 
-### `parseCommentContent(comment, { boardId, threadId })`
+### `parseCommentContent(comment: Comment, { boardId: string, threadId: number })`
 
-Parses `comment` content if `parseContent: false` option was used when creating a `Chan` instance.
+Parses `comment` content if `parseContent: false` option was used when creating an `imageboard` instance.
 
-### `vote({ up, boardId, threadId, commentId })`
+### `vote({ up: boolean, boardId: string, threadId: number, commentId: number }): boolean`
 
-Some imageboards (like `2ch.hk`) allow upvoting or downvoting threads and comments on certain boards (like `/po/` on `2ch.hk`).
+Some imageboards (like [`2ch.hk`](https://2ch.hk)) allow upvoting or downvoting threads and comments on certain boards (like [`/po/`litics on `2ch.hk`](https://2ch.hk/po)).
 
 Returns `true` if the vote has been accepted. Returns `false` if the user has already voted.
 
 ## Miscellaneous API
 
-### `getConfig(chanId: string): object?`
+This API is for "advanced" use cases. In other words, it's being used in [`captchan`](https://github.com/catamphetamine/captchan) and that's the reason why it's exported.
 
-Returns an imageboard config by its id. Example: `"4chan"`.
+### `getConfig(id: string): object?`
+
+Returns an imageboard config by its `id`. Example: `getConfig("4chan")`.
+
+Can be used in cases when an application for whatever reasons needs to know the imageboard info defined in the `*.json` file, such as `domain`, `engine`, etc.
 
 ### `compileWordPatterns(wordPatterns: string[]): object[]`
 
 Compiles [word patterns](#censorship). This is just a `compileWordPatterns()` function re-exported from [`social-components`](https://github.com/catamphetamine/social-components) for convenience.
 
+Can be used for passing a custom `censoredWords` option to the `imageboard` constructor.
+
+### `getCommentText(comment: Comment, options: object?): string?`
+
+Generates a textual representation of [Comment](#comment)'s `content`. This is just a `getPostText()` function re-exported from [`social-components`](https://github.com/catamphetamine/social-components) for convenience.
+
+Is used in the examples in this document.
+
+Available `options` (optional argument):
+
+* `messages: Messages?` — (optional) "Messages" ("strings", "labels") used when generating text from `content`. See [Messages](#messages).
+* `skipPostQuotes: boolean?` — (optional) Set to `true` to skip all "comment quotes" (quotes citing a particular comment).
+* `skipAutogeneratedPostQuotes: boolean?` — (optional) Set to `true` to skip all autogenerated "comment quotes" (autogenerated quotes citing a particular comment).
+
 ### `generateQuotes(content: Content, options: object)`
 
 Autogenerates quotes for other comment links in this comment's `content`.
+
+Can be used, for example, in cases when a parent comment contains a "raw" hyperlink to a YouTube video, and after that video has been loaded the app inserts an embedded video player in place of the link, and since there's now a proper video title instead of a "raw" hyperlink the app also re-generates the autogenerated quotes for all replies to this comment.
 
 The `options`:
 
@@ -171,15 +325,19 @@ The `options`:
 
 Generates `contentPreview` for the `comment` if its too long.
 
+Can be used, for example, in cases when a parent comment contains a "raw" hyperlink to a YouTube video, and after that video has been loaded the app inserts an embedded video player in place of the link, and since there's now a proper video title instead of a "raw" hyperlink the app also re-generates the preview for this comment (if a preview is required).
+
 ### `generateThreadTitle(thread: Thread, options: object?)`
 
 Autogenerates `thread.title` from the "opening" comment's `title` or `content` if `thread.title` is missing.
+
+Can be used, for example, in cases when a thread has no title (and so thread title is autogenerated) and the "opening" comment contains a "raw" hyperlink to a YouTube video, and after that video has been loaded the app inserts an embedded video player in place of the link, and since there's now a proper video title instead of a "raw" hyperlink the app also re-generates the autogenerated thread title.
 
 Available `options` (optional argument):
 
 * `censoredWords: object[]?` — (optional) Compiled word patterns for [censoring](#censorship) comment text.
 * `messages: Messages?` — (optional) "Messages" ("strings", "labels") used when generating comment `content` text. See [Messages](#messages).
-* `parseContent: boolean?` — (optional) If `parseContent: false` is used to skip parsing comments' `content` when using `Chan` methods then `parseContent: false` option should also be passed here so indicate that the "opening" comment `content` (raw unparsed HTML markup) should be ignored.
+* `parseContent: boolean?` — (optional) If `parseContent: false` is used to skip parsing comments' `content` when using `imageboard` methods then `parseContent: false` option should also be passed here so indicate that the "opening" comment `content` (raw unparsed HTML markup) should be ignored.
 
 ## Models
 
@@ -321,7 +479,7 @@ Available `options` (optional argument):
   createdAt: Date?,
   // "Last Modified Date", usually including:
   // posting new comments, deleting existing comments, sticky/closed status changes.
-  // Is usually present on all chans in "get threads list" API response
+  // Is usually present on all imageboards in "get threads list" API response
   // but not in "get thread comments" API response.
   updatedAt: Date?,
   // Custom spoiler ID (if custom spoilers are used on the board).
@@ -355,8 +513,8 @@ Available `options` (optional argument):
   // `2ch.hk` provides means for "original posters" to identify themselves
   // when replying in their own threads with a previously set "OP" cookie.
   isThreadAuthor: boolean?,
-  // Some chans identify their users by a hash of their IP address subnet
-  // on some of their boards (for example, all chans do that on `/pol/` boards).
+  // Some imageboards identify their users by a hash of their IP address subnet
+  // on some of their boards (for example, all imageboards do that on `/pol/` boards).
   authorId: String?,
   // If `authorId` is present then it's converted into a HEX color.
   // Example: "#c05a7f".
@@ -372,9 +530,9 @@ Available `options` (optional argument):
   // https://encyclopediadramatica.rs/Tripcode
   authorTripCode: String?,
   // A two-letter ISO country code (or "ZZ" for "Anonymized").
-  // Chans usually show poster flags on `/int/` boards.
+  // Imageboards usually show poster flags on `/int/` boards.
   authorCountry: String?,
-  // Some chans allow icons for posts on some boards.
+  // Some imageboards allow icons for posts on some boards.
   // For example, `kohlchan.net` shows user icons on `/int/` board.
   // Author icon examples in this case: "UA", "RU-MOW", "TEXAS", "PROXYFAG", etc.
   // `authorBadgeUrl` is `/.static/flags/${authorBadge}.png`.
@@ -452,7 +610,7 @@ Additional fields:
 
 ## Censorship
 
-A `censoredWords` option can be passed to the `Chan` function to censor certain words in parsed comments' `content` or `title`. The `censoredWords: object[]?` option must be a list of word filters pre-compiled via the exported `compileWordPatterns(censoredWords, language)` function:
+A `censoredWords` option can be passed to the `imageboard` function to censor certain words in parsed comments' `content` or `title`. The `censoredWords: object[]?` option must be a list of word filters pre-compiled via the exported `compileWordPatterns(censoredWords, language)` function:
 
 * `language: string` — (required) A lowercase two-letter language code (examples: `"en"`, `"ru"`, `"de"`) used to generate a regular expression for splitting text into individual words.
 
@@ -480,20 +638,20 @@ Censored words in parsed comments' `content` will be replaced with `{ type: "spo
 
 Censored words in comment/thread `title`s don't result in their replacement but rather a new `titleCensored` property is generated with the words censored. The rationale is that `title` is a `string`, not `Content`, therefore it should stay a `string`. `content`, on the other hand, is already of `Content` type so it's edited in-place.
 
-## Chan config
+## Imageboard config
 
 ```js
 {
   // (required)
-  // Chan unique ID.
+  // Imageboard unique ID.
   "id": "4chan",
 
   // (required)
-  // Chan website domain name.
+  // Imageboard website domain name.
   "domain": "4chan.org",
 
   // (required)
-  // The engine the chan runs on.
+  // The engine the imageboard runs on.
   // Must be supported out-of-the-box (see the `./engine` directory).
   // Supported engines:
   // * `"4chan"`
@@ -556,9 +714,9 @@ Censored words in comment/thread `title`s don't result in their replacement but 
 
   // (optional)
   // Attachment URL template.
-  // Is required for chan engines that don't
+  // Is required for imageboard engines that don't
   // provide the full attachment URL (`vichan`)
-  // or for chans that host attachments on another domain
+  // or for imageboards that host attachments on another domain
   // (`4chan` hosts attachments at `https://i.4cdn.org`).
   // Available parameters are:
   // * boardId — Board ID ("b", etc).
@@ -573,7 +731,7 @@ Censored words in comment/thread `title`s don't result in their replacement but 
   "attachmentThumbnailUrl": "https://i.4cdn.org/{boardId}/{name}s.jpg",
 
   // (optional)
-  // Chans usually store images/videos under random-generated filenames
+  // Imageboards usually store images/videos under random-generated filenames
   // and all other files under their original filename,
   // hence the separate "fileAttachmentUrl" parameter.
   "fileAttachmentUrl": "https://i.4cdn.org/{boardId}/{originalName}{ext}",
@@ -591,7 +749,7 @@ Censored words in comment/thread `title`s don't result in their replacement but 
   "attachmentThumbnailUrlFpath": "https://media.8ch.net/file_store/{name}{ext}",
 
   // (optional)
-  // Most chans set author name to some default placeholder
+  // Most imageboards set author name to some default placeholder
   // like "Anonymous" when no author name has been input.
   // The parser then checks if author name is equal to the
   // "defaultAuthorName" and if it is then it leaves the `authorName` blank.
@@ -614,13 +772,13 @@ Censored words in comment/thread `title`s don't result in their replacement but 
 }
 ```
 
-## Adding a new chan
+## Adding a new imageboard
 
-* Create the chan's directory in `./src/imageboard/chan`.
-* Create `index.json` and `index.js` files in the chan's directory (see other chans as an example). See [Chan config](#chan-config) for the explanation of the `index.json` file format.
-* Add an export for the chan in `./src/imageboard/chan/index.js` (same as for the existing chans).
+* Create the imageboard's directory in `./src/imageboard/chan`.
+* Create `index.json` and `index.js` files in the imageboard's directory (see other imageboards as an example). See [Imageboard config](#imageboard-config) for the explanation of the `index.json` file format.
+* Add an export for the imageboard in `./src/imageboard/chan/index.js` (same as for the existing imageboards).
 
-If the chan runs on an already supported engine then it most likely has its own comment HTML syntax which could be different from other chans running on the same engine. In such case, go to the engine directory (`./src/imageboard/engine/${engineName}`) and edit `index.js` file to use the set of ["comment parser plugins"](#comment-parser-plugins) specific to this new chan (see other chan's comment parser plugins as an example). Otherwise, if it's a new engine:
+If the imageboard runs on an already supported engine then it most likely has its own comment HTML syntax which could be different from other imageboards running on the same engine. In such case, go to the engine directory (`./src/imageboard/engine/${engineName}`) and edit `index.js` file to use the set of ["comment parser plugins"](#comment-parser-plugins) specific to this new imageboard (see other imageboards' comment parser plugins as an example). Otherwise, if it's a new engine:
 
 * Create the engine directory in `./src/imageboard/engine`.
 * Create `index.js` file in the engine directory (same as for the existing engines). The engine class must extend `./src/imageboard/Engine.js` and implement at least four methods (`parseBoards()`, `parseThreads()`, `parseThread()` and `parseComment()`) and also provide a list of HTML ["comment parser plugins"](#comment-parser-plugins) (see other engines as an example).
@@ -628,7 +786,7 @@ If the chan runs on an already supported engine then it most likely has its own 
 
 ## Comment parser plugins
 
-Chan comments are formatted in HTML. Different chans use their own comment HTML syntax. For example, bold text could be `<strong>bold</strong>` at some chans, `<b>bold</b>` at other chans and `<span class="bold">bold</span>` at the other chans, even if they all used the same engine. Hence, every chan requires defining their own set of "comment parser plugins" in `./src/imageboard/engine/${engine}` directory.
+Imageboard comments are formatted in HTML. Different imageboards use their own comment HTML syntax. For example, bold text could be `<strong>bold</strong>` at some imageboards, `<b>bold</b>` at other imageboards and `<span class="bold">bold</span>` at the other imageboards, even if they all used the same engine. Hence, every imageboard requires defining their own set of "comment parser plugins" in `./src/imageboard/engine/${engine}` directory.
 
 A "comment parser plugin" is an object having properties:
 
@@ -714,6 +872,13 @@ Messages used when generating `content` text (autogenerated quotes, autogenerate
 * `picture: "Picture"`
 * `audio: "Audio"`
 * `attachment: "Attachment"`
-* `code: "Code"`
 * `link: "Link"`
 * `linkTo: "Link to"`
+
+## What else
+
+You made it. There's not much else to document here, for now. Move along.
+
+## License
+
+[MIT](LICENSE)
