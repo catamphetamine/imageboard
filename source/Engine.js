@@ -51,7 +51,7 @@ export default class Engine {
 	 * @param  {object} [options] — See the README.
 	 * @return {object[]} — A list of `Board` objects.
 	 */
-	async getBoards(options) {
+	async getBoards(options = {}) {
 		// Some "legacy" chans don't provide `/boards.json` API
 		// so their boards list is defined as a static one in JSON configuration.
 		if (this.options.boards) {

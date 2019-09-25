@@ -155,7 +155,7 @@ function stripLinks(content) {
 }
 
 function setPostLinkQuote(postLink, post, options) {
-	const text = getPostSummary(post.content, post.attachments, {
+	const text = getPostSummary(post, {
 		messages: options && options.messages,
 		maxLength: 180,
 		countNewLines: true,

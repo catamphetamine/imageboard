@@ -45,7 +45,7 @@ function getPostTitle(post, { messages, parseContent }) {
 		return post.title
 	}
 	if (parseContent !== false) {
-		const summary = getPostSummary(post.content, post.attachments, {
+		const summary = getPostSummary(post, {
 			messages,
 			maxLength: 60,
 			stopOnNewLine: true
