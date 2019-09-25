@@ -1,6 +1,6 @@
 {
   "name": "imageboard",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "An easy uniform wrapper over the popular imageboards' API",
   "main": "index.commonjs.js",
   "module": "index.js",
