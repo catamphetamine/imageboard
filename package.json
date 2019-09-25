@@ -1,0 +1,78 @@
+{
+  "name": "imageboard",
+  "version": "0.1.0",
+  "description": "An easy uniform wrapper over the popular imageboards' API",
+  "main": "index.commonjs.js",
+  "module": "index.js",
+  "sideEffects": [
+    "*.css"
+  ],
+  "peerDependencies": {
+    "regenerator-runtime": "^0.13.3"
+  },
+  "dependencies": {
+    "domparser": "^0.1.1",
+    "social-components": "^0.1.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.0.0",
+    "@babel/node": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.2.0",
+    "@babel/plugin-transform-destructuring": "^7.1.2",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "autoprefixer": "^9.5.0",
+    "babel-eslint": "^9.0.0",
+    "babel-loader": "^8.0.1",
+    "babel-plugin-istanbul": "^5.2.0",
+    "chai": "^4.2.0",
+    "copyfiles": "^2.1.1",
+    "core-js": "^3.2.1",
+    "cross-env": "^5.1.4",
+    "esm": "^3.2.25",
+    "mocha": "^6.2.0",
+    "node-fetch": "^2.6.0",
+    "npm-run-all": "^1.4.0",
+    "nyc": "^14.1.1",
+    "postcss": "^7.0.14",
+    "postcss-custom-properties": "^8.0.10",
+    "regenerator-runtime": "^0.13.3",
+    "rimraf": "^2.5.0",
+    "rollup": "^1.9.0",
+    "rollup-plugin-commonjs": "^9.3.4",
+    "rollup-plugin-node-resolve": "^4.2.3",
+    "rollup-plugin-terser": "^4.0.4"
+  },
+  "scripts": {
+    "test": "mocha --bail --require regenerator-runtime/runtime --require @babel/register --require esm --require ./test/setup.js \"source/**/*.test.js\" \"test/**/*.test.js\"",
+    "test-coverage": "cross-env NODE_ENV=test nyc mocha --require esm --bail --require ./test/setup.js \"source/**/*.test.js\" \"test/**/*.test.js\"",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "build:clean": "rimraf ./commonjs/**/* ./modules/**/*",
+    "build:commonjs": "cross-env babel ./source --out-dir ./commonjs --source-maps --ignore *.test.js",
+    "build:es6": "cross-env BABEL_ENV=es6 babel ./source --out-dir ./modules --source-maps --ignore *.test.js",
+    "build": "npm-run-all build:clean build:commonjs build:es6 copy-chan-settings",
+    "copy-chan-settings": "cd source && copyfiles chan/**/*.json ../modules && copyfiles chan/**/*.json ../commonjs",
+    "prepublish": "npm-run-all build test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/catamphetamine/imageboard.git"
+  },
+  "keywords": [
+    "react",
+    "sortable",
+    "drag",
+    "drop",
+    "list"
+  ],
+  "author": "catamphetamine <purecatamphetamine@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/catamphetamine/imageboard/issues"
+  },
+  "homepage": "https://github.com/catamphetamine/imageboard#readme"
+}
