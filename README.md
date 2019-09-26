@@ -209,7 +209,7 @@ Fuck you OP I saw horizon and now I am mad that it’s bait
 To use the package first construct an `imageboard` instance using the default exported function.
 
 ```js
-import imageboard from './imageboard'
+import imageboard from 'imageboard'
 ```
 
 ### `imageboard(idOrConfig, options)`
