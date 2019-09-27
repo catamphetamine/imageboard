@@ -5,6 +5,7 @@
 export default function parseRole(capCode) {
 	switch (capCode) {
 		case 'admin':
+		case 'admin_highlight':
 		case 'founder':
 		case 'developer':
 			return 'administrator'
