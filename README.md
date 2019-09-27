@@ -7,7 +7,7 @@ Originally created as part of the [`captchan`](https://github.com/catamphetamine
 Supported engines:
 
 * [4chan](https://github.com/4chan/4chan-API) ([4chan.org](https://www.4chan.org/)). See [`4chan.org` demo](https://catamphetamine.github.io/captchan/?chan=4chan).
-* [vichan](https://github.com/vichan-devel/vichan)/[infinity](https://github.com/ctrlcctrlv/infinity)/[OpenIB](https://github.com/OpenIB/OpenIB/) ([8ch.net](https://8ch.net/)). See [`8ch.net` demo](https://catamphetamine.github.io/captchan/?chan=8ch).
+* [vichan](https://github.com/vichan-devel/vichan) ([lainchan.org](https://lainchan.org/), [arisuchan.jp](https://arisuchan.jp/)) / [infinity](https://github.com/ctrlcctrlv/infinity)/[OpenIB](https://github.com/OpenIB/OpenIB/) ([8ch.net](https://8ch.net/)). See: [`8ch.net` demo](https://catamphetamine.github.io/captchan/?chan=8ch), [`lainchan.org` demo](https://catamphetamine.github.io/captchan/?chan=lainchan), [`arisuchan.jp` demo](https://catamphetamine.github.io/captchan/?chan=arisuchan).
 * [lynxchan](https://gitgud.io/LynxChan/LynxChan) ([kohlchan.net](https://kohlchan.net), [endchan.xyz](https://endchan.xyz)). See: [`kohlchan.net` demo](https://catamphetamine.github.io/captchan/?chan=kohlchan), [`endchan.xyz` demo](https://catamphetamine.github.io/captchan/?chan=endchan).
 * [makaba](https://2ch.hk/api/) ([2ch.hk](https://2ch.hk/)). See [`2ch.hk` demo](https://catamphetamine.github.io/captchan/?chan=2ch).
 
@@ -102,7 +102,9 @@ Now, print the first five threads on `4chan.org` `/a/` board:
 var getCommentText = require('imageboard').getCommentText
 
 // Prints the first five threads on `/a/` board.
-fourChan.getThreads({ boardId: 'a' }).then((threads) => {
+fourChan.getThreads({
+  boardId: 'a'
+}).then((threads) => {
   const threadsList = threads.slice(0, 5).map(({
     id,
     title,
@@ -147,7 +149,10 @@ Now, print the first five comments of the thread:
 var getCommentText = require('imageboard').getCommentText
 
 // Prints the first five comments of thread #193605320 on `/a/` board.
-fourChan.getThread({ boardId: 'a', threadId: 193605320 }).then((thread) => {
+fourChan.getThread({
+  boardId: 'a',
+  threadId: 193605320
+}).then((thread) => {
   const commentsList = thread.comments.slice(0, 5).map((comment) => {
     const {
       id,
@@ -282,7 +287,7 @@ Returns `true` if the vote has been accepted. Returns `false` if the user has al
 
 ## Miscellaneous API
 
-This API is for "advanced" use cases. In other words, it's being used in [`captchan`](https://github.com/catamphetamine/captchan) and that's the reason why it's exported.
+The following functions are exported for "advanced" use cases. In other words, they're being used in [`captchan`](https://github.com/catamphetamine/captchan) and that's the reason why they're exported.
 
 ### `getConfig(id: string): object?`
 
