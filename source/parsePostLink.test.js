@@ -2,9 +2,9 @@ import parsePostLink from './parsePostLink'
 
 import expectToEqual from './utility/expectToEqual'
 
-import FourChannel from './chan/4chan/index.json'
-import EightChannel from './chan/8ch/index.json'
-import TwoChannel from './chan/2ch/index.json'
+import FourChannel from './chan/4chan'
+import EightChannel from './chan/8ch'
+import TwoChannel from './chan/2ch'
 
 describe('parsePostLink', () => {
 	it('should parse anchor post links', () => {
@@ -17,8 +17,9 @@ describe('parsePostLink', () => {
 	})
 
 	it('should parse relative post links (4chan.org)', () => {
+		const fourChannel = FourChannel()
 		expectToEqual(
-			parsePostLink('/a/thread/184064641#p184154285', { commentUrlParser: FourChannel.commentUrlParser }),
+			parsePostLink('/a/thread/184064641#p184154285', { commentUrlParser: fourChannel.options.commentUrlParser }),
 			{
 				boardId: 'a',
 				threadId: 184064641,
@@ -28,8 +29,9 @@ describe('parsePostLink', () => {
 	})
 
 	it('should parse relative post links (8ch.net)', () => {
+		const eightChannel = EightChannel()
 		expectToEqual(
-			parsePostLink('/newsplus/res/238546.html#238584', { commentUrlParser: EightChannel.commentUrlParser }),
+			parsePostLink('/newsplus/res/238546.html#238584', { commentUrlParser: eightChannel.options.commentUrlParser }),
 			{
 				boardId: 'newsplus',
 				threadId: 238546,
@@ -39,8 +41,9 @@ describe('parsePostLink', () => {
 	})
 
 	it('should parse relative post links (2ch.hk)', () => {
+		const twoChannel = TwoChannel()
 		expectToEqual(
-			parsePostLink('/b/res/197765456.html#197791215', { commentUrlParser: TwoChannel.commentUrlParser }),
+			parsePostLink('/b/res/197765456.html#197791215', { commentUrlParser: twoChannel.options.commentUrlParser }),
 			{
 				boardId: 'b',
 				threadId: 197765456,

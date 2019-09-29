@@ -4,7 +4,7 @@
 	"engine": "vichan",
 	"attachmentUrl": "/{boardId}/src/{name}{ext}",
 	"attachmentThumbnailUrl": "/{boardId}/thumb/{name}{ext}",
-	"commentUrlParser": "^\\/(.+?)\\/res\\/(\\d+).html#(\\d+)$",
+  "commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
 	"api": {
 		"getThread": "/{boardId}/res/{threadId}.json",
 		"getThreads": "/{boardId}/catalog.json"

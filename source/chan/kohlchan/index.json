@@ -7,7 +7,7 @@
 		"*": "Bernd",
 		"ru": "Бернд"
 	},
-	"commentUrlParser": "^\\/(.+?)\\/res\\/(\\d+).html#(\\d+)$",
+  "commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
 	"api": {
 		"getThread": "/{boardId}/res/{threadId}.json",
 		"getThreads": "/{boardId}/catalog.json"

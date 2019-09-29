@@ -1,3 +1,8 @@
+1.0.5 / 29.09.2019
+===================
+
+* `commentUrlParser` setting of an imageboard `*.json` file replaced with `commentUrl` template having `{boardId}`, `{threadId}` and `{commentId}`.
+
 1.0.4 / 29.09.2019
 ===================
 

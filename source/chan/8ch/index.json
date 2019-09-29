@@ -21,7 +21,7 @@
 	"attachmentThumbnailUrlFpath": "https://media.8ch.net/file_store/thumb/{name}{ext}",
 	"attachmentUrl": "https://media.8ch.net/{boardId}/src/{name}{ext}",
 	"attachmentThumbnailUrl": "https://media.8ch.net/{boardId}/thumb/{name}{ext}",
-	"commentUrlParser": "^\\/(.+?)\\/res\\/(\\d+).html#(\\d+)$",
+	"commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
 	"api": {
 		"getThread": "/{boardId}/res/{threadId}.json",
 		"getThreads": "/{boardId}/catalog.json",

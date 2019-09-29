@@ -712,10 +712,7 @@ Censored words in comment/thread `title`s don't result in their replacement but 
 
   // (required)
   // A template for parsing links to other comments in comment HTML.
-  // The first "group" must match board id,
-  // the second "group" must match thread id,
-  // the third "group" must match comment id.
-  "commentUrlParser": "^\\/(.+?)\\/res\\/(\\d+).html#(\\d+)$"
+  "commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
 
   // (optional)
   // Attachment URL template.
@@ -797,7 +794,7 @@ A "comment parser plugin" is an object having properties:
 
 * `tag: String` — HTML tag (in lower case).
 * `attributes: object[]?` — A set of HTML tag attribute filters. An attribute filter is an object of shape `{ name: String, value: String }`.
-* `createBlock(content: PostContent, node, options): PostContent?` — Receives child `content` and wraps it in a parent content block (see [Post Content](https://github.com/catamphetamine/social-components/blob/master/docs/Post/PostContent.md) docs). Can return `undefined`. Can return a string, an object or an array of strings or objects. `node` is the DOM `Node` and provides methods like `getAttribute(name: String)`. `options` is an object providing some configuration options like `commentUrlParser` for parsing comment links (`<a href="/b/123#456">&gt;&gt;456</a>`).
+* `createBlock(content: PostContent, node, options): PostContent?` — Receives child `content` and wraps it in a parent content block (see [Post Content](https://github.com/catamphetamine/social-components/blob/master/docs/Post/PostContent.md) docs). Can return `undefined`. Can return a string, an object or an array of strings or objects. `node` is the DOM `Node` and provides methods like `getAttribute(name: String)`. `options` is an object providing some configuration options like `commentUrl` template for parsing comment links (`<a href="/b/123#456">&gt;&gt;456</a>`).
 
 Example:
 

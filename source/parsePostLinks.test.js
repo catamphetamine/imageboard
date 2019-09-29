@@ -2,9 +2,9 @@ import parsePostLinks from './parsePostLinks'
 
 import expectToEqual from './utility/expectToEqual'
 
-import FourChannel from './chan/4chan/index.json'
-import EightChannel from './chan/8ch/index.json'
-import TwoChannel from './chan/2ch/index.json'
+import FourChannel from './chan/4chan'
+import EightChannel from './chan/8ch'
+import TwoChannel from './chan/2ch'
 
 describe('parsePostLinks', () => {
 	it('should parse anchor post links', () => {
@@ -29,6 +29,7 @@ describe('parsePostLinks', () => {
 	})
 
 	it('should parse relative post links (4chan.org)', () => {
+		const fourChannel = FourChannel()
 		expectToEqual(
 			parsePostLinks(
 				`
@@ -36,7 +37,7 @@ describe('parsePostLinks', () => {
 					text
 					<a key="value" href="/a/thread/184064641#p123456">&gt;&gt;123456</a>
 				`,
-				{ commentUrlParser: FourChannel.commentUrlParser }
+				{ commentUrlParser: fourChannel.options.commentUrlParser }
 			),
 			[
 				{
@@ -54,6 +55,7 @@ describe('parsePostLinks', () => {
 	})
 
 	it('should parse relative post links (8ch.net)', () => {
+		const eightChannel = EightChannel()
 		expectToEqual(
 			parsePostLinks(
 				`
@@ -61,7 +63,7 @@ describe('parsePostLinks', () => {
 					text
 					<a key="value" href="/newsplus/res/238546.html#123456">&gt;&gt;123456</a>
 				`,
-				{ commentUrlParser: EightChannel.commentUrlParser }
+				{ commentUrlParser: eightChannel.options.commentUrlParser }
 			),
 			[
 				{
@@ -78,7 +80,8 @@ describe('parsePostLinks', () => {
 		)
 	})
 
-	it('should parse relative post links (8ch.net)', () => {
+	it('should parse relative post links (2ch.hk)', () => {
+		const twoChannel = TwoChannel()
 		expectToEqual(
 			parsePostLinks(
 				`
@@ -86,7 +89,7 @@ describe('parsePostLinks', () => {
 					text
 					<a href="/b/res/197765456.html#123456" class="post-reply-link" data-thread="197765456" data-num="123456">&gt;&gt;123456</a>
 				`,
-				{ commentUrlParser: TwoChannel.commentUrlParser }
+				{ commentUrlParser: twoChannel.options.commentUrlParser }
 			),
 			[
 				{

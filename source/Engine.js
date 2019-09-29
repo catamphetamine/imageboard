@@ -9,6 +9,7 @@ export default class Engine {
 		const {
 			id,
 			domain,
+			commentUrl: commentUrlParseTemplate,
 			...restChanSettings
 		} = chanSettings
 		if (!useRelativeUrls) {
@@ -23,9 +24,22 @@ export default class Engine {
 			...restChanSettings,
 			...rest
 		}
-		// Compile `commentUrlParser`.
-		if (this.options.commentUrlParser) {
-			this.options.commentUrlParser = new RegExp(this.options.commentUrlParser)
+		// Compile `commentUrl` template into a parsing regular expression.
+		if (commentUrlParseTemplate) {
+			this.options.commentUrlParser = new RegExp(
+				'^' +
+				commentUrlParseTemplate
+					// Escape slashes.
+					.replace(/\//g, '\\/')
+					// The "?" at the end of the `boardId` "capturing group"
+					// means "non-greedy" regular expression matching.
+					// (in other words, it means "stop at the first slash").
+					// (could be written as "([^\\/]+)" instead).
+					.replace('{boardId}', '(.+?)')
+					.replace('{threadId}', '(\\d+)')
+					.replace('{commentId}', '(\\d+)') +
+				'$'
+			)
 		}
 	}
 
