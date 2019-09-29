@@ -10,9 +10,12 @@ describe('kohlchan.net', () => {
 		expectToEqual(
 			new KohlChan({
 				messages: {
-					deletedComment: 'Удалённое сообщение',
-					hiddenComment: 'Скрытое сообщение',
-					quotedComment: 'Сообщение'
+					comment: {
+						deleted: 'Deleted comment',
+						hidden: 'Hidden comment',
+						external: 'Comment from another thread',
+						default: 'Comment'
+					}
 				}
 			}).parseThread(API_RESPONSE_1, {
 				boardId: 'a'

@@ -1,7 +1,12 @@
+1.0.6 / 30.09.2019
+===================
+
+* (breaking change) The format of `messages` changed: it now has two child objects — `comment` and `contentType`. See the README.
+
 1.0.5 / 29.09.2019
 ===================
 
-* `commentUrlParser` setting of an imageboard `*.json` file replaced with `commentUrl` template having `{boardId}`, `{threadId}` and `{commentId}`.
+* (breaking change) `commentUrlParser` setting of an imageboard `*.json` file replaced with `commentUrl` template having `{boardId}`, `{threadId}` and `{commentId}`.
 
 1.0.4 / 29.09.2019
 ===================

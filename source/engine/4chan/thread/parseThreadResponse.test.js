@@ -10,9 +10,12 @@ describe('4chan.org', () => {
 		expectToEqual(
 			new FourChan({
 				messages: {
-					deletedComment: 'Удалённое сообщение',
-					hiddenComment: 'Скрытое сообщение',
-					quotedComment: 'Сообщение'
+					comment: {
+						deleted: 'Deleted comment',
+						hidden: 'Hidden comment',
+						external: 'Comment from another thread',
+						default: 'Comment'
+					}
 				},
 				boardId: 'v',
 				threadId: 456354102

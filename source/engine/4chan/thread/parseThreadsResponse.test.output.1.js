@@ -97,7 +97,8 @@ export default [
 									"boardId": "aco",
 									"threadId": 2943071,
 									"postId": 2943071,
-									"content": "Сообщение",
+									"content": "(comment)",
+									"postIsExternal": true,
 									"url": "/aco/2943071#2943071"
 								}
 							]

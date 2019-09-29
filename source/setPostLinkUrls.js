@@ -6,19 +6,15 @@ import visitPostParts from 'social-components/commonjs/utility/post/visitPostPar
  * @param {any} content — Post `content`
  * @param {object} options
  */
-export default function setPostLinkUrls(content, { boardId, threadId, messages, commentUrl }) {
+export default function setPostLinkUrls(content, { boardId, threadId, commentUrl }) {
 	visitPostParts(
 		'post-link',
-		postLink => setPostLinkUrl(postLink, { boardId, threadId, messages, commentUrl }),
+		postLink => setPostLinkUrl(postLink, { boardId, threadId, commentUrl }),
 		content
 	)
 }
 
-function setPostLinkUrl(postLink, { boardId, threadId, messages, commentUrl }) {
-	// Set content.
-	if (messages && messages.quotedComment) {
-		postLink.content = messages.quotedComment
-	}
+function setPostLinkUrl(postLink, { boardId, threadId, commentUrl }) {
 	// Set board ID.
 	if (!postLink.boardId) {
 		postLink.boardId = boardId

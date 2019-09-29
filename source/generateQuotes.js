@@ -35,20 +35,23 @@ export default function generateQuotes(content, {
 	if (isParentCommentUpdate) {
 		contentDidChange = false
 	}
-	if (isFirstRun || isParentCommentUpdate) {
-		// Autogenerate "in reply to" quotes.
-		if (setInReplyToQuotes(content, getCommentById, { threadId, messages })) {
-			contentDidChange = true
-		}
-	}
 	if (isFirstRun) {
-		// Set "Deleted message" `content` for links to deleted comments.
-		// Set "Hidden message" `content` for links to hidden comments.
-		// Autogenerate "in reply to" quotes for links to all other comments.
+		// Set "Deleted comment" `content` for links to deleted comments.
+		// Set "Hidden comment" `content` for links to hidden comments.
+		// Set "External comment" `content` for links from other threads.
+		// Keep "Comment" `content` for links to other comments.
+		// (there seem to be no "other" cases)
 		if (messages) {
-			if (setPostLinksContent(content, { messages })) {
+			// `setPostLinksContent()` must precede `setInReplyToQuotes()`.
+			if (setPostLinksContent(content, getCommentById, { threadId, messages })) {
 				contentDidChange = true
 			}
+		}
+	}
+	if (isFirstRun || isParentCommentUpdate) {
+		// Autogenerate "in reply to" quotes.
+		if (setInReplyToQuotes(content, getCommentById, { messages })) {
+			contentDidChange = true
 		}
 	}
 	return contentDidChange

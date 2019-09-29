@@ -10,9 +10,12 @@ describe('kohlchan.net', () => {
 	it('should parse threads', () => {
 		const threads = new Chan(KohlChanConfig, {
 			messages: {
-				deletedComment: 'Удалённое сообщение',
-				hiddenComment: 'Скрытое сообщение',
-				quotedComment: 'Сообщение'
+				comment: {
+					deleted: 'Deleted comment',
+					hidden: 'Hidden comment',
+					external: 'Comment from another thread',
+					default: 'Comment'
+				}
 			}
 		}).parseThreads(API_RESPONSE, {
 			boardId: 'a'

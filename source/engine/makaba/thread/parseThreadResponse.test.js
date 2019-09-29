@@ -336,7 +336,11 @@ describe('2ch.hk', () => {
 							"boardId": "vg",
 							"threadId": 28727050,
 							"postId": 28942338,
-							"content": "Удалённое сообщение",
+							"content": [{
+								type: "quote",
+								generated: true,
+								content: "Deleted comment"
+							}],
 							"url": "/vg/28727050#28942338",
 							"postWasDeleted": true
 						},
@@ -364,7 +368,11 @@ describe('2ch.hk', () => {
 							"boardId": "vg",
 							"threadId": 28727050,
 							"postId": 28942773,
-							"content": "Удалённое сообщение",
+							"content": [{
+								type: "quote",
+								generated: true,
+								content: "Deleted comment"
+							}],
 							"url": "/vg/28727050#28942773",
 							"postWasDeleted": true
 						},
@@ -404,7 +412,11 @@ describe('2ch.hk', () => {
 							"boardId": "vg",
 							"threadId": 28727050,
 							"postId": 28942908,
-							"content": "Удалённое сообщение",
+							"content": [{
+								type: "quote",
+								generated: true,
+								content: "Deleted comment"
+							}],
 							"url": "/vg/28727050#28942908",
 							"postWasDeleted": true
 						},
@@ -439,9 +451,12 @@ describe('2ch.hk', () => {
 		expectToEqual(
 			new Chan(TwoChanConfig, {
 				messages: {
-					deletedComment: 'Удалённое сообщение',
-					hiddenComment: 'Скрытое сообщение',
-					quotedComment: 'Сообщение'
+					comment: {
+						deleted: 'Deleted comment',
+						hidden: 'Hidden comment',
+						external: 'Comment from another thread',
+						default: 'Comment'
+					}
 				}
 			}).parseThread(API_RESPONSE_1, { boardId: 'vg' }),
 			{

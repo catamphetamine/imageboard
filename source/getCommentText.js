@@ -8,6 +8,10 @@ import getPostText from 'social-components/commonjs/utility/post/getPostText'
  * @param  {object} [options] — See `options` description in `social-components/source/utility/post/getPostText`.
  * @return {string} [text]
  */
-export default function getCommentText(comment, options) {
-	return getPostText(comment, options)
+export default function getCommentText(comment, options = {}) {
+	const { messages, ...rest } = options
+	return getPostText(comment, {
+		...rest,
+		messages: messages && messages.contentType
+	})
 }
