@@ -429,14 +429,17 @@ export default {
                 type: "quote",
                 content: "ori and will of the wisps"
               },
+              "\n",
               {
                 type: "quote",
                 content: "cuphead dlc"
               },
+              "\n",
               {
                 type: "quote",
                 content: "DMC 5"
               },
+              "\n",
               {
                 type: "quote",
                 content: "Rage2"

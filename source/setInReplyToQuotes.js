@@ -93,35 +93,26 @@ export default function setInReplyToQuotes(
 		if (contentParent[index + 1] !== '\n') {
 			return
 		}
-		const combinedQuotes = []
+		const quotes = []
 		// See if there's already an existing post quote for this post link.
 		// (composed manually by post author)
 		const startFromIndex = index + 2
-		const followingQuotesCount = forEachFollowingQuote(contentParent, startFromIndex, (quote, i) => {
+		const quotesCount = forEachFollowingQuote(contentParent, startFromIndex, (quote, i) => {
 			// A post link quote is rendered as a hyperlink
 			// and having nested hyperlinks will result in invalid HTML markup.
 			// To prevent that, strip links from the quote.
 			stripLinks(quote.content)
-			// if (canCombineQuotes) {
-			combinedQuotes.push(quote)
-			// } else {
-			// 	// Transform the quote to a post-link quote.
-			// 	contentParent[i] = {
-			// 		...content,
-			// 		// Set `post-link` quote.
-			// 		content: [quote]
-			// 	}
-			// }
-		})
-		if (followingQuotesCount > 0) {
-			if (combinedQuotes.length === 1) {
-				const quote = combinedQuotes[0]
-				content.content = [quote]
-			} else {
-				content.content = combinedQuotes
+			// Separate quotes with new lines.
+			if (quotes.length > 0) {
+				quotes.push('\n')
 			}
+			quotes.push(quote)
+		})
+		if (quotesCount > 0) {
+			content.content = quotes
 			// Remove the combined quotes and "\n"s before them from post content.
-			contentParent.splice(index + 1, combinedQuotes.length * 2)
+			// Don't remove the "\n" after the last quote.
+			contentParent.splice(index + 1, 1 + quotes.length)
 		} else {
 			// Autogenerate `post-link` quote text.
 			setPostLinkQuote(content, quotedPost, options)
