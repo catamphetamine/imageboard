@@ -463,6 +463,7 @@ describe('2ch.hk', () => {
 				id: COMMENTS[0].id,
 				title: COMMENTS[0].title,
 				boardId: 'vg',
+				tags: ['pubg'],
 				createdAt: new Date('2018-12-26T07:10:09.000Z'),
 				updatedAt: new Date('2019-01-31T22:47:58.000Z'),
 				commentsCount: 123,

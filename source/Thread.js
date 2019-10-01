@@ -28,6 +28,9 @@ export default function Thread(thread, comments, {
 	if (!thread.isRolling) {
 		delete thread.isRolling
 	}
+	if (thread.tags === undefined) {
+		delete thread.tags
+	}
 	if (board && board.bumpLimit && thread.commentsCount >= board.bumpLimit) {
 		thread.isBumpLimitReached = true
 	}

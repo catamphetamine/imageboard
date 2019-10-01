@@ -19,7 +19,8 @@ export default function parseThreadsResponse(response) {
 			lasthit,
 			closed,
 			sticky,
-			endless
+			endless,
+			tags
 		}) => {
 			const thread = {
 				id: parseInt(num),
@@ -42,6 +43,9 @@ export default function parseThreadsResponse(response) {
 			// The "opening post" is always preserved.
 			if (endless === 1) {
 				thread.isRolling = true
+			}
+			if (tags) {
+				thread.tags = [tags]
 			}
 			return thread
 		})
