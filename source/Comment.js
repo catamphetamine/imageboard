@@ -8,6 +8,12 @@ export default function Comment({
 	parseContent,
 	parseCommentContent
 }) {
+	// Nullify empty comments.
+	// For example, `2ch.hk` returns empty strings
+	// instead of `undefined` for `comment`.
+	if (comment.content === '')  {
+		comment.content = undefined
+	}
 	// Parse comment content.
 	if (comment.content) {
 		if (parseContent !== false) {
