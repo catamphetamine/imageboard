@@ -58,8 +58,8 @@ export default function setInReplyToQuotes(
 	// (`post-link`s being the only content on its line)
 	const index = contentParent.indexOf(content)
 	const isTheOnlyOneOnLine =
-		(isFirstInParagraph || contentParent[index - 1] === '\n') &&
-		(isLastInParagraph || contentParent[index + 1] === '\n')
+		(isFirstInParagraph || endsWithNewLineAndOptionalWhiteSpace(contentParent, index, false)) &&
+		(isLastInParagraph || endsWithNewLineAndOptionalWhiteSpace(contentParent, index, true))
 	if (!isTheOnlyOneOnLine) {
 		if (content.type === 'post-link') {
 			if (options && options.messages && options.messages.comment && options.messages.comment.default) {
@@ -185,3 +185,29 @@ function setPostLinkQuote(postLink, post, options) {
 		}]
 	}
 }
+
+export function endsWithNewLineAndOptionalWhiteSpace(content, index, forward) {
+	let nextIndex = index
+	if (forward) {
+		nextIndex++
+		if (nextIndex === content.length) {
+			return true
+		}
+	} else {
+		nextIndex--
+		if (nextIndex === -1) {
+			return true
+		}
+	}
+	if (content[nextIndex] === '\n') {
+		return true
+	}
+	if (typeof content[nextIndex] === 'string') {
+		if (WHITESPACE_REGEXP.test(content[nextIndex])) {
+			return endsWithNewLineAndOptionalWhiteSpace(content, nextIndex, forward)
+		}
+	}
+	return false
+}
+
+const WHITESPACE_REGEXP = /^\s$/
