@@ -4,7 +4,10 @@
   "capcode": {
     "Supreme Commander": "administrator",
     "kalyx": "administrator",
+    "####": "administrator",
     "seph": "administrator",
+    "Admin": "administrator",
+    "dev": "administrator",
     "mod": "moderator"
   },
 	"engine": "vichan",
