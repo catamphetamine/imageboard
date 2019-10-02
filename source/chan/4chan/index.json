@@ -2,7 +2,19 @@
 	"id": "4chan",
 	"engine": "4chan",
 	"domain": "4chan.org",
+	"domainByBoard": {
+		"*": "boards.4channel.org",
+		"isNotSafeForWork": "boards.4chan.org"
+	},
 	"defaultAuthorName": "Anonymous",
+	"capcode": {
+		"admin": "administrator",
+		"admin_highlight": "administrator",
+		"founder": "administrator",
+		"developer": "administrator",
+		"mod": "moderator",
+		"manager": "moderator"
+	},
 	"attachmentUrl": "https://i.4cdn.org/{boardId}/{name}{ext}",
 	"attachmentThumbnailUrl": "https://i.4cdn.org/{boardId}/{name}s.jpg",
 	"fileAttachmentUrl": "https://i.4cdn.org/{boardId}/{originalName}{ext}",

@@ -1,6 +1,7 @@
 import expectToEqual from '../../../utility/expectToEqual'
 
 import FourChan from '../../../chan/4chan'
+import FourChanConfig from '../../../chan/4chan/index.json'
 
 function parseCommentTest(comment, options, expected, expectedWarnings = []) {
 	const consoleWarn = console.warn
@@ -52,7 +53,8 @@ describe('parseComment', () => {
 			},
 			{
 				boardId: 'b',
-				threadId: 123
+				threadId: 123,
+				capcode: FourChanConfig.capcode
 			},
 			{
 				id: 456,
@@ -78,7 +80,8 @@ describe('parseComment', () => {
 			},
 			{
 				boardId: 'b',
-				threadId: 123
+				threadId: 123,
+				capcode: FourChanConfig.capcode
 			},
 			{
 				id: 456,

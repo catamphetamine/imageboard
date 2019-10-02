@@ -1,7 +1,8 @@
 import unescapeContent from '../../../utility/unescapeContent'
 
-import parseAuthorRoleKohlChan from './parseAuthorRole.kohlchan'
+import parseAuthorRole from './parseAuthorRole'
 import parseAuthor from './parseAuthor'
+import parseCountryFlagUrl from './parseCountryFlagUrl'
 import parseAttachments from './parseAttachments'
 
 /**
@@ -18,14 +19,15 @@ export default function parseComment(post, {
 	attachmentThumbnailUrl,
 	thumbnailSize,
 	toAbsoluteUrl,
-	defaultAuthorName
+	defaultAuthorName,
+	capcode
 }) {
 	// `post.markdown` is not really "markdown", it's HTML.
 	// `lynxchan` has a bug of inserting "carriage return" (U+000D)
 	// characters before every "new line" (<br>).
 	// This workaround fixes that:
 	const content = post.markdown.replace(/\u000d/g, '')
-	const parsedAuthorRole = parseAuthorRole(post.signedRole, chan)
+	const authorRole = parseAuthorRole(post, { capcode })
 	const author = parseAuthor(post.name, { defaultAuthorName, boardId })
 	const comment = {
 		boardId,
@@ -52,7 +54,8 @@ export default function parseComment(post, {
 		// For example, `/pol/` on `kohlchan.net`.
 		// `kohlchan.net` examples: eeac31, 0501f9.
 		authorId: post.id,
-		authorRole: parsedAuthorRole && (chan === 'kohlchan' ? parsedAuthorRole.role : parsedAuthorRole),
+		authorRole: authorRole && (typeof authorRole === 'object' ? authorRole.role : authorRole),
+		authorRoleScope: authorRole && (typeof authorRole === 'object' ? authorRole.scope : undefined),
 		authorBan: post.banMessage && true,
 		authorBanReason: post.banMessage, // '(USER WAS BANNED FOR THIS POST)'
 		attachments: parseAttachments(post, {
@@ -67,11 +70,7 @@ export default function parseComment(post, {
 	// `kohlchan.net` displays comment author country flag
 	// on boards like `/int/`.
 	if (post.flag) {
-		const flagId = parseKohlchanFlagId(post.flag)
-		let country
-		if (FLAG_ID_COUNTRY_CODE_REGEXP.test(flagId)) {
-			country = flagId.toUpperCase()
-		}
+		const country = parseCountryFlagUrl(post.flag)
 		if (country) {
 			comment.authorCountry = country
 		} else {
@@ -84,7 +83,7 @@ export default function parseComment(post, {
 			// flag: "/.static/flags/onion.png"
 			// flagCode: null
 			// flagName: "Onion"
-			// ````
+			// ```
 			// comment.authorBadgeId = flagId
 			comment.authorBadgeUrl = post.flag
 			comment.authorBadgeName = post.flagName
@@ -92,23 +91,3 @@ export default function parseComment(post, {
 	}
 	return comment
 }
-
-function parseAuthorRole(role, chan) {
-	switch (chan) {
-		case 'kohlchan':
-			return parseAuthorRoleKohlChan(role)
-	}
-}
-
-// "/.static/flags/onion.png" ->  "onion".
-// "/.static/flags/vsa/ca.png" -> "vsa/ca". (California)
-const FLAG_ID_REGEXP = /^\/\.static\/flags\/(.+)\.png$/
-function parseKohlchanFlagId(flag) {
-	const match = flag.match(FLAG_ID_REGEXP)
-	if (match) {
-		return match[1]
-	}
-}
-
-// "br".
-const FLAG_ID_COUNTRY_CODE_REGEXP = /^([a-z]{2})$/

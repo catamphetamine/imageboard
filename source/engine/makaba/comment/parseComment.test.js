@@ -1,6 +1,7 @@
 import expectToEqual from '../../../utility/expectToEqual'
 
 import TwoChan from '../../../chan/2ch'
+import TwoChanConfig from '../../../chan/2ch/index.json'
 
 function parseCommentTest(comment, options, expected, expectedWarnings = []) {
 	const consoleWarn = console.warn
@@ -58,6 +59,7 @@ describe('parseComment', () => {
 			{
 				boardId: 'b',
 				threadId: 123,
+				tripcode: TwoChanConfig.tripcode
 			},
 			{
 				id: 123,
@@ -86,6 +88,7 @@ describe('parseComment', () => {
 			{
 				boardId: 'b',
 				threadId: 123,
+				tripcode: TwoChanConfig.tripcode
 			},
 			{
 				id: 123,

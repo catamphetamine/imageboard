@@ -1,6 +1,10 @@
 {
 	"id": "lainchan",
 	"domain": "lainchan.org",
+	"capcode": {
+		"Admin": "administrator",
+		"Mod": "moderator"
+	},
 	"engine": "vichan",
 	"attachmentUrl": "/{boardId}/src/{name}{ext}",
 	"attachmentThumbnailUrl": "/{boardId}/thumb/{name}{ext}",

@@ -1,6 +1,7 @@
 import expectToEqual from '../../../utility/expectToEqual'
 
 import KohlChan from '../../../chan/kohlchan'
+import KohlChanConfig from '../../../chan/kohlchan/index.json'
 
 function parseCommentTest(comment, options, expected, expectedWarnings = []) {
 	const consoleWarn = console.warn
@@ -66,7 +67,8 @@ describe('parseComment', () => {
 			},
 			{
 				boardId: 'b',
-				threadId: 123
+				threadId: 123,
+				capcode: KohlChanConfig.capcode
 			},
 			{
 				id: 456,
@@ -92,7 +94,8 @@ describe('parseComment', () => {
 			},
 			{
 				boardId: 'b',
-				threadId: 123
+				threadId: 123,
+				capcode: KohlChanConfig.capcode
 			},
 			{
 				id: 456,

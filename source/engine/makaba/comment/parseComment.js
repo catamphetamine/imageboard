@@ -1,5 +1,4 @@
 import parseAuthor from './parseAuthor'
-import parseAuthorRole from './parseAuthorRole'
 import parseAttachments from './parseAttachments'
 
 // Фраза "Абу благословил этот пост" добавляется в конец поста
@@ -20,7 +19,8 @@ const MAILTO = /^mailto:/
  */
 export default function parseComment(post, {
 	boardId,
-	toAbsoluteUrl
+	toAbsoluteUrl,
+	tripcode
 }, {
 	defaultAuthorName,
 	hasVoting,
@@ -45,7 +45,6 @@ export default function parseComment(post, {
 		id,
 		content,
 		authorName: author && (typeof author === 'string' ? author : author.name),
-		authorRole: parseAuthorRole(post.trip),
 		attachments: parseAttachments(post, { toAbsoluteUrl }),
 		createdAt: new Date(post.timestamp * 1000)
 	}
@@ -84,11 +83,18 @@ export default function parseComment(post, {
 		comment.upvotes = post.likes
 		comment.downvotes = post.dislikes
 	}
-	// Roles are parsed from trip codes
-	// so if there's a role then a trip code
-	// is not shown due to being redundant.
-	if (post.trip && !comment.authorRole) {
-		comment.authorTripCode = post.trip
+	if (post.trip) {
+		// Roles are parsed from trip codes
+		// so if there's a role then a trip code
+		// is not shown due to being redundant.
+		const role = tripcode && tripcode[post.trip]
+		if (role) {
+			comment.authorRole = role
+		} else {
+			// Users can have their own non-privileged trip codes.
+			// Example: "!!5pvF7WEJc."
+			comment.authorTripCode = post.trip
+		}
 	}
 	if (!isOpeningPost && post.op) {
 		comment.isThreadAuthor = true

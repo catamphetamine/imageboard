@@ -1,8 +1,7 @@
 import unescapeContent from '../../../utility/unescapeContent'
 
 import parseAuthor from './parseAuthor'
-import parseAuthorRoleFourChan from './parseAuthorRole.4chan'
-import parseAuthorRoleEightChan from './parseAuthorRole.8ch'
+import parseAuthorRole from './parseAuthorRole'
 import parseAttachments from './parseAttachments'
 
 const USER_BANNED_MARK = /<br><br><b style="color:red;">\(USER WAS BANNED FOR THIS POST\)<\/b>$/
@@ -26,7 +25,8 @@ export default function parseComment(post, {
 	attachmentThumbnailUrlFpath,
 	fileAttachmentUrl,
 	toAbsoluteUrl,
-	defaultAuthorName
+	defaultAuthorName,
+	capcode
 }) {
 	let content = post.com
 	let authorBan
@@ -75,7 +75,7 @@ export default function parseComment(post, {
 		// 	}
 		// }
 	}
-	const parsedAuthorRole = parseAuthorRole(post, chan, { boardId })
+	const authorRole = parseAuthorRole(post, { chan, boardId, capcode })
 	const comment = {
 		boardId,
 		// `resto` is `0` for the first post of the thread.
@@ -90,8 +90,8 @@ export default function parseComment(post, {
 		authorName: parseAuthor(post.name, { defaultAuthorName, boardId }),
 		// `8ch.net` has `email` field.
 		authorEmail: post.email,
-		authorRole: parsedAuthorRole && (typeof parsedAuthorRole === 'object' ? parsedAuthorRole.role : parsedAuthorRole),
-		authorRoleDomain: parsedAuthorRole && (typeof parsedAuthorRole === 'object' ? parsedAuthorRole.domain : undefined),
+		authorRole: authorRole && (typeof authorRole === 'object' ? authorRole.role : authorRole),
+		authorRoleScope: authorRole && (typeof authorRole === 'object' ? authorRole.scope : undefined),
 		authorTripCode: post.trip,
 		// `4chan`-alike imageboards (`4chan.org`, `8ch.net`, `kohlchan.net`)
 		// displays poster country flags.
@@ -122,13 +122,4 @@ export default function parseComment(post, {
 		})
 	}
 	return comment
-}
-
-function parseAuthorRole(post, chan, { boardId }) {
-	switch (chan) {
-		case '4chan':
-			return parseAuthorRoleFourChan(post.capcode)
-		case '8ch':
-			return parseAuthorRoleEightChan(post.capcode, { boardId })
-	}
 }

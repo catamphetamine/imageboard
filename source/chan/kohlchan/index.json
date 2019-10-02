@@ -7,6 +7,29 @@
 		"*": "Bernd",
 		"ru": "Бернд"
 	},
+  "capcode": {
+    "Root": {
+    	"role": "administrator"
+    },
+    "Administrator": {
+    	"role": "administrator"
+    },
+    "Board Owner": {
+    	"role": "moderator",
+    	"scope": "board"
+    },
+    "Board owner": {
+    	"role": "moderator",
+    	"scope": "board"
+    },
+    "Global volunteer": {
+    	"role": "moderator"
+    },
+    "Board volunteer": {
+    	"role": "moderator",
+    	"scope": "board"
+    }
+  },
   "commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
 	"api": {
 		"getThread": "/{boardId}/res/{threadId}.json",

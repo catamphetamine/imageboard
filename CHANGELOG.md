@@ -1,7 +1,14 @@
+1.0.8 / 03.10.2019
+===================
+
+* (small breaking change) Renamed `authorRoleDomain` to `authorRoleScope`.
+
+* Moved role `capcode`s to chan config files.
+
 1.0.6 / 30.09.2019
 ===================
 
-* (breaking change) The format of `messages` changed: it now has two child objects — `comment` and `contentType`. See the README.
+* (small breaking change) The format of `messages` changed: it now has two child objects — `comment` and `contentType`. See the README.
 
 1.0.5 / 29.09.2019
 ===================

@@ -1,6 +1,12 @@
 {
 	"id": "arisuchan",
 	"domain": "arisuchan.jp",
+  "capcode": {
+    "Supreme Commander": "administrator",
+    "kalyx": "administrator",
+    "seph": "administrator",
+    "mod": "moderator"
+  },
 	"engine": "vichan",
 	"attachmentUrl": "/{boardId}/src/{name}{ext}",
 	"attachmentThumbnailUrl": "/{boardId}/thumb/{name}{ext}",

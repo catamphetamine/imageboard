@@ -554,9 +554,9 @@ Available `options` (optional argument):
   authorRole: String?,
   // `8ch.net` and `lynxchan` have "global adiministrators"
   // and "board administrators", and "global moderators"
-  // and "board moderators", so `authorRoleDomain` is gonna be
+  // and "board moderators", so `authorRoleScope` is gonna be
   // "board" for a "board administrator" or "board moderator".
-  authorRoleDomain: String?,
+  authorRoleScope: String?,
   // If `true` then it means that the author was banned for the message.
   authorBan: boolean?,
   // An optional `String` with the ban reason.

@@ -2,6 +2,10 @@
 	"id": "2ch",
 	"domain": "2ch.hk",
 	"engine": "makaba",
+	"tripcode": {
+		"!!%adm%!!": "administrator",
+		"!!%mod%!!": "moderator"
+	},
 	"commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
 	"api": {
 		"getThread": "/{boardId}/res/{threadId}.json",
