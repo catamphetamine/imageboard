@@ -26,6 +26,22 @@ function getRoleByCapCode(capCode, capcodeRoles) {
 		if (capcodeRoles && capcodeRoles[capCode]) {
 			return capcodeRoles[capCode]
 		}
+		// `arisuchan.jp` has a separate `capcode` for each administrator.
+		// Some of them're:
+		// {
+		// "Supreme Commander": "administrator",
+		// "kalyx": "administrator",
+		// "####": "administrator",
+		// "seph": "administrator",
+		// "Admin": "administrator",
+		// "dev": "administrator"
+		// }
+		// Since it wouldn't be practical to release a new version of this package
+		// every time a new administrator is added to `arisuchan.jp`,
+		// a "*" wildcard was introduced for this specific case.
+		if (capcodeRoles && capcodeRoles['*']) {
+			return capcodeRoles['*']
+		}
 		if (typeof window === 'undefined') {
 			console.warn(`Unknown "capcode": ${capCode}`)
 		} else {
