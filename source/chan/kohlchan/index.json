@@ -14,6 +14,9 @@
     "Administrator": {
     	"role": "administrator"
     },
+    "Global Moderator": {
+    	"role": "moderator"
+    },
     "Board Owner": {
     	"role": "moderator",
     	"scope": "board"
