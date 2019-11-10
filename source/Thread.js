@@ -53,7 +53,14 @@ export default function Thread(thread, comments, {
 			parseContent
 		})
 		if (inReplyTo) {
-			comment.inReplyTo = inReplyTo
+			// Prevent circular references.
+			// http://boards.4chan.org/gif/thread/15873661
+			// One time there was a thread on `4chan` where a user
+			// somehow managed to quote their own comment recursively:
+			// A comment with id "15873666" had ">>15873666" in its content.
+			// To prevent such cyclic links this expclicit "not a link to self"
+			// filter is applied, even though such things can't normally happen.
+			comment.inReplyTo = inReplyTo.filter(commentId => commentId !== comment.id)
 		}
 	}
 	// Set `.replies` array for each comment

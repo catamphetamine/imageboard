@@ -36,6 +36,9 @@ function getInReplyToPostIdsForRawContent(rawContent, {
 	if (links.length > 0) {
 		const postIds = links.map(link => link.postId)
 		// Exclude duplicates.
+		// Sometimes users add multiple post links to the same post
+		// in their comments content. For example:
+		// ">>12345 >>12345 >>12345"
 		return postIds.filter((postId, i) => postIds.indexOf(postId) === i)
 	}
 }
