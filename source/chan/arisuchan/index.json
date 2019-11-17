@@ -15,6 +15,10 @@
   },
   "boards": [
     {
+      "id": "tech",
+      "title": "Science and Technology"
+    },
+    {
       "id": "art",
       "title": "Art and Design"
     },
@@ -23,48 +27,28 @@
       "title": "Culture and Media"
     },
     {
-      "id": "cyb",
-      "title": "Cyberpunk and Cybersecurity"
-    },
-    {
-      "id": "feels",
-      "title": "Personal Experiences"
-    },
-    {
       "id": "psy",
       "title": "Psychology and Psychonautics"
     },
     {
-      "id": "q",
-      "title": "Arisuchan Meta"
-    },
-    {
-      "id": "r",
-      "title": "Miscellaneous"
-    },
-    {
-      "id": "ru",
-      "title": "Киберпанк-доска"
-    },
-    {
-      "id": "tech",
-      "title": "Science and Technology"
-    },
-    {
-      "id": "x",
-      "title": "Paranoia"
-    },
-    {
-      "id": "z",
-      "title": "Zaibatsu"
+      "id": "λ",
+      "title": "Programming"
     },
     {
       "id": "Δ",
       "title": "DIY and Projects"
     },
     {
-      "id": "λ",
-      "title": "Programming"
+      "id": "ru",
+      "title": "Киберпанк-доска"
+    },
+    {
+      "id": "r",
+      "title": "Miscellaneous"
+    },
+    {
+      "id": "q",
+      "title": "Arisuchan Meta"
     }
   ]
 }
