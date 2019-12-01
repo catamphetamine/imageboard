@@ -96,7 +96,10 @@ export default function parseComment(post, {
 			comment.authorTripCode = post.trip
 		}
 	}
-	if (!isOpeningPost && post.op) {
+	// `.op` flag is only present either when a thread uses author ids,
+	// or when the thread author did check the "Original Poster" checkbox
+	// when submitting the comment (provided they're the original poster).
+	if (post.op) {
 		comment.isThreadAuthor = true
 	}
 	// `2ch.hk` returns poster countries on `/int/` board
