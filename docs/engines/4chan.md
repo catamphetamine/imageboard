@@ -385,10 +385,12 @@ Country flags: `//s.4cdn.org/image/country/${country}.gif`
 If a comment has a `capcode` then it implies that the poster is a priviliged one. Possible `capcode`s:
 
 * `"admin"` for admins
+* `"admin_highlight"` for some kind of "highlighted" admins
 * `"mod"` for moderators
-* `"manager"` for managers
+* `"manager"` for "managers"
 * `"developer"` for developers
 * `"founder"` for founders
+* `"verified"` for [verified](https://github.com/4chan/4chan-API/issues/76) posters
 
 "Janitors" don't get a `capcode`. See [4chan FAQ on "capcodes"](https://www.4chan.org/faq#capcode).
 

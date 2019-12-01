@@ -561,6 +561,12 @@ Available `options` (optional argument):
   authorBan: boolean?,
   // An optional `String` with the ban reason.
   authorBanReason: String?,
+  // If `true` then it means that the author has been verified
+  // to be the one who they're claiming to be.
+  // For example, `{ authorName: "Gabe Newell", authorVerified: true }`
+  // would mean that that's real Gabe Newell posting in an "Ask Me Anything" thread.
+  // It's the same as the "verified" checkmark on celebrities pages on social media like Twitter.
+  authorVerified: Boolean?,
   // If this comment was posted with a "sage".
   // https://knowyourmeme.com/memes/sage
   isSage: boolean?,

@@ -42,6 +42,12 @@ function getRoleByCapCode(capCode, capcodeRoles) {
 		if (capcodeRoles && capcodeRoles['*']) {
 			return capcodeRoles['*']
 		}
+		// "verified" capcode is for verified posters.
+		// https://github.com/4chan/4chan-API/issues/76
+		if (capCode === 'verified') {
+			// Ignore it, will be handled on the upper level of comment parsing.
+			return
+		}
 		if (typeof window === 'undefined') {
 			console.warn(`Unknown "capcode": ${capCode}`)
 		} else {

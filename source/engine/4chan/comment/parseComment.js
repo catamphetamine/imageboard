@@ -76,6 +76,12 @@ export default function parseComment(post, {
 		// }
 	}
 	const authorRole = parseAuthorRole(post, { chan, boardId, capcode })
+	// Handle "verified" capcode.
+	// https://github.com/4chan/4chan-API/issues/76
+	let authorVerified
+	if (post.capcode === 'verified') {
+		authorVerified = true
+	}
 	const comment = {
 		boardId,
 		// `resto` is `0` for the first post of the thread.
@@ -93,6 +99,7 @@ export default function parseComment(post, {
 		authorRole: authorRole && (typeof authorRole === 'object' ? authorRole.role : authorRole),
 		authorRoleScope: authorRole && (typeof authorRole === 'object' ? authorRole.scope : undefined),
 		authorTripCode: post.trip,
+		authorVerified,
 		// `4chan`-alike imageboards (`4chan.org`, `8ch.net`, `kohlchan.net`)
 		// displays poster country flags.
 		// `8ch.net` and `4chan.org` have correct country codes.

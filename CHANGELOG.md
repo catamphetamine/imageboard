@@ -1,3 +1,8 @@
+1.0.10 / 01.12.2019
+===================
+
+* Added ["verified"](https://github.com/4chan/4chan-API/issues/76) capcode halding on `4chan.org` via the new `authorVerified: boolean?` property of a comment.
+
 1.0.8 / 03.10.2019
 ===================
 
