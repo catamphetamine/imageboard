@@ -46,6 +46,13 @@ require('regenerator-runtime/runtime')
 var fetch = require('node-fetch')
 var imageboard = require('imageboard')
 
+var HEADERS = {
+  // Sometimes imageboards may go offline while still responding with a web page:
+  // an incorrect 2xx HTTP status code with HTML content like "We're temporarily offline".
+  // Accepting only `application/json` HTTP responses works around that.
+  'Accept': 'application/json'
+}
+
 var fourChan = imageboard('4chan', {
   request: function(method, url, parameters) {
     // Sends an HTTP request.
@@ -54,13 +61,16 @@ var fourChan = imageboard('4chan', {
     switch (method) {
       case 'POST':
         return fetch(url, {
+          headers: HEADERS,
           method: 'POST',
           body: JSON.stringify(parameters)
         }).then(function(response) {
           return response.json()
         })
       case 'GET':
-        return fetch(url).then(function(response) {
+        return fetch(url, {
+          headers: HEADERS
+        }).then(function(response) {
           return response.json()
         })
       default:
