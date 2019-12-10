@@ -98,6 +98,6 @@ export default {
     }
   ],
   commentsCount: 2,
-  commentAttachmentsCount: 2,
+  attachmentsCount: 3,
   forceAnonymity: true
 }

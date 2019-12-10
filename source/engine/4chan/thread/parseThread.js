@@ -20,6 +20,8 @@ export default function parseThread({
 	bumplocked,
 	bumplimit,
 	imagelimit,
+	archived,
+	archived_on,
 	custom_spoiler
 }) {
 	const thread = {
@@ -34,11 +36,16 @@ export default function parseThread({
 		// I guess it's for "rolling" threads.
 		// Seems that it's always "0" though.
 		isRolling: cyclical === '1',
+		// Not including the "opening comment".
 		commentsCount: replies,
-		commentAttachmentsCount: getCommentAttachmentsCount(images, last_replies, omitted_images)
+		// On `4chan.org`, `8ch.net` (OpenIB) and `vichan` chans
+		// the `images` counter doesn't include the attachments
+		// of the "opening post". Therefore, `1` is added.
+		attachmentsCount: images + 1
 	}
 	// Is present only in "get thread comments" API response.
 	if (unique_ips) {
+		// Includes both comment posters and the thread poster.
 		thread.uniquePostersCount = unique_ips
 	}
 	// Is present only in "get threads list" API response.
@@ -60,6 +67,12 @@ export default function parseThread({
 	if (imagelimit === 1) {
 		thread.isAttachmentLimitReached = true
 	}
+	if (archived === 1) {
+		thread.isArchived = true
+		if (archived_on) {
+			thread.archivedAt = new Date(archived_on * 1000)
+		}
+	}
 	// At `4chan.org` each board can have a list of "custom spoilers" for attachments.
 	// `custom_spoiler` is a number, and if it's `5`, for example, then it means that
 	// the board has five custom spoilers defined: from `1` to `5`.
@@ -71,45 +84,4 @@ export default function parseThread({
 		thread.customSpoilersCount = custom_spoiler
 	}
 	return thread
-}
-
-// https://github.com/vichan-devel/vichan/issues/327
-// https://github.com/OpenIB/OpenIB/issues/295
-// `kohlchan.net` and `8ch.net` both return incorrect `images` count:
-// it can be `1` for a thread having `8` images, for example,
-// with `omitted_images` being `7`, for example.
-// This workaround kinda fixes that, but, for example, `kohlchan.net`
-// still doesn't count video attachments as part of `images` and `omitted_images`.
-function getCommentAttachmentsCount(images, last_replies, omitted_images) {
-	let commentAttachmentsCount = 0
-	// The main post's attachments are not counted.
-	// if (thread.tim) {
-	// 	commentAttachmentsCount++
-	// }
-	// // `8ch.net` and `kohlchan.net` have `extra_files`.
-	// // (allows more that one attachment per post).
-	// if (thread.extra_files) {
-	// 	for (const file of thread.extra_files) {
-	// 		// if (!wasAttachmentDeleted(file)) {
-	// 			commentAttachmentsCount++
-	// 		// }
-	// 	}
-	// }
-	// `4chan.org`'s "catalog.json" API has `last_replies`.
-	// `4chan.org` supports only one attachment max per comment.
-	if (last_replies) {
-		for (const reply of last_replies) {
-			if (reply.tim) {
-				commentAttachmentsCount++
-			}
-		}
-	}
-	// Count "omitted" attachments count.
-	// "omitted" means: "not in the main post and not in `last_replies` for 4chan".
-	commentAttachmentsCount += omitted_images
-	// `images` can't be `undefined` for all  currently supported 4chan-alike chans.
-	if (images < commentAttachmentsCount) {
-		return commentAttachmentsCount
-	}
-	return images
 }

@@ -467,7 +467,7 @@ describe('2ch.hk', () => {
 				createdAt: new Date('2018-12-26T07:10:09.000Z'),
 				updatedAt: new Date('2019-01-31T22:47:58.000Z'),
 				commentsCount: 123,
-				commentAttachmentsCount: 455,
+				attachmentsCount: 456,
 				uniquePostersCount: 12,
 				comments: COMMENTS,
 				board: {

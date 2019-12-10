@@ -17,10 +17,14 @@ export default function parseThreadResponse(response) {
 		id: parseInt(current_thread),
 		commentsCount: posts_count,
 		// `unique_posters` is only present in "get thread comments" API response.
+		// For some weird reason doesn't include the "opening comment" of a thread.
+		// In other words, `unique_posters` won't count thread author unless
+		// they've posted a comment in their own thread.
 		uniquePostersCount: parseInt(unique_posters),
-		// `files_count` is incorrect, even with `1` subtracted from it:
-		// https://github.com/catamphetamine/captchan/blob/master/docs/makaba.md
-		commentAttachmentsCount: files_count - 1,
+		// `files_count` includes the "opening comment"'s attachments in this case.
+		// `files_count` is incorrect anyway:
+		// https://github.com/catamphetamine/imageboard/blob/master/docs/engines/makaba-issues.md
+		attachmentsCount: files_count,
 		isLocked: openingPost.closed === 1,
 		isRolling: openingPost.endless === 1,
 		// If the thread is pinned `sticky` will be a number greater than `0`.

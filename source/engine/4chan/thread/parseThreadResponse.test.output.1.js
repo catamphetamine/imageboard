@@ -1,7 +1,7 @@
 export default {
   "title": "«Stalker 2»",
   "commentsCount": 17,
-  "commentAttachmentsCount": 7,
+  "attachmentsCount": 8,
   "uniquePostersCount": 18,
   "customSpoilersCount": 1,
   "id": 456354102,

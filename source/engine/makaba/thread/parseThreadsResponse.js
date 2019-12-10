@@ -16,6 +16,7 @@ export default function parseThreadsResponse(response) {
 			num,
 			posts_count,
 			files_count,
+			files,
 			lasthit,
 			closed,
 			sticky,
@@ -25,9 +26,10 @@ export default function parseThreadsResponse(response) {
 			const thread = {
 				id: parseInt(num),
 				commentsCount: posts_count,
-				// `files_count` is incorrect:
-				// https://github.com/catamphetamine/captchan/blob/master/docs/makaba.md
-				commentAttachmentsCount: files_count,
+				// `files_count` doesn't include the "opening comment"'s attachments in this case.
+				// `files_count` is incorrect anyway:
+				// https://github.com/catamphetamine/imageboard/blob/master/docs/engines/makaba-issues.md
+				attachmentsCount: files_count + files.length,
 				updatedAt: new Date(lasthit * 1000)
 			}
 			if (closed === 1) {
