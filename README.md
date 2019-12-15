@@ -7,7 +7,7 @@ Originally created as part of the [`captchan`](https://github.com/catamphetamine
 Supported engines:
 
 * [4chan](https://github.com/4chan/4chan-API) ([4chan.org](https://www.4chan.org/)). See [`4chan.org` demo](https://catamphetamine.github.io/captchan/?chan=4chan).
-* [vichan](https://github.com/vichan-devel/vichan) ([lainchan.org](https://lainchan.org/), [arisuchan.jp](https://arisuchan.jp/)) / [infinity](https://github.com/ctrlcctrlv/infinity)/[OpenIB](https://github.com/OpenIB/OpenIB/) ([8ch.net](https://8ch.net/)). See: [`8ch.net` demo](https://catamphetamine.github.io/captchan/?chan=8ch), [`lainchan.org` demo](https://catamphetamine.github.io/captchan/?chan=lainchan), [`arisuchan.jp` demo](https://catamphetamine.github.io/captchan/?chan=arisuchan).
+* [vichan](https://github.com/vichan-devel/vichan) ([lainchan.org](https://lainchan.org/), [arisuchan.jp](https://arisuchan.jp/)) / [infinity](https://github.com/ctrlcctrlv/infinity)/[OpenIB](https://github.com/OpenIB/OpenIB/) ([8ch.net (8kun.top)](https://8kun.top/)). See: [`8ch.net (8kun.top)` demo](https://catamphetamine.github.io/captchan/?chan=8ch), [`lainchan.org` demo](https://catamphetamine.github.io/captchan/?chan=lainchan), [`arisuchan.jp` demo](https://catamphetamine.github.io/captchan/?chan=arisuchan).
 * [lynxchan](https://gitgud.io/LynxChan/LynxChan) ([kohlchan.net](https://kohlchan.net), [endchan.xyz](https://endchan.xyz)). See: [`kohlchan.net` demo](https://catamphetamine.github.io/captchan/?chan=kohlchan), [`endchan.xyz` demo](https://catamphetamine.github.io/captchan/?chan=endchan).
 * [makaba](https://2ch.hk/api/) ([2ch.hk](https://2ch.hk/)). See [`2ch.hk` demo](https://catamphetamine.github.io/captchan/?chan=2ch).
 
@@ -237,7 +237,7 @@ Imageboard `id`s supported out-of-the-box:
 
 * `"2ch"`
 * `"4chan"`
-* `"8ch"`
+* `"8ch"` (8kun.top)
 * `"kohlchan"`
 * `"lainchan"`
 * `"arisuchan"`
@@ -247,7 +247,7 @@ See [Imageboard config](#imageboard-config) for the available imageboard `config
 
 Available `options`:
 
-* `request(method: string, url: string, parameters: object?): Promise` — (required) Sends HTTP requests to imageboard API. Must return a `Promise` resolving to response JSON. Example: `request("GET", "https://8ch.net/boards.json")`.
+* `request(method: string, url: string, parameters: object?): Promise` — (required) Sends HTTP requests to imageboard API. Must return a `Promise` resolving to response JSON. Example: `request("GET", "https://8kun.top/boards.json")`.
 
 * `commentUrl: string?` — (optional) A template for the `url` of all `type: "post-link"`s (links to other comments) in parsed comments' `content`. Is `"/{boardId}/{threadId}#{commentId}"` by default.
 
@@ -267,11 +267,11 @@ Available `options`:
 
 ### `getBoards(): Board[]`
 
-Returns a list of [Boards](#board). For some imageboards this isn't gonna be a full list of boards because, for example, `8ch.net` has about `20,000` boards so `getBoards()` returns just the "top 20 boards" list.
+Returns a list of [Boards](#board). For some imageboards this isn't gonna be a full list of boards because, for example, `8ch.net (8kun.top)` has about `20,000` boards so `getBoards()` returns just the "top 20 boards" list.
 
 ### `getAllBoards(): Board[]`
 
-Returns a list of all [Boards](#board). For example, `8ch.net` has about `20,000` boards so `getBoards()` returns just the "top 20 boards" list while `getAllBoards()` returns all `20,000` boards.
+Returns a list of all [Boards](#board). For example, `8ch.net (8kun.top)` has about `20,000` boards so `getBoards()` returns just the "top 20 boards" list while `getAllBoards()` returns all `20,000` boards.
 
 ### `hasMoreBoards(): boolean`
 
@@ -562,7 +562,7 @@ Available `options` (optional argument):
   // then it's gonna be the role of the comment author.
   // Examples: "administrator", "moderator".
   authorRole: String?,
-  // `8ch.net` and `lynxchan` have "global adiministrators"
+  // `8ch.net (8kun.top)` and `lynxchan` have "global adiministrators"
   // and "board administrators", and "global moderators"
   // and "board moderators", so `authorRoleScope` is gonna be
   // "board" for a "board administrator" or "board moderator".
@@ -718,7 +718,7 @@ Censored words in comment/thread `title`s don't result in their replacement but 
 
     // (optional)
     // "Get all boards list" API URL.
-    // `8ch.net` has about `20,000` boards total
+    // `8ch.net (8kun.top)` has about `20,000` boards total
     // so "getBoards" API only returns top 20 of them
     // while "getAllBoards" API returns all `20,000` of them.
     "getAllBoards": "/boards.json",
@@ -760,17 +760,17 @@ Censored words in comment/thread `title`s don't result in their replacement but 
   // hence the separate "fileAttachmentUrl" parameter.
   "fileAttachmentUrl": "https://i.4cdn.org/{boardId}/{originalName}{ext}",
 
-  // (is only required by `8ch.net`)
-  // `8ch.net` has `fpath: 0/1` parameter for attachments:
+  // (is only required by `8ch.net (8kun.top)`)
+  // `8ch.net (8kun.top)` has `fpath: 0/1` parameter for attachments:
   // `fpath: 1` attachments are hosted at the global
   // board-agnostic URLs (not having `{boardId}` as part of their URL)
   // and all other attachments are hosted at board-specific URLs.
-  "attachmentUrlFpath": "https://media.8ch.net/file_store/{name}{ext}",
+  "attachmentUrlFpath": "https://media.8kun.top/file_store/{name}{ext}",
 
-  // (is only required by `8ch.net`)
+  // (is only required by `8ch.net (8kun.top)`)
   // Attachment thumbnail URL pattern for `fpath: 1` attachments.
   // Same as "attachmentUrlFpath" but for thumbnails.
-  "attachmentThumbnailUrlFpath": "https://media.8ch.net/file_store/{name}{ext}",
+  "attachmentThumbnailUrlFpath": "https://media.8kun.top/file_store/{name}{ext}",
 
   // (optional)
   // Most imageboards set author name to some default placeholder
@@ -934,9 +934,9 @@ Chans running on their own `vichan` forks:
 
 [infinity](https://github.com/ctrlcctrlv/infinity) is a `vichan` fork permitting users to create their own boards (hence the name). As of April 2017, `infinity` engine is no longer being maintained. [OpenIB](https://github.com/OpenIB/OpenIB/) is a security-focused fork of the `infinity` engine which is no longer being maintained too.
 
-The only imageboard running on `infinity` engine is currently [`8ch.net`](https://8ch.net).
+The only imageboard running on `infinity` engine is currently [`8ch.net (8kun.top)`](https://8kun.top).
 
-* [`8ch.net` API (with examples)](https://github.com/catamphetamine/imageboard/blob/master/docs/engines/OpenIB.md).
+* [`8ch.net (8kun.top)` API (with examples)](https://github.com/catamphetamine/imageboard/blob/master/docs/engines/OpenIB.md).
 
 ### makaba
 
@@ -961,7 +961,7 @@ Chans running on `lynxchan`:
 
 There're some limitations for imageboards running on `lynxchan` engine (for example, `kohlchan.net`) due to the [lack of support for several features](https://github.com/catamphetamine/imageboard/blob/master/docs/engines/lynxchan-issues.md) in that engine.
 
-There're some very minor limitations for `8ch.net` caused by its `OpenIB` engine due to the [lack of support for several very minor features](https://github.com/catamphetamine/imageboard/blob/master/docs/engines/OpenIB-issues.md) in that engine.
+There're some very minor limitations for `8ch.net (8kun.top)` caused by its `OpenIB` engine due to the [lack of support for several very minor features](https://github.com/catamphetamine/imageboard/blob/master/docs/engines/OpenIB-issues.md) in that engine.
 
 There're [some very minor bugs](https://github.com/catamphetamine/imageboard/blob/master/docs/engines/makaba-issues.md) for `2ch.hk` caused by its `makaba` engine.
 
