@@ -1,5 +1,5 @@
-import getPostSummary from 'social-components/commonjs/utility/post/getPostSummary'
 import getPostText from 'social-components/commonjs/utility/post/getPostText'
+import trimText from 'social-components/commonjs/utility/post/trimText'
 import censorWords from 'social-components/commonjs/utility/post/censorWords'
 
 /**
@@ -45,13 +45,14 @@ function getPostTitle(post, { messages, parseContent }) {
 		return post.title
 	}
 	if (parseContent !== false) {
-		const summary = getPostSummary(post, {
+		const maxLength = 60
+		const text = getPostText(post, {
 			messages: messages && messages.contentType,
-			maxLength: 60,
+			softLimit: maxLength,
 			stopOnNewLine: true
 		})
-		if (summary) {
-			return summary
+		if (text) {
+			return trimText(text, maxLength)
 		}
 	}
 }

@@ -1,12 +1,13 @@
-import getPostSummary from 'social-components/commonjs/utility/post/getPostSummary'
 import { forEachFollowingQuote } from 'social-components/commonjs/utility/post/combineQuotes'
+import generatePostQuote from 'social-components/commonjs/utility/post/generatePostQuote'
 
 /**
  * Adds "in-reply-to" quotes.
  * Has some CPU usage.
  * @param {any} content — Comment `content`. Must be a root-level `content`.
  * @param {function} getPostById — Retuns comment by id.
- * @param {object} options
+ * @param {object} [options.messages]
+ * @param {boolean} [options.generateQuotes] — Is `true` by default.
  * @param {object} contentParent — Shouldn't be passed. Is only passed internally when recursing. The parent block of `content` block.
  * @param {boolean} isLastInParagraph — If the `content` block is the last one in `contentParent`.
  * @return {boolean} [contentDidChange] — Returns `true` if `content` did change (either as a result of setting an in-reply-to quote or as a result of setting "deleted post"/"hidden post" flag).
@@ -102,10 +103,24 @@ export default function setInReplyToQuotes(
 			console.error(`Post #${content.postId} not found`)
 			return
 		}
+		// Passing `generateQuotes: false` could seem like not making any sense,
+		// but it is used in `captchan` when parsing comments not starting from the first one:
+		// when "Show previous" button is shown and comments are output from after the "latest read" one.
+		// In those cases, when the first shown comment quotes an earlier comment
+		// having a manually written quote for a post link, such manually written quotes
+		// should be moved inside that `post-link`'s `content`.
+		// Example: #1235 ">>1234 \n >Quote \n Text" (hidden), #1236 ">>1235 \n Second text" (shown).
+		// Without calling `setInReplyToQuotes({ generateQuotes: false })` it would be:
+		// #1236 ">>««Quote» \n Text» \n Second text".
+		// With calling `setInReplyToQuotes({ generateQuotes: false })` it would be:
+		// #1236 ">>«Text» \n Second text".
+		const generateQuotes = options && options.generateQuotes === false ? false : true
 		// If the quoted post link is the last content element in the post then
 		// don't perform further checks and generate the quote for the quoted post.
 		if (isLastInParagraph) {
-			setPostLinkQuote(content, quotedPost, options)
+			if (generateQuotes) {
+				setPostLinkQuote(content, quotedPost, options)
+			}
 			return true
 		}
 		const quotes = []
@@ -130,7 +145,9 @@ export default function setInReplyToQuotes(
 			contentParent.splice(index + 1, 1 + quotes.length)
 		} else {
 			// Autogenerate `post-link` quote text.
-			setPostLinkQuote(content, quotedPost, options)
+			if (generateQuotes) {
+				setPostLinkQuote(content, quotedPost, options)
+			}
 		}
 		return true
 	}
@@ -168,11 +185,11 @@ function stripLinks(content) {
 }
 
 function setPostLinkQuote(postLink, post, options) {
-	const text = getPostSummary(post, {
-		messages: options && options.messages && options.messages.contentType,
+	const text = generatePostQuote(post, {
 		maxLength: 180,
+		fitFactor: 1.35,
 		countNewLines: true,
-		fitFactor: 1.35
+		messages: options && options.messages
 	})
 	if (text) {
 		// Set `content.quote` to the quoted post text abstract.
