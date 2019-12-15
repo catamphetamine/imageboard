@@ -351,9 +351,6 @@ describe('2ch.hk', () => {
 						}
 					]
 				],
-				"inReplyTo": [
-					28942338
-				],
 				"createdAt": new Date("2019-01-16T09:20:06.000Z"),
 				"replies": [
 					28943045
@@ -379,9 +376,6 @@ describe('2ch.hk', () => {
 						"\n",
 						"Не советую."
 					]
-				],
-				"inReplyTo": [
-					28942773
 				],
 				"createdAt": new Date("2019-01-16T09:20:51.000Z"),
 				"replies": [
@@ -441,7 +435,6 @@ describe('2ch.hk', () => {
 				],
 				"inReplyTo": [
 					28942787,
-					28942908,
 					28942793
 				],
 				"createdAt": new Date("2019-01-16T09:47:03.000Z")

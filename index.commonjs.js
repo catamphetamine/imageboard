@@ -11,5 +11,6 @@ exports.getCommentText = require('./commonjs/getCommentText').default
 exports.generateQuotes = require('./commonjs/generateQuotes').default
 exports.generatePreview = require('./commonjs/generatePreview').default
 exports.generateThreadTitle = require('./commonjs/generateThreadTitle').default
+exports.setInReplyToQuotes = require('./commonjs/setInReplyToQuotes').default
 
 exports['default'] = require('./commonjs/Chan').default

@@ -1,6 +1,9 @@
 0.2.0 / 10.12.2019
 ==================
+
 * Renamed `commentAttachmentsCount` -> `attachmentsCount`: now it's supposed to include the "opening post" attachments too.
+
+* `expandReplies: true` option now also transforms `comment.inReplyTo[]` from a list of comment ids to a list of comments.
 
 0.1.10 / 01.12.2019
 ===================

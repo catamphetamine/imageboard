@@ -43,10 +43,13 @@ export default function Thread(thread, comments, {
 			thread.isBumpLimitReached = false
 		}
 	}
+	// `Array.find()` is slow for doing it every time.
+	// A "get post by id" index is much faster.
+	const getCommentById = createByIdIndex(comments)
 	// Set `.inReplyTo` array for each comment.
 	// `.inReplyTo` array contains comment IDs.
 	for (const comment of comments) {
-		const inReplyTo = getInReplyToPostIds(comment, {
+		let inReplyTo = getInReplyToPostIds(comment, {
 			boardId,
 			threadId: thread.id,
 			commentUrlParser,
@@ -60,17 +63,25 @@ export default function Thread(thread, comments, {
 			// A comment with id "15873666" had ">>15873666" in its content.
 			// To prevent such cyclic links this expclicit "not a link to self"
 			// filter is applied, even though such things can't normally happen.
-			comment.inReplyTo = inReplyTo.filter(commentId => commentId !== comment.id)
+			inReplyTo = inReplyTo.filter(commentId => commentId !== comment.id)
+			if (expandReplies) {
+				inReplyTo = inReplyTo.map(getCommentById)
+					// Comments can be deleted by moderators.
+					.filter(_ => _)
+			} else {
+				// Comments can be deleted by moderators.
+				inReplyTo = inReplyTo.filter(getCommentById)
+			}
+			if (inReplyTo.length > 0) {
+				comment.inReplyTo = inReplyTo
+			}
 		}
 	}
 	// Set `.replies` array for each comment
 	// based on the `.inReplyTo` array.
 	// `.replies` array contains comment IDs.
 	// Can only come after `.inReplyTo` arrays are set on comments.
-	setReplies(comments)
-	// `Array.find()` is slow for doing it every time.
-	// A "get post by id" index is much faster.
-	const getCommentById = createByIdIndex(comments)
+	setReplies(comments, expandReplies)
 	for (const comment of comments) {
 		// If the comment has any content and `parseContent` is not `false`
 		// (in which case `comment.content` has already been parsed)
@@ -90,14 +101,6 @@ export default function Thread(thread, comments, {
 			})
 			if (commentLengthLimit) {
 				generatePreview(comment, commentLengthLimit)
-			}
-		}
-	}
-	if (expandReplies) {
-		// Expand `replies` array from a list of reply `id`s to a list of the reply objects.
-		for (const comment of comments) {
-			if (comment.replies) {
-				comment.replies = comment.replies.map(getCommentById)
 			}
 		}
 	}
