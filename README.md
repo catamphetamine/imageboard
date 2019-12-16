@@ -47,25 +47,16 @@ var fetch = require('node-fetch')
 var imageboard = require('imageboard')
 
 var fourChan = imageboard('4chan', {
-  request: function(method, url, parameters) {
-    // Sends an HTTP request.
-    // Any HTTP request library can be used here.
-    // Must return a `Promise` resolving to response JSON.
-    switch (method) {
-      case 'POST':
-        return fetch(url, {
-          method: 'POST',
-          body: JSON.stringify(parameters)
-        }).then(function(response) {
-          return response.json()
-        })
-      case 'GET':
-        return fetch(url).then(function(response) {
-          return response.json()
-        })
-      default:
-        throw new Error(`Method not supported: ${method}`)
-    }
+  // Sends an HTTP request.
+  // Any HTTP request library can be used here.
+  // Must return a `Promise` resolving to response text.
+  request: (method, url, { body, headers }) => {
+    return fetch(url, { method, headers, body }).then((response) => {
+      if (response.ok) {
+        return response.text()
+      }
+      throw new Error(response.status)
+    })
   }
 })
 ```

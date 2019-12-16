@@ -15,7 +15,25 @@ export default class Engine {
 		if (!useRelativeUrls) {
 			this._baseUrl = `https://${domain}`
 		}
-		this.request = request
+		this.request = (method, url, options) => {
+			return request(method, url, options).then((response) => {
+				switch (options.headers['Accept']) {
+					case 'application/json':
+						try {
+							return JSON.parse(response)
+						} catch (error) {
+							// Sometimes imageboards may go offline while still responding with a web page:
+							// an incorrect 2xx HTTP status code with HTML content like "We're temporarily offline".
+							// Accepting only `application/json` HTTP responses works around that.
+							console.error(`Expected HTTP request to ${url} to return JSON but got:`)
+							console.error(response)
+							throw new Error('INVALID_RESPONSE')
+						}
+					default:
+						return response
+				}
+			})
+		}
 		this.options = {
 			chan: id,
 			toAbsoluteUrl: this.toAbsoluteUrl,
@@ -80,7 +98,11 @@ export default class Engine {
 			throw new Error('Neither "boards" nor "api.getBoards" parameters were found in chan config')
 		}
 		// Query the API endpoint.
-		const response = await this.request('GET', this.toAbsoluteUrl(url))
+		const response = await this.request('GET', this.toAbsoluteUrl(url), {
+			headers: {
+				'Accept': 'application/json'
+			}
+		})
 		// Parse the boards list.
 		return this.parseBoards(response, options)
 	}
@@ -119,7 +141,11 @@ export default class Engine {
 		// The API endpoint URL.
 		const url = setParameters(this.options.api.getThreads, parameters)
 		// Query the API endpoint.
-		const response = await this.request('GET', this.toAbsoluteUrl(url))
+		const response = await this.request('GET', this.toAbsoluteUrl(url), {
+			headers: {
+				'Accept': 'application/json'
+			}
+		})
 		// Parse the threads list.
 		// `boardId` is still used there.
 		return this.parseThreads(response, {
@@ -138,7 +164,11 @@ export default class Engine {
 		// The API endpoint URL.
 		const url = setParameters(this.options.api.getThread, parameters)
 		// Query the API endpoint.
-		const response = await this.request('GET', this.toAbsoluteUrl(url))
+		const response = await this.request('GET', this.toAbsoluteUrl(url), {
+			headers: {
+				'Accept': 'application/json'
+			}
+		})
 		// Parse the thread comments list.
 		// `boardId` and `threadId` are still used there.
 		return this.parseThread(response, {
@@ -155,6 +185,7 @@ export default class Engine {
 	async vote(params) {
 		const voteApi = this.options.api.vote
 		const method = voteApi.method
+		const accept = voteApi.accept || 'application/json'
 		const parameters = getVoteParameters(voteApi, params)
 		// The API endpoint URL.
 		const url = this.toAbsoluteUrl(setParameters(voteApi.url, parameters))
@@ -163,10 +194,20 @@ export default class Engine {
 		let response
 		switch (method) {
 			case 'GET':
-				response = await this.request('GET', addUrlParameters(url, parameters))
+				response = await this.request('GET', addUrlParameters(url, parameters), {
+					headers: {
+						'Accept': accept
+					}
+				})
 				break
 			default:
-				response = await this.request(method, url, parameters)
+				response = await this.request(method, url, {
+					body: JSON.stringify(parameters),
+					headers: {
+						'Content-Type': 'application/json',
+						'Accept': accept
+					}
+				})
 				break
 		}
 		// Parse vote status.
@@ -187,6 +228,10 @@ export default class Engine {
 		}
 		parseCommentContent(comment, this.getOptions(options))
 	}
+}
+
+function isJson(response) {
+	return Array.isArray(response) || typeof response === 'object'
 }
 
 function setParameters(string, parameters) {

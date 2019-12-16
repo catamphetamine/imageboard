@@ -1,7 +1,12 @@
+0.3.0 / 16.12.2019
+==================
+
+* (breaking change) Changed `request()` arguments. Previous: `request(method, url, data)`. New: `request(method, url, { body, headers })`.
+
 0.2.0 / 10.12.2019
 ==================
 
-* Renamed `commentAttachmentsCount` -> `attachmentsCount`: now it's supposed to include the "opening post" attachments too.
+* (breaking change) Renamed `commentAttachmentsCount` -> `attachmentsCount`: now it's supposed to include the "opening post" attachments too.
 
 * `expandReplies: true` option now also transforms `comment.inReplyTo[]` from a list of comment ids to a list of comments.
 
