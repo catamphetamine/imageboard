@@ -21,7 +21,7 @@ export default function postProcessCommentContent(content, {
 	// // Combine `{ type: 'quote' }` objects on consequtive lines
 	// // into a single `{ type: 'quote' }` object with "\n"s inside.
 	// combineQuotes(content)
-	// Set `content`, `url`, `threadId` and `boardId` of `{ type: 'post-link' }` objects.
+	// Set `url`, `threadId` and `boardId` of `{ type: 'post-link' }` objects.
 	setPostLinkUrls(content, { boardId, threadId, commentUrl })
 	// Expand attachment links (objects of shape `{ type: 'link', attachment: ... }`)
 	// into standalone attachments (block-level attachments: `{ type: 'attachment' }`).

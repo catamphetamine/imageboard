@@ -185,7 +185,7 @@ export default class Engine {
 	async vote(params) {
 		const voteApi = this.options.api.vote
 		const method = voteApi.method
-		const accept = voteApi.accept || 'application/json'
+		const responseType = voteApi.responseType || 'application/json'
 		const parameters = getVoteParameters(voteApi, params)
 		// The API endpoint URL.
 		const url = this.toAbsoluteUrl(setParameters(voteApi.url, parameters))
@@ -196,7 +196,7 @@ export default class Engine {
 			case 'GET':
 				response = await this.request('GET', addUrlParameters(url, parameters), {
 					headers: {
-						'Accept': accept
+						'Accept': responseType
 					}
 				})
 				break
@@ -205,7 +205,7 @@ export default class Engine {
 					body: JSON.stringify(parameters),
 					headers: {
 						'Content-Type': 'application/json',
-						'Accept': accept
+						'Accept': responseType
 					}
 				})
 				break
