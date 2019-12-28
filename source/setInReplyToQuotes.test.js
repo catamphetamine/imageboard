@@ -20,8 +20,10 @@ describe('setInReplyToQuotes', () => {
 		}
 		setInReplyToQuotes(
 			post.content,
-			id => undefined,
-			{ messages }
+			{
+				getCommentById: id => undefined,
+				messages
+			}
 		)
 		expectToEqual(
 			post.content,
@@ -60,8 +62,10 @@ describe('setInReplyToQuotes', () => {
 		}
 		setInReplyToQuotes(
 			post.content,
-			id => undefined,
-			{ messages }
+			{
+				getCommentById: id => undefined,
+				messages
+			}
 		)
 		expectToEqual(
 			post.content,
@@ -70,7 +74,7 @@ describe('setInReplyToQuotes', () => {
 					'Link: ',
 					{
 						type: 'post-link',
-						content: 'Comment',
+						content: '[comment]',
 						postId: 123,
 						postIsExternal: true
 					}
@@ -97,8 +101,10 @@ describe('setInReplyToQuotes', () => {
 		}
 		setInReplyToQuotes(
 			post.content,
-			id => undefined,
-			{ messages }
+			{
+				getCommentById: id => undefined,
+				messages
+			}
 		)
 		expectToEqual(
 			post.content,
@@ -106,7 +112,7 @@ describe('setInReplyToQuotes', () => {
 				[
 					{
 						type: 'post-link',
-						content: 'Comment',
+						content: '[comment]',
 						postId: 123,
 						postIsExternal: true
 					},
@@ -138,8 +144,10 @@ describe('setInReplyToQuotes', () => {
 		}
 		setInReplyToQuotes(
 			post.content,
-			id => undefined,
-			{ messages }
+			{
+				getCommentById: id => undefined,
+				messages
+			}
 		)
 		expectToEqual(
 			post.content,
@@ -147,7 +155,7 @@ describe('setInReplyToQuotes', () => {
 				[
 					{
 						type: 'post-link',
-						content: '(comment)',
+						content: '[comment]',
 						postId: 123,
 						postIsExternal: true
 					},
@@ -185,17 +193,19 @@ describe('setInReplyToQuotes', () => {
 		}
 		setInReplyToQuotes(
 			post.content,
-			(id) => {
-				switch (id) {
-					case 111:
-						return post
-					case 123:
-						return { content: [['A']] }
-					case 124:
-						return { content: [['B']] }
-				}
-			},
-			{ messages }
+			{
+				getCommentById: (id) => {
+					switch (id) {
+						case 111:
+							return post
+						case 123:
+							return { content: [['A']] }
+						case 124:
+							return { content: [['B']] }
+					}
+				},
+				messages
+			}
 		)
 		expectToEqual(
 			post.content,

@@ -8,9 +8,9 @@ exports = module.exports = require('./commonjs/Chan').default
 exports.getConfig = require('./commonjs/chan/index').getConfig
 exports.compileWordPatterns = require('social-components/commonjs/utility/post/compileWordPatterns').default
 exports.getCommentText = require('./commonjs/getCommentText').default
-exports.generateQuotes = require('./commonjs/generateQuotes').default
-exports.generatePreview = require('./commonjs/generatePreview').default
-exports.generateThreadTitle = require('./commonjs/generateThreadTitle').default
-exports.setInReplyToQuotes = require('./commonjs/setInReplyToQuotes').default
+// exports.generateQuotes = require('./commonjs/generateQuotes').default
+// exports.generatePreview = require('./commonjs/generatePreview').default
+// exports.generateThreadTitle = require('./commonjs/generateThreadTitle').default
+// exports.setInReplyToQuotes = require('./commonjs/setInReplyToQuotes').default
 
 exports['default'] = require('./commonjs/Chan').default

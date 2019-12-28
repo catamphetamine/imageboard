@@ -14,9 +14,11 @@ export default function Comment({
 	if (comment.content === '')  {
 		comment.content = undefined
 	}
-	// Parse comment content.
-	if (comment.content) {
-		if (parseContent !== false) {
+	if (parseContent === false) {
+		// Don't parse `.content`.
+	} else {
+		// Parse comment content.
+		if (comment.content) {
 			parseCommentContent(comment, {
 				boardId,
 				threadId

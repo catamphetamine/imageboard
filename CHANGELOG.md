@@ -1,3 +1,10 @@
+0.4.0 / 27.12.2019
+==================
+
+* Removed exports: `generateQuotes()`, `generatePreview()`, `generateThreadTitle()`, `setInReplyToQuotes()`.
+
+* Added `addParseContent: boolean` option.
+
 0.3.0 / 16.12.2019
 ==================
 

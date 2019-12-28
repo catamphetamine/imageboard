@@ -1,5 +1,10 @@
 import generatePostPreview from 'social-components/commonjs/utility/post/generatePostPreview'
 
+/**
+ * Generates a `.contentPreview` from `comment`'s `.content`.
+ * @param {object} comment
+ * @param {number} commentLengthLimit
+ */
 export default function generatePreview(comment, commentLengthLimit) {
 	const preview = generatePostPreview(
 		comment.content,
