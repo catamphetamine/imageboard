@@ -42,17 +42,26 @@
 		{
 			"id": "b",
 			"title": "Unser gemeinsamer, freier Kanal KC",
-			"category": "VIP"
+			"category": "VIP",
+			"isNotSafeForWork": true
+		},
+		{
+			"id": "ccc",
+			"name": "CCC",
+			"category": "VIP",
+			"isNotSafeForWork": true
 		},
 		{
 			"id": "pol",
 			"title": "Politik",
-			"category": "VIP"
+			"category": "VIP",
+			"isNotSafeForWork": true
 		},
 		{
 			"id": "int",
 			"title": "International",
-			"category": "VIP"
+			"category": "VIP",
+			"isNotSafeForWork": true
 		},
 		{
 			"id": "a",
@@ -93,7 +102,8 @@
 			"id": "danisch",
 			"title": "Danisch",
 			"description": "Kommentarspalte von Hadmut",
-			"category": "Allgemein"
+			"category": "Allgemein",
+			"isNotSafeForWork": true
 		},
 		{
 			"id": "e",
@@ -113,7 +123,8 @@
 		{
 			"id": "fefe",
 			"title": "Fefe (dietchan)",
-			"category": "Allgemein"
+			"category": "Allgemein",
+			"isNotSafeForWork": true
 		},
 		{
 			"id": "fit",
@@ -126,9 +137,15 @@
 			"category": "Allgemein"
 		},
 		{
+			"id": "g",
+			"name": "Geschichte",
+			"category": "Allgemein"
+		},
+		{
 			"id": "jp",
 			"title": "2D/Chaos",
-			"category": "Allgemein"
+			"category": "Allgemein",
+			"isNotSafeForWork": true
 		},
 		{
 			"id": "l",
@@ -171,6 +188,11 @@
 			"category": "Allgemein"
 		},
 		{
+			"id": "r",
+			"name": "Religion &amp; Glaube",
+			"category": "Allgemein"
+		},
+		{
 			"id": "s",
 			"title": "Schönes",
 			"category": "Allgemein"
@@ -178,11 +200,6 @@
 		{
 			"id": "soz",
 			"title": "Soziales",
-			"category": "Allgemein"
-		},
-		{
-			"id": "trv",
-			"title": "Travel (de/en)",
 			"category": "Allgemein"
 		},
 		{
@@ -216,23 +233,38 @@
 			"category": "Allgemein"
 		},
 		{
+			"id": "rvss",
+			"name": "Ronny vs. Sören",
+			"category": "Allgemein",
+			"isNotSafeForWork": true
+		},
+		{
 			"id": "kohl",
 			"title": "Verwaltung (de/en)",
-			"category": "Sonstiges"
+			"category": "Sonstiges",
+			"isNotSafeForWork": true
 		},
 		{
 			"id": "km",
 			"title": "Krautmeister",
-			"category": "Sonstiges"
+			"category": "Sonstiges",
+			"isNotSafeForWork": true
 		},
 		{
 			"id": "m",
 			"title": "Müll (de/en)",
-			"category": "Sonstiges"
+			"category": "Sonstiges",
+			"isNotSafeForWork": true
 		},
 		{
 			"id": "ru",
 			"title": "Бред",
+			"category": "Sonstiges",
+			"isNotSafeForWork": true
+		},
+		{
+			"id": "trv",
+			"title": "Travel (de/en)",
 			"category": "Sonstiges"
 		}
 	]

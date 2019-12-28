@@ -974,3 +974,33 @@ You made it. There's not much else to document here, for now. Move along.
 ## License
 
 [MIT](LICENSE)
+
+<!--
+## `kohlchan.net` boards
+
+[Boards list](https://kohlchan.net/boards.js)
+
+```js
+var boards = ...
+
+var grabbedBoards = Array.prototype.slice.apply(document.querySelectorAll('.linkBoard'))
+  .map(node => ({
+    id: node.innerHTML.split(' - ')[0].replace('/', '').replace('/', ''),
+    name: node.innerHTML.split(' - ')[1],
+    isNotSafeForWork: node.nextSibling.nextSibling.innerHTML === '*NVIP*' ? undefined : true,
+    category: 'Allgemein'
+  }))
+
+grabbedBoards.forEach(board => {
+  if (!board.isNotSafeForWork) {
+    delete board.isNotSafeForWork
+  }
+})
+
+var newBoards = grabbedBoards.filter(board => !boards.find(_ => _.id === board.id))
+var removedBoards = boards.filter(board => !grabbedBoards.find(_ => _.id === board.id))
+
+console.log('New boards', JSON.stringify(newBoards, null, '\t'))
+console.log('Removed boards', JSON.stringify(removedBoards, null, '\t'))
+```
+-->
