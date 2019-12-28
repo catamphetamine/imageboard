@@ -986,7 +986,7 @@ var boards = ...
 var grabbedBoards = Array.prototype.slice.apply(document.querySelectorAll('.linkBoard'))
   .map(node => ({
     id: node.innerHTML.split(' - ')[0].replace('/', '').replace('/', ''),
-    name: node.innerHTML.split(' - ')[1],
+    title: node.innerHTML.split(' - ')[1],
     isNotSafeForWork: node.nextSibling.nextSibling.innerHTML === '*NVIP*' ? undefined : true,
     category: 'Allgemein'
   }))

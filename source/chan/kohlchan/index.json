@@ -47,7 +47,7 @@
 		},
 		{
 			"id": "ccc",
-			"name": "CCC",
+			"title": "CCC",
 			"category": "VIP",
 			"isNotSafeForWork": true
 		},
@@ -138,7 +138,7 @@
 		},
 		{
 			"id": "g",
-			"name": "Geschichte",
+			"title": "Geschichte",
 			"category": "Allgemein"
 		},
 		{
@@ -189,7 +189,7 @@
 		},
 		{
 			"id": "r",
-			"name": "Religion &amp; Glaube",
+			"title": "Religion &amp; Glaube",
 			"category": "Allgemein"
 		},
 		{
@@ -234,7 +234,7 @@
 		},
 		{
 			"id": "rvss",
-			"name": "Ronny vs. Sören",
+			"title": "Ronny vs. Sören",
 			"category": "Allgemein",
 			"isNotSafeForWork": true
 		},
