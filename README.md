@@ -342,6 +342,7 @@ Generates `contentPreview` for the `comment` if its too long.
 Can be used, for example, in cases when a parent comment contains a "raw" hyperlink to a YouTube video, and after that video has been loaded the app inserts an embedded video player in place of the link, and since there's now a proper video title instead of a "raw" hyperlink the app also re-generates the preview for this comment (if a preview is required).
 -->
 
+<!--
 ### `generateThreadTitle(thread: Thread, options: object?)`
 
 Autogenerates `thread.title` from the "opening" comment's `title` or `content` if `thread.title` is missing.
@@ -353,6 +354,7 @@ Available `options` (optional argument):
 * `censoredWords: object[]?` — (optional) Compiled word patterns for [censoring](#censorship) comment text.
 * `messages: Messages?` — (optional) "Messages" ("strings", "labels") used when generating comment `content` text. See [Messages](#messages).
 * `parseContent: boolean?` — (optional) If `parseContent: false` is used to skip parsing comments' `content` when using `imageboard` methods then `parseContent: false` option should also be passed here so indicate that the "opening" comment `content` (raw unparsed HTML markup) should be ignored.
+-->
 
 ## Models
 
