@@ -67,7 +67,10 @@ export default function setInReplyToQuotes(
 		(isLastInParagraph || endsWithNewLineAndOptionalWhiteSpace(contentParent, index, true))
 	if (!isTheOnlyOneOnLine) {
 		if (content.type === 'post-link') {
-			content.content = '[' + content.content.toLowerCase() + ']'
+			// Doesn' do `content.content.toLowerCase()`
+			// because, for example, in German all nouns
+			// are supposed to start with a capital letter.
+			content.content = '[' + content.content + ']'
 		}
 		return
 	}
