@@ -97,7 +97,7 @@ export default [
 									"boardId": "aco",
 									"threadId": 2943071,
 									"postId": 2943071,
-									"content": "[comment from another thread]",
+									"content": "[Comment from another thread]",
 									"postIsExternal": true,
 									"url": "/aco/2943071#2943071"
 								}

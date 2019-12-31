@@ -74,7 +74,7 @@ describe('setInReplyToQuotes', () => {
 					'Link: ',
 					{
 						type: 'post-link',
-						content: '[comment]',
+						content: '[Comment]',
 						postId: 123,
 						postIsExternal: true
 					}
@@ -112,7 +112,7 @@ describe('setInReplyToQuotes', () => {
 				[
 					{
 						type: 'post-link',
-						content: '[comment]',
+						content: '[Comment]',
 						postId: 123,
 						postIsExternal: true
 					},
@@ -155,7 +155,7 @@ describe('setInReplyToQuotes', () => {
 				[
 					{
 						type: 'post-link',
-						content: '[comment]',
+						content: '[Comment]',
 						postId: 123,
 						postIsExternal: true
 					},
