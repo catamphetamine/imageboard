@@ -7,10 +7,7 @@ import getBoardInfo from '../board/getBoardInfo'
  */
 export default function parseThreadsResponse(response) {
 	return {
-		board: {
-			defaultAuthorName: response.threads[0].default_name,
-			...getBoardInfo(response)
-		},
+		board: getBoardInfo(response),
 		comments: response.threads,
 		threads: response.threads.map(({
 			num,
