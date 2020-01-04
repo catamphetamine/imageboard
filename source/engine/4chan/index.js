@@ -29,7 +29,7 @@ export default class FourChan extends Engine {
 	 * @return {Board[]}
 	 */
 	parseBoards(response, options) {
-		return parseBoardsResponse(response, options).map(Board)
+		return parseBoardsResponse(response, this.getOptions(options)).map(Board)
 	}
 
 	/**

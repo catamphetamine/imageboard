@@ -1,7 +1,7 @@
 export default function parseBoard(board) {
   const parsedBoard = {
     id: board.uri,
-    name: board.title,
+    title: board.title,
     description: board.subtitle,
     commentsPerHour: board.pph_average, // Also has `ppd` and `pph`.
     language: board.locale,
