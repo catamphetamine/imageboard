@@ -6,10 +6,26 @@ Originally created as part of the [`captchan`](https://github.com/catamphetamine
 
 Supported engines:
 
-* [4chan](https://github.com/4chan/4chan-API) ([4chan.org](https://www.4chan.org/)). See [`4chan.org` demo](https://catamphetamine.github.io/captchan/?chan=4chan).
-* [vichan](https://github.com/vichan-devel/vichan) ([lainchan.org](https://lainchan.org/), [arisuchan.jp](https://arisuchan.jp/)) / [infinity](https://github.com/ctrlcctrlv/infinity)/[OpenIB](https://github.com/OpenIB/OpenIB/) ([8ch.net (8kun.top)](https://8kun.top/)). See: [`8ch.net (8kun.top)` demo](https://catamphetamine.github.io/captchan/?chan=8ch), [`lainchan.org` demo](https://catamphetamine.github.io/captchan/?chan=lainchan), [`arisuchan.jp` demo](https://catamphetamine.github.io/captchan/?chan=arisuchan).
-* [lynxchan](https://gitgud.io/LynxChan/LynxChan) ([kohlchan.net](https://kohlchan.net), [endchan.xyz](https://endchan.xyz)). See: [`kohlchan.net` demo](https://catamphetamine.github.io/captchan/?chan=kohlchan), [`endchan.xyz` demo](https://catamphetamine.github.io/captchan/?chan=endchan).
-* [makaba](https://2ch.hk/api/) ([2ch.hk](https://2ch.hk/)). See [`2ch.hk` demo](https://catamphetamine.github.io/captchan/?chan=2ch).
+* [4chan](https://github.com/4chan/4chan-API)
+
+  1. [4chan.org](https://www.4chan.org/) — [demo](https://catamphetamine.github.io/captchan/?chan=4chan)
+
+* [vichan](https://github.com/vichan-devel/vichan)
+
+  1. [lainchan.org](https://lainchan.org/) — [demo](https://catamphetamine.github.io/captchan/?chan=lainchan)
+
+* [OpenIB](https://github.com/OpenIB/OpenIB/) (formerly [infinity](https://github.com/ctrlcctrlv/infinity))
+
+  1. [8ch.net (8kun.top)](https://8kun.top/) — [demo](https://catamphetamine.github.io/captchan/?chan=8ch)
+
+* [lynxchan](https://gitgud.io/LynxChan/LynxChan)
+
+  1. [kohlchan.net](https://kohlchan.net) — [demo](https://catamphetamine.github.io/captchan/?chan=kohlchan)
+  2. [endchan.net](https://endchan.net) — [demo](https://catamphetamine.github.io/captchan/?chan=endchan)
+
+* [makaba](https://2ch.hk/api/)
+
+  1. [2ch.hk](https://2ch.hk/) — [demo](https://catamphetamine.github.io/captchan/?chan=2ch)
 
 Features:
 

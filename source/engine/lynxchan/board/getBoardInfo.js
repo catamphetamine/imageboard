@@ -7,12 +7,15 @@ export default function getBoardInfo({
 	maxFileSize
 }) {
 	const board = {
-		title: boardName,
 		maxCommentLength: maxMessageLength,
 		// Example: 4.
 		maxAttachments: maxFileCount,
 		// Example: "128.00 MB".
-		maxAttachmentSize: parseFileSize(maxFileSize)
+		maxAttachmentSize: maxFileSize && parseFileSize(maxFileSize)
+	}
+	// `endchan.net` doesn't have `boardName` (LynxChan 1.7.5).
+	if (boardName !== undefined) {
+		board.title = boardName
 	}
 	if (flagData) {
 		board.badges = flagData.map(({ _id, name }) => ({ id: _id, title: name }))

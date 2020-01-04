@@ -1,9 +1,13 @@
 {
 	"id": "endchan",
-	"domain": "endchan.xyz",
+	"domain": "endchan.net",
 	"engine": "lynxchan",
 	"thumbnailSize": 255,
-	"defaultAuthorName": "Anonymous",
+	"defaultAuthorName": {
+		"*": "Anonymous",
+		"ausneets": "NEET",
+		"kc": "Bernd"
+	},
   "commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
 	"api": {
 		"getThread": "/{boardId}/res/{threadId}.json",
