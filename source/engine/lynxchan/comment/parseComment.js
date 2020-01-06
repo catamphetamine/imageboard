@@ -51,8 +51,7 @@ export default function parseComment(post, {
 		authorEmail: post.email,
 		authorTripCode: author && author.tripCode,
 		// Imageboards identify their posters by a hash of their IP addresses on some boards.
-		// For example, `/pol/` on `kohlchan.net`.
-		// `kohlchan.net` examples: eeac31, 0501f9.
+		// A three-byte hex string (like "d1e8f1").
 		authorId: post.id,
 		authorRole: authorRole && (typeof authorRole === 'object' ? authorRole.role : authorRole),
 		authorRoleScope: authorRole && (typeof authorRole === 'object' ? authorRole.scope : undefined),

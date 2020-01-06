@@ -549,7 +549,7 @@ Available `options` (optional argument):
   // Some imageboards identify their users by a hash of their IP address subnet
   // on some of their boards (for example, all imageboards do that on `/pol/` boards).
   // On `8ch` and `lynxchan` it's a three-byte hex string (like "d1e8f1"),
-  // on `4chan` it's a case-sensitive alphanumeric string (like "Bg9BS7Xl").
+  // on `4chan` it's a 8-character case-sensitive alphanumeric string (like "Bg9BS7Xl").
   authorId: String?,
   // If `authorId` is present then it's converted into a HEX color.
   // Example: "#c05a7f".

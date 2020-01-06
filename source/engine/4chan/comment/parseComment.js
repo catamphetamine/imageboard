@@ -112,10 +112,12 @@ export default function parseComment(post, {
 		// `4chan`-alike imageboards (`4chan.org`, `8ch.net`, `kohlchan.net`)
 		// identify their posters by a hash of their IP addresses on some boards.
 		// For example, `/pol/` on `4chan.org`, `8ch.net`, `kohlchan.net`.
-		// `8ch.net` example: 2e20aa, d1e8f1, 000000.
-		// `kohlchan.net` examples: a8d15, 90048, a26d4.
-		// `4chan.org` examples: Bg9BS7Xl, rhGbaBg/, L/+PhYNf.
-		authorId: post.id,
+		// On `8ch` it's a three-byte hex string (like "d1e8f1").
+		// On `4chan` it's a 8-character case-sensitive alphanumeric string (like "Bg9BS7Xl").
+		// Also, on `4chan` Moderators seem to have "Mod" `authorId`.
+		// Therefore, a guess is that all authors having `capcode`
+		// don't really have an `authorId` hash.
+		authorId: post.capcode ? undefined : post.id,
 		authorBan,
 		attachments: parseAttachments(post, {
 			chan,
