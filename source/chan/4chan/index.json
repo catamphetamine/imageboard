@@ -19,6 +19,7 @@
 	"attachmentThumbnailUrl": "https://i.4cdn.org/{boardId}/{name}s.jpg",
 	"fileAttachmentUrl": "https://i.4cdn.org/{boardId}/{originalName}{ext}",
 	"commentUrl": "/{boardId}/thread/{threadId}#p{commentId}",
+	"authorBadgeUrl": "https://s.4cdn.org/image/country/troll/{0}.gif",
 	"api": {
 		"getThread": "https://a.4cdn.org/{boardId}/thread/{threadId}.json",
 		"getThreads": "https://a.4cdn.org/{boardId}/catalog.json",

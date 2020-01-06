@@ -26,7 +26,8 @@ export default function parseComment(post, {
 	fileAttachmentUrl,
 	toAbsoluteUrl,
 	defaultAuthorName,
-	capcode
+	capcode,
+	authorBadgeUrl
 }) {
 	let content = post.com
 	let authorBan
@@ -127,6 +128,12 @@ export default function parseComment(post, {
 			fileAttachmentUrl,
 			toAbsoluteUrl
 		})
+	}
+	// Sometimes on `4chan.org` (for example, on `/pol/`)
+	// there's `troll_country` instead of `country`.
+	if (post.troll_country) {
+		comment.authorBadgeUrl = authorBadgeUrl.replace('{0}', post.troll_country.toLowerCase())
+		comment.authorBadgeName = post.country_name
 	}
 	return comment
 }

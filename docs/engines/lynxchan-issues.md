@@ -6,6 +6,7 @@ While [adding support](http://lynxhub.com/lynxchan/res/722.html#q984) for [`lynx
 * No thread creation date on threads in `/catalog.json` API response.
 * No `signedRole` property on threads in `/catalog.json` API response.
 * No "unique IPs" counter on threads in "get thread" API response.
+* No `authorId`s returned by JSON API while they're present on HTML pages.
 * No duration for video files.
 * No width and height for thumbnails in `files[]` array entries of a post.
 * No `files[]` array on threads in `/catalog.json` API response (only `thumb` thumbnail URL).
