@@ -556,7 +556,7 @@ Available `options` (optional argument):
   authorIdColor: String?,
   // `2ch.hk` autogenerates names based on IP address subnet hash on `/po` board.
   // If this flag is `true` then it means that `authorName` is an equivalent of an `authorId`.
-  authorIdName: boolean?,
+  authorNameIsId: boolean?,
   // Comment author name.
   authorName: String?,
   // Comment author's email address.
