@@ -297,3 +297,28 @@ Example output:
 ### Links
 
 For some reason, hyperlinks in posts on `8ch.net` have their protocol colon wrapped in `<em></em>` tag (example: `"http<em>:</em>//google.com"`). Perhaps this was done to prevent some kind of crawling or something. Google doesn't index `8ch.net` anyway.
+
+### Get thread IDs list (and their latest comment dates)
+
+This is the same as `4chan`'s ["Get thread IDs list (and their latest comment dates)"](https://github.com/catamphetamine/imageboard/blob/master/docs/engines/4chan.md#get-thread-ids-list-and-their-latest-comment-dates) API endpoint, the only difference being that it doesn't have `replies` count, and also has comment author `id`s on boards that show comment author ids..
+
+[8kun.top/v/threads.json](https://8kun.top/v/threads.json)
+
+```js
+[
+  {
+    threads: [
+      {
+        no: 2942,
+        last_modified: 1578380032,
+        id: "97e711"
+      },
+      {
+        no: 2999,
+        last_modified: 1578361038,
+        id: "256314"
+      }
+    ]
+  }
+]
+```

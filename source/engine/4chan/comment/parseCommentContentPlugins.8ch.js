@@ -60,6 +60,8 @@ const newLine = {
 			value: 'body-line empty '
 		}
 	],
+	// Doesn't have any content.
+	skipIfHasNoContent: false,
 	createBlock() {
 		return '\n'
 	}
@@ -130,10 +132,10 @@ const quote = {
 	createBlock(content) {
 		content = dropQuoteMarker(content)
 		if (content) {
-			return {
+			return appendNewLine({
 				type: 'quote',
-				content: appendNewLine(content)
-			}
+				content
+			})
 		}
 	}
 }
@@ -150,11 +152,11 @@ const inverseQuote = {
 	createBlock(content) {
 		content = dropQuoteMarker(content, '<')
 		if (content) {
-			return {
+			return appendNewLine({
 				type: 'quote',
 				kind: 'inverse',
-				content: appendNewLine(content)
-			}
+				content
+			})
 		}
 	}
 }

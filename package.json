@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "domparser": "^0.1.1",
-    "social-components": "^0.1.13"
+    "social-components": "^0.1.14",
+    "xmldom": "^0.2.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",

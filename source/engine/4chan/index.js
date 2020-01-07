@@ -70,7 +70,15 @@ export default class FourChan extends Engine {
 		// Therefore, attachments are counted "by hand" in case of `8ch.net` (OpenIB).
 		// `vichan` also has the same bug:
 		// https://github.com/vichan-devel/vichan/issues/327
+		//
+		// Also, `vichan` and `OpenIB` don't have `replies` property
+		// in "get thread comments" API response.
+		//
 		if (this.options.engine === 'OpenIB' || this.options.engine === 'vichan') {
+			if (thread.commentsCount === undefined) {
+				// Not including the "opening comment".
+				thread.commentsCount = comments.length - 1
+			}
 			thread.attachmentsCount = comments.reduce((sum, comment) => sum += comment.attachments ? comment.attachments.length : 0, 0)
 		}
 		return Thread(

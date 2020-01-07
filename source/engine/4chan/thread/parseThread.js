@@ -6,7 +6,6 @@
  */
 export default function parseThread({
 	no,
-	posts,
 	replies,
 	images,
 	last_replies,
@@ -26,8 +25,7 @@ export default function parseThread({
 }) {
 	const thread = {
 		// `no` is present in "get threads list" API response.
-		// `posts[0].no` is present in "get thread comments" API response.
-		id: no || posts[0].no,
+		id: no,
 		isSticky: sticky,
 		// `4chan.org` has `closed` property.
 		// `8ch.net` has `locked` property.
@@ -37,11 +35,15 @@ export default function parseThread({
 		// Seems that it's always "0" though.
 		isRolling: cyclical === '1',
 		// Not including the "opening comment".
-		commentsCount: replies,
+		// `vichan` and `OpenIB` don't have `replies` property
+		// in "get thread comments" API response.
+		commentsCount: replies === undefined ? undefined : replies,
 		// On `4chan.org`, `8ch.net` (OpenIB) and `vichan` chans
 		// the `images` counter doesn't include the attachments
 		// of the "opening post". Therefore, `1` is added.
-		attachmentsCount: images + 1
+		// `vichan` and `OpenIB` don't have `images` property
+		// in "get thread comments" API response.
+		attachmentsCount: images === undefined ? undefined : images + 1
 	}
 	// Is present only in "get thread comments" API response.
 	if (unique_ips) {

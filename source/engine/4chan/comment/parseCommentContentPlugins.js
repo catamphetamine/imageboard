@@ -1,5 +1,3 @@
-import { getContentText } from 'social-components/commonjs/utility/post/getPostText'
-
 import createLink from '../../../utility/createLink'
 import dropQuoteMarker from '../../../dropQuoteMarker'
 import parsePostLink from '../../../parsePostLink'
@@ -40,6 +38,7 @@ export const underline = {
 // They have code tags in `/g/`.
 export const code = {
 	tag: 'pre',
+	parseContentText: true,
 	attributes: [
 		{
 			name: 'class',
@@ -50,7 +49,7 @@ export const code = {
 		return {
 			type: 'code',
 			// inline: true,
-			content: content && getContentText(content)
+			content
 		}
 	}
 }

@@ -6,8 +6,6 @@ import {
 	link
 } from './parseCommentContentPlugins'
 
-import { getContentText } from 'social-components/commonjs/utility/post/getPostText'
-
 // They have advanced code highlighting.
 // https://lainchan.org/faq.html
 // `<code/>` tags are placed inside `<pre/>` tags
@@ -55,11 +53,12 @@ export const codeBlock = {
 const CODE_LANG_REGEXP = /\bhljs (\S+)$/
 export const code = {
 	tag: 'code',
+	parseContentText: true,
 	createBlock(content, utility) {
 		const result = {
 			type: 'code',
 			inline: true,
-			content: content && getContentText(content)
+			content
 		}
 		// `lainchan` has:
 		// `<pre><code class="hljs clojure">...</code></pre>`.

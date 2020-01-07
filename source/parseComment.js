@@ -52,9 +52,6 @@ class CommentParser {
 	}
 
 	shouldParseUsingPlugin(element, plugin) {
-		if (!element.tagName) {
-			return
-		}
 		if (element.tagName.toLowerCase() !== plugin.tag) {
 			return
 		}
@@ -112,8 +109,13 @@ class CommentParser {
 			}
 			for (const plugin of this.options.plugins) {
 				if (this.shouldParseUsingPlugin(node, plugin)) {
-					const content = node.childNodes.length > 0 ? this.parseContent(node.childNodes) : undefined
-					if (!content && plugin.content !== false) {
+					let content
+					if (plugin.parseContentText) {
+						content = getText(node).trim()
+					} else {
+						content = node.childNodes.length > 0 ? this.parseContent(node.childNodes) : undefined
+					}
+					if (!content && plugin.skipIfHasNoContent !== false) {
 						return
 					}
 					return plugin.createBlock(content, node, this.options)
@@ -273,3 +275,25 @@ function trimNewLinesRightSide(paragraph) {
 // }
 
 // console.log('Array time:', Date.now() - startedAt)
+
+function getText(element) {
+	let text = ''
+	let i = 0
+	while (i < element.childNodes.length) {
+		const node = element.childNodes[i]
+		// `1` means "DOM element".
+		if (node.nodeType === 1) {
+			if (node.tagName.toLowerCase() === 'br') {
+				text += '\n'
+			} else {
+				text += getText(node)
+			}
+		}
+		// `3` means "text node".
+		else if (node.nodeType === 3) {
+			text += node.nodeValue
+		}
+		i++
+	}
+	return text
+}

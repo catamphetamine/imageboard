@@ -18,9 +18,8 @@ const emoji = {
 			value: /^emote\s?/
 		}
 	],
-	// Without `content: false` the plugin wouldn't work
-	// because empty DOM elements are ignored.
-	content: false,
+	// `kohlchan` emoji don't have `content`.
+	skipIfHasNoContent: false,
 	createBlock(content, util, { emojiUrl, toAbsoluteUrl }) {
 		const url = util.getAttribute('src')
 		// "/.static/images/chen.png" -> "chen"

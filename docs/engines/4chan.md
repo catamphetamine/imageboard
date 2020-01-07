@@ -299,11 +299,11 @@ Message HTML syntax is:
 ]
 ```
 
+### Get thread IDs list (and their latest comment dates)
 
-<!--
-### Get thread IDs list (and their latest message dates)
+I don't know what for does this API endpoint exist. `4chan` seems to query it on a thread page periodically.
 
-[`https://a.4cdn.org/g/threads.json`](https://a.4cdn.org/g/threads.json). The response is:
+[`https://a.4cdn.org/g/threads.json`](https://a.4cdn.org/g/threads.json)
 
 ```js
 [
@@ -312,11 +312,13 @@ Message HTML syntax is:
 		"threads": [
 			{
 				"no": 51971506,
-				"last_modified": 1536364716
+				"last_modified": 1536364716,
+				"replies": 123
 			},
 			{
 				"no": 69694831,
-				"last_modified": 1549505043
+				"last_modified": 1549505043,
+				"replies": 456
 			},
 			// ...
 		]
@@ -324,7 +326,6 @@ Message HTML syntax is:
 	...
 ]
 ```
--->
 
 ### Get thread
 
