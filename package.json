@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "domparser": "^0.1.1",
-    "social-components": "^0.1.14",
+    "social-components": "^0.1.15",
     "xmldom": "^0.2.1"
   },
   "devDependencies": {
