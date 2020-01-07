@@ -1,6 +1,8 @@
 import { forEachFollowingQuote } from 'social-components/commonjs/utility/post/combineQuotes'
 import generatePostQuote from 'social-components/commonjs/utility/post/generatePostQuote'
 
+import { getPostLinkDefaultText } from './setPostLinksDefaultText'
+
 /**
  * Adds "in-reply-to" quotes.
  * Has some CPU usage.
@@ -67,10 +69,13 @@ export default function setInReplyToQuotes(
 		(isLastInParagraph || endsWithNewLineAndOptionalWhiteSpace(contentParent, index, true))
 	if (!isTheOnlyOneOnLine) {
 		if (content.type === 'post-link') {
-			// Doesn' do `content.content.toLowerCase()`
+			// Doesn't do `content.content.toLowerCase()`
 			// because, for example, in German all nouns
 			// are supposed to start with a capital letter.
-			content.content = '[' + content.content + ']'
+			// `setInReplyToQuotes()` can be called multiple times
+			// for the same comment (for example, when its parent
+			// comment's `content` is updated).
+			content.content = '[' + getPostLinkDefaultText(content, options.messages) + ']'
 		}
 		return
 	}

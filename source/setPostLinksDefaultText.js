@@ -14,7 +14,7 @@ export default function setPostLinksDefaultText(content, { messages }) {
 		const results = visitPostParts(
 			'post-link',
 			(postLink) => {
-				const newContent = getPostLinkText(postLink, messages.comment)
+				const newContent = getPostLinkDefaultText(postLink, messages)
 				if (newContent) {
 					postLink.content = newContent
 					return true
@@ -32,7 +32,10 @@ export default function setPostLinksDefaultText(content, { messages }) {
  * @param  {object} messages
  * @return {string} [text]
  */
-function getPostLinkText(postLink, messages) {
+export function getPostLinkDefaultText(postLink, messages) {
+	if (messages.comment) {
+		messages = messages.comment
+	}
 	// If it's a post link for a post from another thread.
 	if (postLink.postIsExternal) {
 		return messages.external
