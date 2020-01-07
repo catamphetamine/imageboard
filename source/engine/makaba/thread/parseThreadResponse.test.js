@@ -338,6 +338,7 @@ describe('2ch.hk', () => {
 							"postId": 28942338,
 							"content": [{
 								type: "quote",
+								"block": true,
 								generated: true,
 								content: "Deleted comment"
 							}],
@@ -367,6 +368,7 @@ describe('2ch.hk', () => {
 							"postId": 28942773,
 							"content": [{
 								type: "quote",
+								"block": true,
 								generated: true,
 								content: "Deleted comment"
 							}],
@@ -393,6 +395,7 @@ describe('2ch.hk', () => {
 							"postId": 28942787,
 							"content": [{
 								type: "quote",
+								"block": true,
 								generated: true,
 								content: "░​░​░​░​░​░​░​░​"
 							}],
@@ -408,6 +411,7 @@ describe('2ch.hk', () => {
 							"postId": 28942908,
 							"content": [{
 								type: "quote",
+								"block": true,
 								generated: true,
 								content: "Deleted comment"
 							}],
@@ -424,6 +428,7 @@ describe('2ch.hk', () => {
 							"postId": 28942793,
 							"content": [{
 								type: "quote",
+								"block": true,
 								generated: true,
 								content: "Не советую."
 							}],

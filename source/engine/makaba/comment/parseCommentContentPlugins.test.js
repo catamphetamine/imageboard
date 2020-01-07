@@ -139,6 +139,7 @@ describe('parseComment', () => {
 				'\n',
 				{
 					type: 'quote',
+					block: true,
 					content: 'test'
 				},
 				'\n',
@@ -218,6 +219,7 @@ describe('parseComment', () => {
 				[
 					{
 						"type": "quote",
+						"block": true,
 						"content": [
 							"Отмечается, что в ходе ",
 							{
@@ -256,6 +258,7 @@ describe('parseComment', () => {
 				[
 					{
 						type: 'quote',
+						block: true,
 						content: 'Дискасс.'
 					}
 				]

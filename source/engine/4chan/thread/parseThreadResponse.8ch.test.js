@@ -130,6 +130,7 @@ const RESULT = {
               {
                 "type": "quote",
                 "generated": true,
+                "block": true,
                 "content": "Deleted comment"
               }
             ],
@@ -141,6 +142,7 @@ const RESULT = {
           "\n",
           {
             "type": "quote",
+            "block": true,
             "content": "paid shills"
           },
           '\n',
@@ -166,6 +168,7 @@ const RESULT = {
             "content": [
             	{
             		type: 'quote',
+                block: true,
             		content: 'Literally nobody in the history of anybody has ever been paid to post here.'
             	}
             ],

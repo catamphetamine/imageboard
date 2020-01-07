@@ -134,6 +134,7 @@ const quote = {
 		if (content) {
 			return appendNewLine({
 				type: 'quote',
+				block: true,
 				content
 			})
 		}
@@ -155,6 +156,7 @@ const inverseQuote = {
 			return appendNewLine({
 				type: 'quote',
 				kind: 'inverse',
+				block: true,
 				content
 			})
 		}

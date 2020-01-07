@@ -75,6 +75,7 @@ const quote = {
 		if (content) {
 			return {
 				type: 'quote',
+				block: true,
 				content
 			}
 		}
@@ -97,6 +98,7 @@ const inverseQuote = {
 				type: 'quote',
 				// kind: 'inverse-orange',
 				kind: 'inverse',
+				block: true,
 				content
 			}
 		}

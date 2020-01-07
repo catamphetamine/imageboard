@@ -35,6 +35,7 @@ export default {
         [
           {
             "type": "quote",
+            "block": true,
             "content": "Stalker 2"
           },
           "\n",
@@ -42,6 +43,7 @@ export default {
           "\n",
           {
             "type": "quote",
+            "block": true,
             "content": "Borderlands 3"
           },
           "\n",
@@ -49,6 +51,7 @@ export default {
           "\n",
           {
             "type": "quote",
+            "block": true,
             "content": "Shenmue 3"
           },
           "\n",
@@ -56,6 +59,7 @@ export default {
           "\n",
           {
             "type": "quote",
+            "block": true,
             "content": "Vampire the masquarade bloodlines 2"
           },
           "\n",
@@ -63,6 +67,7 @@ export default {
           "\n",
           {
             "type": "quote",
+            "block": true,
             "content": "Devil may cry 5"
           },
           "\n",
@@ -98,6 +103,7 @@ export default {
             "url": "/v/456354102#456354102",
             "content": [{
               type: "quote",
+              "block": true,
               content: "wojack"
             }]
           },
@@ -175,6 +181,7 @@ export default {
             "url": "/v/456354102#456354175",
             "content": [{
               type: "quote",
+              "block": true,
               generated: true,
               content: "all epic store exclusives"
             }]
@@ -222,6 +229,7 @@ export default {
             "url": "/v/456354102#456354102",
             "content": [{
               type: "quote",
+              "block": true,
               generated: true,
               content: "«Stalker 2»\n12 years of waiting\n«Borderlands 3»\n8 years of waiting"
             }]
@@ -271,6 +279,7 @@ export default {
             "url": "/v/456354102#456354102",
             "content": [{
               type: "quote",
+              "block": true,
               content: "WoW classic coming out this summer"
             }]
           },
@@ -321,6 +330,7 @@ export default {
             "url": "/v/456354102#456354102",
             "content": [{
               type: "quote",
+              "block": true,
               generated: true,
               content: "«Stalker 2»\n12 years of waiting\n«Borderlands 3»\n8 years of waiting"
             }]
@@ -356,6 +366,7 @@ export default {
             "url": "/v/456354102#456354175",
             "content": [{
               type: "quote",
+              "block": true,
               generated: true,
               content: "all epic store exclusives"
             }]
@@ -369,6 +380,7 @@ export default {
             "url": "/v/456354102#456354990",
             "content": [{
               type: "quote",
+              "block": true,
               generated: true,
               content: "«all epic store exclusives»"
             }]
@@ -427,21 +439,25 @@ export default {
             "content": [
               {
                 type: "quote",
+                "block": true,
                 content: "ori and will of the wisps"
               },
               "\n",
               {
                 type: "quote",
+                "block": true,
                 content: "cuphead dlc"
               },
               "\n",
               {
                 type: "quote",
+                "block": true,
                 content: "DMC 5"
               },
               "\n",
               {
                 type: "quote",
+                "block": true,
                 content: "Rage2"
               }
             ]
@@ -487,21 +503,25 @@ export default {
         [
           {
             "type": "quote",
+            "block": true,
             "content": "Old friend I knew since I was 4 texts me about Halo PC being announced"
           },
           "\n",
           {
             "type": "quote",
+            "block": true,
             "content": "Haven't seen since we both went off to college"
           },
           "\n",
           {
             "type": "quote",
+            "block": true,
             "content": "Tells me he's building a PC this summer"
           },
           "\n",
           {
             "type": "quote",
+            "block": true,
             "content": "Wants to bring the squad back together"
           }
         ],
@@ -526,6 +546,7 @@ export default {
             "url": "/v/456354102#456354102",
             "content": [{
               type: "quote",
+              "block": true,
               content: "Sonic Adventure 3"
             }]
           },
@@ -534,6 +555,7 @@ export default {
           "\n",
           {
             "type": "quote",
+            "block": true,
             "content": "Mega Man X9"
           },
           "\n",
@@ -569,6 +591,7 @@ export default {
             "url": "/v/456354102#456354102",
             "content": [{
               type: "quote",
+              "block": true,
               content: "they're all massive disappointments"
             }]
           }
@@ -602,6 +625,7 @@ export default {
         [
           {
             "type": "quote",
+            "block": true,
             "content": "Half-Life 3"
           },
           "\n",

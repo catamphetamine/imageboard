@@ -24,6 +24,10 @@ function classifyPostLink(postLink, { getCommentById, threadId }) {
 	// If it's a post link for a post from another thread then mark it as "external".
 	if (postLink.threadId !== threadId) {
 		postLink.postIsExternal = true
+		if (typeof postLink.content === 'string' &&
+			OP_POST_LINK_TEXT.test(postLink.content)) {
+			postLink.postIsRoot = true
+		}
 	}
 	// If the quoted post has been deleted then skip it.
 	else if (!quotedPost) {
@@ -35,3 +39,5 @@ function classifyPostLink(postLink, { getCommentById, threadId }) {
 		postLink.postIsHiddenRule = quotedPost.hiddenRule
 	}
 }
+
+const OP_POST_LINK_TEXT = / \(OP\)$/

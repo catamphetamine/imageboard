@@ -2,9 +2,17 @@ import expectToEqual from './utility/expectToEqual'
 
 import setInReplyToQuotes, { endsWithNewLineAndOptionalWhiteSpace } from './setInReplyToQuotes'
 
+const messages = {
+	comment: {
+		external: 'Comment from another thread',
+		deleted: 'Deleted comment',
+		hidden: 'Hidden comment',
+		default: 'Comment'
+	}
+}
+
 describe('setInReplyToQuotes', () => {
 	it('should set "quote" from "content" if the comment is from another thread', () => {
-		const messages = {}
 		const post = {
 			id: 111,
 			content: [
@@ -34,6 +42,7 @@ describe('setInReplyToQuotes', () => {
 						content: [{
 							type: 'quote',
 							generated: true,
+							block: true,
 							content: 'Comment'
 						}],
 						postId: 123,
@@ -45,7 +54,6 @@ describe('setInReplyToQuotes', () => {
 	})
 
 	it('shouldn\'t set "quote" from "content" if the comment is not taking the whole line (has pre text)', () => {
-		const messages = {}
 		const post = {
 			id: 111,
 			content: [
@@ -54,8 +62,7 @@ describe('setInReplyToQuotes', () => {
 					{
 						type: 'post-link',
 						content: 'Comment',
-						postId: 123,
-						postIsExternal: true
+						postId: 123
 					}
 				]
 			]
@@ -74,9 +81,8 @@ describe('setInReplyToQuotes', () => {
 					'Link: ',
 					{
 						type: 'post-link',
-						content: '[Comment]',
-						postId: 123,
-						postIsExternal: true
+						content: 'Comment',
+						postId: 123
 					}
 				]
 			]
@@ -84,7 +90,6 @@ describe('setInReplyToQuotes', () => {
 	})
 
 	it('shouldn\'t set "quote" from "content" if the comment is not taking the whole line (has post text)', () => {
-		const messages = {}
 		const post = {
 			id: 111,
 			content: [
@@ -92,8 +97,7 @@ describe('setInReplyToQuotes', () => {
 					{
 						type: 'post-link',
 						content: 'Comment',
-						postId: 123,
-						postIsExternal: true
+						postId: 123
 					},
 					'.'
 				]
@@ -112,9 +116,8 @@ describe('setInReplyToQuotes', () => {
 				[
 					{
 						type: 'post-link',
-						content: '[Comment]',
-						postId: 123,
-						postIsExternal: true
+						content: 'Comment',
+						postId: 123
 					},
 					'.'
 				]
@@ -123,11 +126,6 @@ describe('setInReplyToQuotes', () => {
 	})
 
 	it('should set `content` to `messages.comment.default` if there\'s the message', () => {
-		const messages = {
-			comment: {
-				default: 'Comment'
-			}
-		}
 		const post = {
 			id: 111,
 			content: [
@@ -135,8 +133,7 @@ describe('setInReplyToQuotes', () => {
 					{
 						type: 'post-link',
 						content: 'Comment',
-						postId: 123,
-						postIsExternal: true
+						postId: 123
 					},
 					'.'
 				]
@@ -155,9 +152,105 @@ describe('setInReplyToQuotes', () => {
 				[
 					{
 						type: 'post-link',
-						content: '[Comment]',
-						postId: 123,
-						postIsExternal: true
+						content: 'Comment',
+						postId: 123
+					},
+					'.'
+				]
+			]
+		)
+	})
+
+	it('should set `content` to generated quote text (if there\'s one)', () => {
+		const quotedPost = {
+			id: 100,
+			content: [
+				[
+					{
+						type: 'text',
+						style: 'bold',
+						content: 'Some'
+					},
+					' ',
+					{
+						type: 'quote',
+						content: 'text'
+					}
+				]
+			]
+		}
+		const post = {
+			id: 111,
+			content: [
+				[
+					{
+						type: 'post-link',
+						content: 'Comment',
+						postId: 100
+					},
+					'.'
+				]
+			]
+		}
+		setInReplyToQuotes(
+			post.content,
+			{
+				getCommentById: id => id === quotedPost.id ? quotedPost : undefined,
+				messages
+			}
+		)
+		expectToEqual(
+			post.content,
+			[
+				[
+					{
+						type: 'post-link',
+						postId: 100,
+						content: [{
+							type: 'quote',
+							generated: true,
+							content: 'Some «text»'
+						}]
+					},
+					'.'
+				]
+			]
+		)
+	})
+
+	it('shouldn\'t set `content` to generated quote text (if there\'s no such text)', () => {
+		const quotedPost = {
+			id: 100,
+			content: ''
+		}
+		const post = {
+			id: 111,
+			content: [
+				[
+					{
+						type: 'post-link',
+						content: 'Comment',
+						postId: 100
+					},
+					'.'
+				]
+			]
+		}
+		setInReplyToQuotes(
+			post.content,
+			{
+				getCommentById: id => id === quotedPost.id ? quotedPost : undefined,
+				messages
+			}
+		)
+		expectToEqual(
+			post.content,
+			[
+				[
+					{
+						type: 'post-link',
+						content: 'Comment',
+						postId: 100
 					},
 					'.'
 				]
@@ -216,6 +309,7 @@ describe('setInReplyToQuotes', () => {
 						content: [{
 							type: 'quote',
 							generated: true,
+							block: true,
 							content: 'A'
 						}],
 						postId: 123
@@ -226,6 +320,7 @@ describe('setInReplyToQuotes', () => {
 						content: [{
 							type: 'quote',
 							generated: true,
+							block: true,
 							content: 'B'
 						}],
 						postId: 124

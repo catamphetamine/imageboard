@@ -14,6 +14,7 @@ const inlineQuote = {
 		if (content) {
 			return {
 				type: 'quote',
+				block: true,
 				content
 			}
 		}
@@ -31,6 +32,7 @@ const quote = {
 	createBlock(content) {
 		return {
 			type: 'quote',
+			block: true,
 			content
 		}
 	}

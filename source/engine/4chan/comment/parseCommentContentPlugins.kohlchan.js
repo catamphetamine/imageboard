@@ -39,6 +39,7 @@ const inverseQuote = {
 			return {
 				type: 'quote',
 				kind: 'inverse',
+				block: true,
 				content
 			}
 		}

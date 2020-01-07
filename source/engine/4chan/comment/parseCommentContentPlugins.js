@@ -67,6 +67,7 @@ export const quote = {
 		if (content) {
 			return {
 				type: 'quote',
+				block: true,
 				content
 			}
 		}
