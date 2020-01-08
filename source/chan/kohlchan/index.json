@@ -8,9 +8,6 @@
 		"ru": "Бернд"
 	},
   "capcode": {
-    "Root": {
-    	"role": "administrator"
-    },
     "Administrator": {
     	"role": "administrator"
     },
@@ -18,17 +15,6 @@
     	"role": "moderator"
     },
     "Board Owner": {
-    	"role": "moderator",
-    	"scope": "board"
-    },
-    "Board owner": {
-    	"role": "moderator",
-    	"scope": "board"
-    },
-    "Global volunteer": {
-    	"role": "moderator"
-    },
-    "Board volunteer": {
     	"role": "moderator",
     	"scope": "board"
     }

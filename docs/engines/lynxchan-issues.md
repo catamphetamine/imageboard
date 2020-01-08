@@ -4,7 +4,7 @@ While [adding support](http://lynxhub.com/lynxchan/res/722.html#q984) for [`lynx
 
 * No "get boards list" API (like `/boards.json` on `4chan.org`).
 * No thread creation date on threads in `/catalog.json` API response.
-* No `signedRole` property on threads in `/catalog.json` API response.
+* No `signedRole` (thread author role) property on threads in `/catalog.json` API response.
 * No "unique IPs" counter on threads in "get thread" API response.
 * No `authorId`s returned by JSON API while they're present on HTML pages.
 * No duration for video files.
