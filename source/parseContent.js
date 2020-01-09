@@ -1,7 +1,7 @@
 import { canGeneratePostQuoteIgnoringNestedPostQuotes } from 'social-components/commonjs/utility/post/generatePostQuote'
 
 import generatePreview from './generatePreview'
-import setInReplyToQuotes, { getGeneratedQuoteMaxLength, getGeneratedQuoteFitFactor } from './setInReplyToQuotes'
+import setInReplyToQuotes, { getGeneratePostQuoteOptions } from './setInReplyToQuotes'
 import classifyPostLinks from './classifyPostLinks'
 import setPostLinksDefaultText from './setPostLinksDefaultText'
 
@@ -145,11 +145,20 @@ export function addParseContent(comment, {
 							generateQuotes: false
 						}
 					)
-					if (canGeneratePostQuoteIgnoringNestedPostQuotes(comment, {
+					if (canGeneratePostQuoteIgnoringNestedPostQuotes(comment, getGeneratePostQuoteOptions({
 						messages,
-						maxLength: getGeneratedQuoteMaxLength(generatedQuoteMaxLength),
-						fitFactor: getGeneratedQuoteFitFactor(generatedQuoteFitFactor)
-					})) {
+						// `maxLength` here is the same both for block `post-link`s
+						// and inline `post-link`s, which isn't the same as when generating
+						// real quotes with inline `post-link`s' `maxLength` being half that
+						// of block `post-link`s.
+						// But the behavior of `canGeneratePostQuoteIgnoringNestedPostQuotes()`
+						// function is still correct, because internally it returns `false`
+						// when it encounters an inline `post-link`, without generating its `content`.
+						// So there's no need to differentiate between block `post-link`s'
+						// and inline `post-link`s' `maxLength` here.
+						generatedQuoteMaxLength,
+						generatedQuoteFitFactor
+					}))) {
 						_canGeneratePostQuoteIgnoringNestedPostQuotes = true
 						// Don't parse `inReplyTo` comments for this "non-exhaustive" parse.
 						// But since the comment isn't fully "parsed" in a sense that

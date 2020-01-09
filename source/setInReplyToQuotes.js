@@ -79,10 +79,10 @@ export default function setInReplyToQuotes(
 				let quoteText
 				const quotedPost = getCommentById(postLink.postId)
 				if (quotedPost) {
-					quoteText = _generatePostQuote(quotedPost, {
+					quoteText = generatePostQuote(quotedPost, getGeneratePostQuoteOptions({
 						...options,
 						generatedQuoteMaxLength: options.generatedInlineQuoteMaxLength || ((options.generatedQuoteMaxLength || DEFAULT_GENERATED_QUOTE_MAX_LENGTH) / 2)
-					})
+					}))
 				}
 				// `setInReplyToQuotes()` can be called multiple times
 				// for the same comment (for example, when its parent
@@ -237,22 +237,25 @@ function stripLinks(content) {
 	}
 }
 
-function _generatePostQuote(post, options = {}) {
-	const {
+const DEFAULT_GENERATED_QUOTE_MAX_LENGTH = 180
+const DEFAULT_GENERATED_QUOTE_FIT_FACTOR = 1.35
+
+export function getGeneratePostQuoteOptions({
+	messages,
+	generatedQuoteMaxLength,
+	generatedQuoteFitFactor
+}) {
+	return {
 		messages,
-		generatedQuoteMaxLength,
-		generatedQuoteFitFactor
-	} = options
-	return generatePostQuote(post, {
-		maxLength: getGeneratedQuoteMaxLength(generatedQuoteMaxLength),
-		fitFactor: getGeneratedQuoteFitFactor(generatedQuoteFitFactor),
-		countNewLines: true,
-		messages
-	})
+		maxLength: generatedQuoteMaxLength || DEFAULT_GENERATED_QUOTE_MAX_LENGTH,
+		// `fitFactor` could be `0`.
+		fitFactor: generatedQuoteFitFactor === undefined ? DEFAULT_GENERATED_QUOTE_FIT_FACTOR : generatedQuoteFitFactor,
+		countNewLines: true
+	}
 }
 
 function generateAndSetPostLinkQuote(postLink, post, options) {
-	const text = _generatePostQuote(post, options)
+	const text = generatePostQuote(post, getGeneratePostQuoteOptions(options))
 	if (text) {
 		// Set `content` quote to the quoted post text abstract.
 		postLink.content = [{
@@ -289,15 +292,3 @@ export function endsWithNewLineAndOptionalWhiteSpace(content, index, forward) {
 }
 
 const WHITESPACE_REGEXP = /^\s$/
-
-const DEFAULT_GENERATED_QUOTE_MAX_LENGTH = 180
-const DEFAULT_GENERATED_QUOTE_FIT_FACTOR = 1.35
-
-export function getGeneratedQuoteMaxLength(generatedQuoteMaxLength) {
-	return generatedQuoteMaxLength || DEFAULT_GENERATED_QUOTE_MAX_LENGTH
-}
-
-export function getGeneratedQuoteFitFactor(generatedQuoteFitFactor) {
-	// `fitFactor` could be `0`.
-	return generatedQuoteFitFactor === undefined ? DEFAULT_GENERATED_QUOTE_FIT_FACTOR : generatedQuoteFitFactor
-}
