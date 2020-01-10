@@ -81,7 +81,7 @@ export default function setInReplyToQuotes(
 				if (quotedPost) {
 					quoteText = generatePostQuote(quotedPost, getGeneratePostQuoteOptions({
 						...options,
-						generatedQuoteMaxLength: options.generatedInlineQuoteMaxLength || ((options.generatedQuoteMaxLength || DEFAULT_GENERATED_QUOTE_MAX_LENGTH) / 2)
+						generatedQuoteMaxLength: getGeneratedInlineQuoteMaxLength(options)
 					}))
 				}
 				// `setInReplyToQuotes()` can be called multiple times
@@ -252,6 +252,15 @@ export function getGeneratePostQuoteOptions({
 		fitFactor: generatedQuoteFitFactor === undefined ? DEFAULT_GENERATED_QUOTE_FIT_FACTOR : generatedQuoteFitFactor,
 		countNewLines: true
 	}
+}
+
+// Generated inline quote `maxLength` should be no larger than
+// generated block quote `maxLength`: `parseContent.js` assumes that
+// when calling `canGeneratePostQuoteIgnoringNestedPostQuotes()`.
+// Also, generated inline quote `fitFactor` should be the same
+// as generated block quote `fitFactor`: `parseContent.js` assumes that too.
+export function getGeneratedInlineQuoteMaxLength(options) {
+	return options.generatedInlineQuoteMaxLength || ((options.generatedQuoteMaxLength || DEFAULT_GENERATED_QUOTE_MAX_LENGTH) / 2)
 }
 
 function generateAndSetPostLinkQuote(postLink, post, options) {

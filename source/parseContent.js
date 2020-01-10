@@ -147,15 +147,22 @@ export function addParseContent(comment, {
 					)
 					if (canGeneratePostQuoteIgnoringNestedPostQuotes(comment, getGeneratePostQuoteOptions({
 						messages,
-						// `maxLength` here is the same both for block `post-link`s
-						// and inline `post-link`s, which isn't the same as when generating
-						// real quotes with inline `post-link`s' `maxLength` being half that
-						// of block `post-link`s.
-						// But the behavior of `canGeneratePostQuoteIgnoringNestedPostQuotes()`
-						// function is still correct, because internally it returns `false`
-						// when it encounters an inline `post-link`, without generating its `content`.
-						// So there's no need to differentiate between block `post-link`s'
-						// and inline `post-link`s' `maxLength` here.
+						// `generatedQuoteMaxLength` and `generatedQuoteFitFactor`
+						// passed here are the "maximum" ones between block `post-link` quotes
+						// and inline `post-link` quotes: `inReplyTo` list currently
+						// doesn't specify whether this `post` is a reply with a
+						// block `post-link` to the quoted comment, or a reply with an
+						// inline `post-link` to the quoted comment.
+						// `setInReplyToQuotes()` could add that info to `inReplyTo` list
+						// (for example, via something like an `_inReplyToQuoteType` list)
+						// but implementing that feature doesn't seem like a necessity:
+						// instead, the code here doesn't differentiate between an
+						// inline `post-link` and a block `post-link`, simply
+						// passing the maximum `maxLength` of the two.
+						// Since block `post-link` quotes have larger `maxLength`
+						// than inline `post-link` quotes (in `setInReplyToQuotes()`)
+						// then it's assumed that `generatedQuoteMaxLength` is the
+						// maximum of the two, and their `fitFactor`s are the same.
 						generatedQuoteMaxLength,
 						generatedQuoteFitFactor
 					}))) {
