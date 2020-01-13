@@ -209,6 +209,7 @@ export default function setInReplyToQuotes(
 				// displayed instead of a generic "Picture"/"Video" placeholder.
 				if (attachment) {
 					postLink.attachment = attachment
+					postLink.attachmentsCount = quotedPost.attachments.length
 				}
 				// Content did change.
 				return true
