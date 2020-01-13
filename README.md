@@ -312,7 +312,7 @@ Can be used for passing a custom `censoredWords` option to the `imageboard` cons
 
 ### `getCommentText(comment: Comment, options: object?): string?`
 
-Generates a textual representation of [Comment](#comment)'s `content`. This is just a `getPostText()` function re-exported from [`social-components`](https://github.com/catamphetamine/social-components) for convenience.
+Generates a textual representation of [Comment](#comment)'s `content`. This is just a [`getPostText()`](https://github.com/catamphetamine/social-components#getposttext-post-post-options-object-string) function re-exported from [`social-components`](https://github.com/catamphetamine/social-components) for convenience.
 
 Is used in the examples in this document.
 
