@@ -6,12 +6,13 @@ import generatePostPreview from 'social-components/commonjs/utility/post/generat
  * @param {number} commentLengthLimit
  */
 export default function generatePreview(comment, commentLengthLimit) {
-	const preview = generatePostPreview(
-		comment.content,
-		comment.attachments,
-		{ limit: commentLengthLimit }
-	)
-	if (preview) {
-		comment.contentPreview = preview
+	if (comment.content) {
+		const preview = generatePostPreview(
+			comment,
+			{ maxLength: commentLengthLimit }
+		)
+		if (preview) {
+			comment.contentPreview = preview
+		}
 	}
 }

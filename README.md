@@ -372,6 +372,10 @@ Available `options` (optional argument):
 * `parseContent: boolean?` — (optional) If `parseContent: false` is used to skip parsing comments' `content` when using `imageboard` methods then `parseContent: false` option should also be passed here so indicate that the "opening" comment `content` (raw unparsed HTML markup) should be ignored.
 -->
 
+## Attachments
+
+This library doesn't parse links to YouTube/Twitter/etc. Instead, this type of functionality is offloaded to a separate library. For example, [`captchan`](https://github.com/catamphetamine/captchan) uses `loadResourceLinks()` and `expandStandaloneAttachmentLinks()` from [`social-components`](https://github.com/catamphetamine/social-components) library when rendering comments to load YouTube/Twitter/etc links and embed the attachments directly in comments.
+
 ## Models
 
 ### Board

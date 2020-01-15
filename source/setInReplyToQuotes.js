@@ -81,7 +81,9 @@ export default function setInReplyToQuotes(
 				if (quotedPost) {
 					quoteText = generatePostQuote(quotedPost, getGeneratePostQuoteOptions({
 						...options,
-						generatedQuoteMaxLength: getGeneratedInlineQuoteMaxLength(options)
+						generatedQuoteMaxLength: getGeneratedInlineQuoteMaxLength(options),
+						// This is an inline `post-link` quote, so don't go past the first line.
+						stopOnNewLine: true
 					}))
 				}
 				// `setInReplyToQuotes()` can be called multiple times
@@ -193,8 +195,7 @@ export default function setInReplyToQuotes(
 			let attachment
 			const text = generatePostQuote(quotedPost, {
 				...getGeneratePostQuoteOptions(options),
-				embedUntitledAttachments: true,
-				onAttachment: _ => attachment = _
+				onUntitledAttachment: _ => attachment = _
 			})
 			if (text) {
 				// Set `content` quote to the quoted post text abstract.
@@ -265,8 +266,7 @@ export function getGeneratePostQuoteOptions({
 		messages,
 		maxLength: generatedQuoteMaxLength || DEFAULT_GENERATED_QUOTE_MAX_LENGTH,
 		// `fitFactor` could be `0`.
-		fitFactor: generatedQuoteFitFactor === undefined ? DEFAULT_GENERATED_QUOTE_FIT_FACTOR : generatedQuoteFitFactor,
-		countNewLines: true
+		fitFactor: generatedQuoteFitFactor === undefined ? DEFAULT_GENERATED_QUOTE_FIT_FACTOR : generatedQuoteFitFactor
 	}
 }
 
