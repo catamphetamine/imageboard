@@ -28,27 +28,70 @@ fourChan.getBoards().then((boards) => {
     return `* [${category}] /${id}/ — ${title} — ${description}`
   })
   console.log(boardsList.join('\n'))
-})
 
-// Prints the first five threads on `/a/` board.
-fourChan.getThreads({
-  boardId: 'a'
-}).then((threads) => {
-  const threadsList = threads.slice(0, 5).map(({
-    id,
-    title,
-    createdAt,
-    commentsCount,
-    attachmentsCount,
-    comments
-  }) => {
-    return [
-      `#${id}`,
-      createdAt,
+  console.log()
+  console.log('===============================================')
+  console.log('=                 Board threads               =')
+  console.log('===============================================')
+  console.log()
+
+  // Prints the first five threads on `/a/` board.
+  fourChan.getThreads({
+    boardId: 'a'
+  }).then((threads) => {
+    const threadsList = threads.slice(0, 5).map(({
+      id,
       title,
-      getCommentText(comments[0]) || '(empty)',
-      `${commentsCount} comments, ${attachmentsCount} attachments`
-    ].join('\n\n')
+      createdAt,
+      commentsCount,
+      attachmentsCount,
+      comments
+    }) => {
+      return [
+        `#${id}`,
+        createdAt,
+        title,
+        getCommentText(comments[0]) || '(empty)',
+        `${commentsCount} comments, ${attachmentsCount} attachments`
+      ].join('\n\n')
+    })
+    console.log(threadsList.join('\n\n~~~~~~~~~~~~~~~~~~~~~~~~~\n\n'))
+
+    console.log()
+    console.log('===============================================')
+    console.log('=                 First thread                =')
+    console.log('===============================================')
+    console.log()
+
+    // Prints the first five comments of thread #193605320 on `/a/` board.
+    fourChan.getThread({
+      boardId: 'a',
+      threadId: threads[0].id
+    }).then((thread) => {
+      const commentsList = thread.comments.slice(0, 5).map((comment) => {
+        const {
+          id,
+          title,
+          createdAt,
+          replies,
+          attachments
+        } = comment
+        const parts = []
+        parts.push(`#${id}`)
+        parts.push(createdAt)
+        if (title) {
+          parts.push(title)
+        }
+        parts.push(getCommentText(comment) || '(empty)')
+        if (attachments) {
+          parts.push(`${attachments.length} attachments`)
+        }
+        if (title) {
+          parts.push(`${replies.length} replies`)
+        }
+        return parts.join('\n\n')
+      })
+      console.log(commentsList.join('\n\n~~~~~~~~~~~~~~~~~~~~~~~~~\n\n'))
+    })
   })
-  console.log(threadsList.join('\n\n~~~~~~~~~~~~~~~~~~~~~~~~~\n\n'))
 })
