@@ -174,20 +174,20 @@ function parseAudio(file, mimeType, name, {
 }
 
 function parseFile(file, mimeType, name, {
+	chan,
 	boardId,
 	attachmentUrl,
 	fileAttachmentUrl,
+	attachmentThumbnailUrl,
 	formatUrl
 }) {
-	return {
+	const attachment = {
 		type: 'file',
 		file: {
 			type: mimeType,
 			name,
 			ext: file.ext,
 			size: file.fsize, // in bytes
-			width: file.w, // 4chan.org `/f/` board attachments (Flash files) have `width` and `height`.
-			height: file.h, // 4chan.org `/f/` board attachments (Flash files) have `width` and `height`.
 			url: formatUrl(
 				fileAttachmentUrl || attachmentUrl,
 				boardId,
@@ -197,6 +197,29 @@ function parseFile(file, mimeType, name, {
 			)
 		}
 	}
+	// 4chan.org `/f/` board attachments (Flash files) have `width` and `height`.
+	if (file.w !== undefined) {
+		attachment.file.width = file.w
+		attachment.file.height = file.h
+	}
+	// On `lainchan.org` PDFs have thumbnails.
+	if (file.tim) {
+		const thumbnailExt = getThumbnailExt(file, 'file', chan)
+		const thumbnailType = getMimeType(thumbnailExt)
+		attachment.file.picture = {
+			type: thumbnailType,
+			width: file.tn_w,
+			height: file.tn_h,
+			url: formatUrl(
+				attachmentThumbnailUrl,
+				boardId,
+				file.tim,
+				thumbnailExt,
+				null
+			)
+		}
+	}
+	return attachment
 }
 
 function getThumbnailExt(file, type, chan) {
@@ -212,6 +235,10 @@ function getThumbnailExt(file, type, chan) {
 	if (chan === '8ch') {
 		return file.ext
 	}
+	// // `lainchan.org` has thumbnails on PDFs.
+	// if (chan === 'lainchan' && file.ext === '.pdf') {
+	// 	return '.png'
+	// }
 	// `lainchan.org` always has ".png" extension for thumbnails.
 	if (chan === 'lainchan' || chan === 'arisuchan') {
 		return '.png'
