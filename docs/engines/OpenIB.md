@@ -2,7 +2,7 @@
 
 `8ch.net` is built on [`OpenIB`](https://github.com/OpenIB/OpenIB) engine which is a security-focused fork of [`infinity`](https://github.com/ctrlcctrlv/infinity) enging which is a fork of [`vichan`](https://github.com/vichan-devel/vichan) engine which is a fork of [`Tinyboard`](https://github.com/savetheinternet/Tinyboard) engine.
 
-`vichan` API is mostly compatible to [`4chan` API](https://github.com/catamphetamine/captchan/blob/master/docs/4chan.org.md). For example, compare the official [`vichan` API readme](https://github.com/vichan-devel/vichan-API) to the official [`4chan` API readme](https://github.com/4chan/4chan-API): they're mostly the same.
+`vichan` API is mostly compatible to [`4chan` API](https://gitlab.com/catamphetamine/captchan/blob/master/docs/4chan.org.md). For example, compare the official [`vichan` API readme](https://github.com/vichan-devel/vichan-API) to the official [`4chan` API readme](https://github.com/4chan/4chan-API): they're mostly the same.
 
 ### Post
 
@@ -300,7 +300,7 @@ For some reason, hyperlinks in posts on `8ch.net` have their protocol colon wrap
 
 ### Get thread IDs list (and their latest comment dates)
 
-This is the same as `4chan`'s ["Get thread IDs list (and their latest comment dates)"](https://github.com/catamphetamine/imageboard/blob/master/docs/engines/4chan.md#get-thread-ids-list-and-their-latest-comment-dates) API endpoint, the only difference being that it doesn't have `replies` count, and also has comment author `id`s on boards that show comment author ids..
+This is the same as `4chan`'s ["Get thread IDs list (and their latest comment dates)"](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/4chan.md#get-thread-ids-list-and-their-latest-comment-dates) API endpoint, the only difference being that it doesn't have `replies` count, and also has comment author `id`s on boards that show comment author ids..
 
 [8kun.top/v/threads.json](https://8kun.top/v/threads.json)
 

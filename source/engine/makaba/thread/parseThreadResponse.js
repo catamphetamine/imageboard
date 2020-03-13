@@ -23,7 +23,7 @@ export default function parseThreadResponse(response) {
 		uniquePostersCount: parseInt(unique_posters),
 		// `files_count` includes the "opening comment"'s attachments in this case.
 		// `files_count` is incorrect anyway:
-		// https://github.com/catamphetamine/imageboard/blob/master/docs/engines/makaba-issues.md
+		// https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/makaba-issues.md
 		attachmentsCount: files_count,
 		isLocked: openingPost.closed === 1,
 		isRolling: openingPost.endless === 1,

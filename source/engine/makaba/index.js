@@ -63,7 +63,7 @@ export default class Makaba extends Engine {
 			board
 		} = parseThreadResponse(response)
 		// Fix incorrect attachments count.
-		// https://github.com/catamphetamine/imageboard/blob/master/docs/engines/makaba-issues.md
+		// https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/makaba-issues.md
 		thread.attachmentsCount = comments.reduce((sum, comment) => sum += comment.files.length, 0)
 		return Thread(
 			thread,

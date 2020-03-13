@@ -25,7 +25,7 @@ export default function parseThreadsResponse(response) {
 				commentsCount: posts_count,
 				// `files_count` doesn't include the "opening comment"'s attachments in this case.
 				// `files_count` is incorrect anyway:
-				// https://github.com/catamphetamine/imageboard/blob/master/docs/engines/makaba-issues.md
+				// https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/makaba-issues.md
 				attachmentsCount: files_count + files.length,
 				updatedAt: new Date(lasthit * 1000)
 			}

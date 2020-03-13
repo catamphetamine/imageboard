@@ -61,7 +61,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/catamphetamine/imageboard.git"
+    "url": "git+https://gitlab.com/catamphetamine/imageboard.git"
   },
   "keywords": [
     "imageboard",
@@ -72,7 +72,7 @@
   "author": "catamphetamine <purecatamphetamine@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/catamphetamine/imageboard/issues"
+    "url": "https://gitlab.com/catamphetamine/imageboard/issues"
   },
-  "homepage": "https://github.com/catamphetamine/imageboard#readme"
+  "homepage": "https://gitlab.com/catamphetamine/imageboard#readme"
 }
