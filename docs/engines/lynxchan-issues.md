@@ -9,7 +9,7 @@ While [adding support](http://lynxhub.com/lynxchan/res/722.html#q984) for [`lynx
 * No `authorId`s returned by JSON API while they're present on HTML pages.
 * No duration for video files.
 * No width and height for thumbnails in `files[]` array entries of a post.
-* No `files[]` array on threads in `/catalog.json` API response (only `thumb` thumbnail URL).
+* No "original" file name for files in `files[]` array  on threads in `/catalog.json` API response. For example, there's no "original" name for `*.txt` files.
 * (can be hacked around in a web browser) No `width` and `height` of the `thumb` thumbnail URL on threads in `/catalog.json` API response.
 * (can be hacked around in a web browser) No "original" image URL for the `thumb` thumbnail URL on threads in `/catalog.json` API response.
 * (can be hacked around in a web browser) No `width` and `height` of the "original" image URL for the `thumb` thumbnail URL on threads in `/catalog.json` API response.

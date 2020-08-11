@@ -158,7 +158,12 @@ Consists of the "opening post" (thread ID is the "opening post" ID) and some thr
 	"closed": 1,
 
 	// (optional)
-	// `1` if the thread is "archived" (whatever that could mean).
+	// `1` if the thread is "archived".
+	// When a thread expires due to being pushed off the
+	// last page of a board because there haven't been new replies.
+	// Eventually, a thread is deleted from the archive too.
+	// Not all boards have archival feature enabled.
+	// https://github.com/4chan/4chan-API/blob/master/pages/Archive.md
 	"archived": 1,
 
 	// (optional)
@@ -233,7 +238,7 @@ Consists of the "opening post" (thread ID is the "opening post" ID) and some thr
 		"images": 60 // Perhaps a cooldown for attaching an image to a comment in a thread. I guess it can be ignored if it's the same as the `replies` cooldown.
 	},
 	"meta_description": "&quot;/3/ - 3DCG&quot; is 4chan's board for 3D modeling and imagery.", // Board description.
-	"is_archived": 1, // Seems to always be `1`.
+	"is_archived": 1, // `1` if threads on this board are archived when they expire.
 
 	// Optional:
 	"spoilers": 1, // Whether the board uses "spoilers" for attachments.

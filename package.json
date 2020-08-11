@@ -1,6 +1,6 @@
 {
   "name": "imageboard",
-  "version": "0.4.16",
+  "version": "0.4.22",
   "description": "An easy uniform wrapper over the popular imageboards' API",
   "main": "index.commonjs.js",
   "module": "index.js",
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "domparser": "^0.1.1",
-    "social-components": "^0.1.18",
+    "social-components": "^0.1.29",
     "xmldom": "^0.2.1"
   },
   "devDependencies": {
@@ -24,7 +24,6 @@
     "@babel/plugin-transform-destructuring": "^7.1.2",
     "@babel/polyfill": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
-    "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.0.0",
     "autoprefixer": "^9.5.0",
     "babel-eslint": "^9.0.0",

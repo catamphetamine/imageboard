@@ -3,6 +3,8 @@ import expectToEqual from '../../../utility/expectToEqual'
 import KohlChan from '../../../chan/kohlchan'
 import KohlChanConfig from '../../../chan/kohlchan/index.json'
 
+import { fixNewLineCharacters } from './parseComment'
+
 function parseCommentTest(comment, options, expected, expectedWarnings = []) {
 	const consoleWarn = console.warn
 	const warnings = []
@@ -196,5 +198,11 @@ describe('parseComment', () => {
 				]
 			}
 		)
+	})
+})
+
+describe('fixNewLineCharacters', () => {
+	it('should fix carriage returns and replace new line characters with line break tags', () => {
+		fixNewLineCharacters('<span class="redText">testing\u000d\u000atesting</span>\u000d\u000a<code>code line 0\u000d\u000acode line 1\u000d\u000acode line 2</code>\u000d\u000a\u000d\u000a<span class="aa">aa line 0\u000d\u000aaa line 1\u000d\u000aaa line 2</span>').should.equal('<span class="redText">testing<br>testing</span><br><code>code line 0\ncode line 1\ncode line 2</code><br><br><span class="aa">aa line 0\naa line 1\naa line 2</span>')
 	})
 })

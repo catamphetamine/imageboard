@@ -231,7 +231,7 @@ export default {
               type: "quote",
               "block": true,
               generated: true,
-              content: "«Stalker 2»\n12 years of waiting\n«Borderlands 3»\n8 years of waiting"
+              content: "«Stalker 2»\n12 years of waiting\n«Borderlands 3»\n8 years of waiting\n«Shenmue 3»\n19 years of waiting"
             }]
           },
           "\n",
@@ -332,7 +332,7 @@ export default {
               type: "quote",
               "block": true,
               generated: true,
-              content: "«Stalker 2»\n12 years of waiting\n«Borderlands 3»\n8 years of waiting"
+              content: "«Stalker 2»\n12 years of waiting\n«Borderlands 3»\n8 years of waiting\n«Shenmue 3»\n19 years of waiting"
             }]
           },
           "\n",

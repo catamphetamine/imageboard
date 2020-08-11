@@ -186,15 +186,16 @@ export default class Engine {
 		const voteApi = this.options.api.vote
 		const method = voteApi.method
 		const responseType = voteApi.responseType || 'application/json'
-		const parameters = getVoteParameters(voteApi, params)
+		const urlParameters = getVoteParameters(voteApi, params)
+		const queryParameters = voteApi.query && getVoteParameters(voteApi.query, params)
 		// The API endpoint URL.
-		const url = this.toAbsoluteUrl(setParameters(voteApi.url, parameters))
+		const url = this.toAbsoluteUrl(setParameters(voteApi.url, urlParameters))
 		// Send a request to the API endpoint.
 		// Strangely, `2ch.hk` requires sending a `GET` HTTP request in order to vote.
 		let response
 		switch (method) {
 			case 'GET':
-				response = await this.request('GET', addUrlParameters(url, parameters), {
+				response = await this.request('GET', addQueryParameters(url, queryParameters), {
 					headers: {
 						'Accept': responseType
 					}
@@ -202,7 +203,7 @@ export default class Engine {
 				break
 			default:
 				response = await this.request(method, url, {
-					body: JSON.stringify(parameters),
+					body: queryParameters && JSON.stringify(queryParameters),
 					headers: {
 						'Content-Type': 'application/json',
 						'Accept': responseType
@@ -241,23 +242,27 @@ function setParameters(string, parameters) {
 	return string
 }
 
-function getVoteParameters(voteApi, parameters) {
+function getVoteParameters(config, parameters) {
 	const {
 		params,
 		voteParam,
 		voteParamUp,
 		voteParamDown
-	} = voteApi
+	} = config
+	let voteParameters
 	if (params) {
-		const voteParameters = JSON.parse(setParameters(params, parameters))
-		if (voteParam) {
-			voteParameters[voteParam] = parameters.up ? voteParamUp : voteParamDown
-		}
-		return voteParameters
+		voteParameters = JSON.parse(setParameters(params, parameters))
 	}
+	if (voteParam) {
+		if (!voteParameters) {
+			voteParameters = {}
+		}
+		voteParameters[voteParam] = parameters.up ? voteParamUp : voteParamDown
+	}
+	return voteParameters
 }
 
-function addUrlParameters(url, parameters) {
+function addQueryParameters(url, parameters) {
 	if (parameters) {
 		return url + '?' + Object.keys(parameters).map(key => `${key}=${parameters[key]}`).join('&')
 	}

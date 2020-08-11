@@ -13,11 +13,13 @@
 		"getBoards": "/boards.json",
 		"vote": {
 			"method": "GET",
-			"url": "/makaba/likes.fcgi",
-			"voteParam": "task",
+			"url": "/api/{action}",
+			"voteParam": "action",
 			"voteParamUp": "like",
 			"voteParamDown": "dislike",
-			"params": "{ \"board\": \"{boardId}\", \"num\": {commentId} }"
+			"query": {
+				"params": "{ \"board\": \"{boardId}\", \"num\": {commentId} }"
+			}
 		}
 	}
 }

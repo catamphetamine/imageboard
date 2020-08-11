@@ -1,6 +1,6 @@
 import expectToEqual from './utility/expectToEqual'
 
-import setInReplyToQuotes, { endsWithNewLineAndOptionalWhiteSpace } from './setInReplyToQuotes'
+import setPostLinkQuotes, { endsWithNewLineAndOptionalWhiteSpace } from './setPostLinkQuotes'
 
 const messages = {
 	comment: {
@@ -11,7 +11,7 @@ const messages = {
 	}
 }
 
-describe('setInReplyToQuotes', () => {
+describe('setPostLinkQuotes', () => {
 	it('should set "quote" from "content" if the comment is from another thread', () => {
 		const post = {
 			id: 111,
@@ -26,7 +26,7 @@ describe('setInReplyToQuotes', () => {
 				]
 			]
 		}
-		setInReplyToQuotes(
+		setPostLinkQuotes(
 			post.content,
 			{
 				getCommentById: id => undefined,
@@ -67,7 +67,7 @@ describe('setInReplyToQuotes', () => {
 				]
 			]
 		}
-		setInReplyToQuotes(
+		setPostLinkQuotes(
 			post.content,
 			{
 				getCommentById: id => undefined,
@@ -103,7 +103,7 @@ describe('setInReplyToQuotes', () => {
 				]
 			]
 		}
-		setInReplyToQuotes(
+		setPostLinkQuotes(
 			post.content,
 			{
 				getCommentById: id => undefined,
@@ -139,7 +139,7 @@ describe('setInReplyToQuotes', () => {
 				]
 			]
 		}
-		setInReplyToQuotes(
+		setPostLinkQuotes(
 			post.content,
 			{
 				getCommentById: id => undefined,
@@ -192,7 +192,7 @@ describe('setInReplyToQuotes', () => {
 				]
 			]
 		}
-		setInReplyToQuotes(
+		setPostLinkQuotes(
 			post.content,
 			{
 				getCommentById: id => id === quotedPost.id ? quotedPost : undefined,
@@ -236,7 +236,7 @@ describe('setInReplyToQuotes', () => {
 				]
 			]
 		}
-		setInReplyToQuotes(
+		setPostLinkQuotes(
 			post.content,
 			{
 				getCommentById: id => id === quotedPost.id ? quotedPost : undefined,
@@ -284,7 +284,7 @@ describe('setInReplyToQuotes', () => {
 				]
 			]
 		}
-		setInReplyToQuotes(
+		setPostLinkQuotes(
 			post.content,
 			{
 				getCommentById: (id) => {

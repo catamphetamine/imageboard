@@ -1,7 +1,7 @@
 import { canGeneratePostQuoteIgnoringNestedPostQuotes } from 'social-components/commonjs/utility/post/generatePostQuote'
 
 import generatePreview from './generatePreview'
-import setInReplyToQuotes, { getGeneratePostQuoteOptions } from './setInReplyToQuotes'
+import setPostLinkQuotes, { getGeneratePostQuoteOptions } from './setPostLinkQuotes'
 import classifyPostLinks from './classifyPostLinks'
 import setPostLinksDefaultText from './setPostLinksDefaultText'
 
@@ -13,7 +13,9 @@ import setPostLinksDefaultText from './setPostLinksDefaultText'
  * @param {function} options.getCommentById
  * @param {object} [options.messages]
  * @param {number} [options.generatedQuoteMaxLength]
- * @param {number} [options.generatedQuoteFitFactor]
+ * @param {number} [options.generatedQuoteMinFitFactor]
+ * @param {number} [options.generatedQuoteMaxFitFactor]
+ * @param {number} [options.generatedQuoteNewLineCharacterLength]
  * @param {number} options.commentLengthLimit
  * @return {boolean} [contentDidChange] Returns `true` if `comment`'s content has changed.
  */
@@ -22,7 +24,9 @@ export function generatePostLinksAndUpdatePreview(comment, {
 	getCommentById,
 	messages,
 	generatedQuoteMaxLength,
-	generatedQuoteFitFactor,
+	generatedQuoteMinFitFactor,
+	generatedQuoteMaxFitFactor,
+	generatedQuoteNewLineCharacterLength,
 	commentLengthLimit,
 	hasBeenCalledBefore,
 	isParentCommentUpdate
@@ -30,7 +34,7 @@ export function generatePostLinksAndUpdatePreview(comment, {
 	const content = comment.content
 	let contentDidChange
 	if (!hasBeenCalledBefore) {
-		// `classifyPostLinks()` must precede `setInReplyToQuotes()`,
+		// `classifyPostLinks()` must precede `setPostLinkQuotes()`,
 		// because it sets `postWasDeleted: true` flags for deleted comments.
 		classifyPostLinks(content, { getCommentById, threadId })
 		if (messages) {
@@ -47,11 +51,13 @@ export function generatePostLinksAndUpdatePreview(comment, {
 	}
 	if (!hasBeenCalledBefore || isParentCommentUpdate) {
 		// Autogenerate "in reply to" quotes.
-		if (setInReplyToQuotes(content, {
+		if (setPostLinkQuotes(content, {
 			getCommentById,
 			messages,
 			generatedQuoteMaxLength,
-			generatedQuoteFitFactor
+			generatedQuoteMinFitFactor,
+			generatedQuoteMaxFitFactor,
+			generatedQuoteNewLineCharacterLength
 		})) {
 			contentDidChange = true
 		}
@@ -73,6 +79,9 @@ export function generatePostLinksAndUpdatePreview(comment, {
  * @param {function} options.parseCommentContent — `.parseCommentContent()` method of an imageboard instance.
  * @param {object} [options.messages]
  * @param {number} [options.generatedQuoteMaxLength]
+ * @param {number} [options.generatedQuoteMinFitFactor]
+ * @param {number} [options.generatedQuoteMaxFitFactor]
+ * @param {number} [options.generatedQuoteNewLineCharacterLength]
  * @param {number} options.commentLengthLimit
  * @param {boolean} [options.expandReplies] — `expandReplies` option of `imageboard` constructor.
  */
@@ -82,7 +91,9 @@ export function addParseContent(comment, {
 	getCommentById,
 	messages,
 	generatedQuoteMaxLength,
-	generatedQuoteFitFactor,
+	generatedQuoteMinFitFactor,
+	generatedQuoteMaxFitFactor,
+	generatedQuoteNewLineCharacterLength,
 	commentLengthLimit,
 	expandReplies,
 	parseCommentContent
@@ -100,7 +111,9 @@ export function addParseContent(comment, {
 			threadId,
 			messages,
 			generatedQuoteMaxLength,
-			generatedQuoteFitFactor,
+			generatedQuoteMinFitFactor,
+			generatedQuoteMaxFitFactor,
+			generatedQuoteNewLineCharacterLength,
 			commentLengthLimit,
 			hasBeenCalledBefore,
 			isParentCommentUpdate
@@ -134,37 +147,61 @@ export function addParseContent(comment, {
 				if (options.exhaustive === false) {
 					const rawContent = comment.content
 					parseContent(comment)
-					// Don't autogenerate `post-link` quotes yet,
-					// just mark `post-link`s with `_block: true/false`.
-					setInReplyToQuotes(
+					// At this stage, it won't autogenerate quotes for "block" `post-link`s
+					// not having human-written `content`. Instead, for such `post-link`s,
+					// it will just flag them with `_block: true`.
+					// The `_block` flag will be used later when
+					// `social-components/canGeneratePostQuoteIgnoringNestedPostQuotes()`
+					// is called on this comment in order to find out
+					// whether the "previous" comments quoted by this comment,
+					// if there're any, are required to be parsed,
+					// in order to autogenerate this comment's quote.
+					// For example, there's comment A, that quotes comment B,
+					// that, in turn, quotes comment C.
+					// In such case, when showing comments starting from C,
+					// B.parseContent({ exhaustive: false }) is called,
+					// which marks B's `post-link` to A with `_block: true`,
+					// so that `canGeneratePostQuoteIgnoringNestedPostQuotes(B)`
+					// could determine if it could skip the "block" `post-link` to A
+					// when generating the quote for the `post-link` to B inside C,
+					// meaning that it could skip parsing comment A, and only parse
+					// comments C and B.
+					setPostLinkQuotes(
 						comment.content,
 						{
 							getCommentById,
 							messages,
+							// These three options aren't used anyway,
+							// but they're passed just for code consistency.
 							generatedQuoteMaxLength,
+							generatedQuoteMinFitFactor,
+							generatedQuoteMaxFitFactor,
+							generatedQuoteNewLineCharacterLength,
 							generateQuotes: false
 						}
 					)
 					if (canGeneratePostQuoteIgnoringNestedPostQuotes(comment, getGeneratePostQuoteOptions({
 						messages,
-						// `generatedQuoteMaxLength` and `generatedQuoteFitFactor`
+						// `generatedQuoteMaxLength` and `generatedQuote(Min/Max)FitFactor`
 						// passed here are the "maximum" ones between block `post-link` quotes
 						// and inline `post-link` quotes: `inReplyTo` list currently
 						// doesn't specify whether this `post` is a reply with a
 						// block `post-link` to the quoted comment, or a reply with an
 						// inline `post-link` to the quoted comment.
-						// `setInReplyToQuotes()` could add that info to `inReplyTo` list
+						// `setPostLinkQuotes()` could add that info to `inReplyTo` list
 						// (for example, via something like an `_inReplyToQuoteType` list)
 						// but implementing that feature doesn't seem like a necessity:
 						// instead, the code here doesn't differentiate between an
 						// inline `post-link` and a block `post-link`, simply
 						// passing the maximum `maxLength` of the two.
 						// Since block `post-link` quotes have larger `maxLength`
-						// than inline `post-link` quotes (in `setInReplyToQuotes()`)
+						// than inline `post-link` quotes (in `setPostLinkQuotes()`)
 						// then it's assumed that `generatedQuoteMaxLength` is the
 						// maximum of the two, and their `fitFactor`s are the same.
 						generatedQuoteMaxLength,
-						generatedQuoteFitFactor
+						generatedQuoteMinFitFactor,
+						generatedQuoteMaxFitFactor,
+						generatedQuoteNewLineCharacterLength
 					}))) {
 						_canGeneratePostQuoteIgnoringNestedPostQuotes = true
 						// Don't parse `inReplyTo` comments for this "non-exhaustive" parse.
@@ -196,25 +233,40 @@ export function addParseContent(comment, {
 				parseContent()
 			}
 			if (shouldBeReParsedLater) {
-				// Passing `generateBlockQuotes: false` could seem like not making any sense,
-				// but it is used in `captchan` when parsing comments not starting from the first one:
-				// when "Show previous" button is shown and comments are output from after the "latest read" one.
-				// In those cases, when the first shown comment quotes an earlier comment
-				// having a manually written quote for a post link, such manually written quotes
-				// should be moved inside that `post-link`'s `content`.
-				// Example: #1235 ">>1234 \n >Quote \n Text" (hidden), #1236 ">>1235 \n Second text" (shown).
-				// Without calling `setInReplyToQuotes({ generateBlockQuotes: false })` it would be:
-				// #1236 ">>««Quote» \n Text» \n Second text".
-				// With calling `setInReplyToQuotes({ generateBlockQuotes: false })` it would be:
-				// #1236 ">>«Text» \n Second text".
-				// Also, inline `post-link` quotes should be generated too
-				// because they're also present in such comment's quotes.
-				setInReplyToQuotes(
+				// See the comments above on passing `generateQuotes: false`.
+				// Passing `generateBlockQuotes: false` here has a different goal:
+				// it simply skips autogenerating quotes for "block" `post-link`s
+				// while autogenerating quotes for "inline" `post-link`s.
+				// This way, it could skip parsing the whole comment tree,
+				// because "inline" `post-link`s are very rare.
+				// Such approach wouldn't work in weird edge cases
+				// when a person posts a comment that simply quotes some other comment
+				// (happens on 4chan), in which case such comment's `content`
+				// will be assumed empty when autogenerating its quote
+				// in the `content` of its replies. But such cases are ignored
+				// because it's not encouraged to write such weird comments,
+				// and comment authors should at least input some text (or attach a media).
+				//
+				// Example (not the edge case):
+				//
+				// Comment #1235: ">>1234 \n >Hello \n Hi". (not shown)
+				// Comment #1236: ">>1235 \n Wassup". (shown)
+				//
+				// Without `generateBlockQuotes: false` the parsed comment content would be:
+				// Comment #1236: ">>««Hello» \n Hi» \n Wassup".
+				//
+				// With `generateBlockQuotes: false` the parsed comment content would be:
+				// Comment #1236: ">>«Hi» \n Wassup".
+				//
+				setPostLinkQuotes(
 					comment.content,
 					{
 						getCommentById,
 						messages,
 						generatedQuoteMaxLength,
+						generatedQuoteMinFitFactor,
+						generatedQuoteMaxFitFactor,
+						generatedQuoteNewLineCharacterLength,
 						generateBlockQuotes: false
 					}
 				)

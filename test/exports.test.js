@@ -6,7 +6,7 @@ import {
 	// generateQuotes,
 	// generatePreview,
 	// generateThreadTitle,
-	// setInReplyToQuotes
+	// setPostLinkQuotes
 } from '../index'
 
 describe('exports', () => {
@@ -18,7 +18,7 @@ describe('exports', () => {
 		// generateQuotes.should.be.a('function')
 		// generatePreview.should.be.a('function')
 		// generateThreadTitle.should.be.a('function')
-		// setInReplyToQuotes.should.be.a('function')
+		// setPostLinkQuotes.should.be.a('function')
 	})
 
 	it('should export CommonJS', () => {
@@ -31,6 +31,6 @@ describe('exports', () => {
 		// Library.generateQuotes.should.be.a('function')
 		// Library.generatePreview.should.be.a('function')
 		// Library.generateThreadTitle.should.be.a('function')
-		// Library.setInReplyToQuotes.should.be.a('function')
+		// Library.setPostLinkQuotes.should.be.a('function')
 	})
 })

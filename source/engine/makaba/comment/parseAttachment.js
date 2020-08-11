@@ -128,6 +128,8 @@ function getContentTypeByFileType(type) {
 		case 6:
 			return 'video/webm'
 		case 10:
+			// If an `mp4` audio is uploaded, it's converted
+			// to a `mp4` video with zero `width` and `height`.
 			return 'video/mp4'
 		// Stickers.
 		case STICKER_FILE_TYPE:

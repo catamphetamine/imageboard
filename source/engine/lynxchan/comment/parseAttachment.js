@@ -6,7 +6,13 @@ export default function parseAttachment(file, options) {
 		...options,
 		formatUrl: (...args) => options.toAbsoluteUrl(formatUrl.apply(this, args))
 	}
-	const [name] = splitFilename(file.originalName)
+	let name
+	// `lynxchan` doesn't provide `file.originalName`
+	// in `catalog.json` API response.
+	if (file.originalName) {
+		const [_name] = splitFilename(file.originalName)
+		name = _name
+	}
 	const mimeType = file.mime
 	if (mimeType && mimeType.indexOf('image/') === 0) {
 		return parsePicture(file, mimeType, name, options)

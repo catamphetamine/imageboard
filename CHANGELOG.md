@@ -1,3 +1,35 @@
+0.4.22 / 08.08.2020
+==================
+
+* Added `generatedQuoteNewLineCharacterLength: number?` option.
+
+0.4.21 / 06.08.2020
+==================
+
+* Renamed `setInReplyToQuotes` to `setPostLinkQuotes`.
+
+0.4.20 / 05.08.2020
+==================
+
+* Fixed `lynxchan` bug: `file.originalName` isn't present in `catalog.json` API response.
+
+0.4.19 / 05.08.2020
+==================
+
+* Fixed `makaba` voting API url.
+
+0.4.18 / 23.03.2020
+==================
+
+* Fixed LynxChan parser replacing all `\n`-s with `<br>`s in `<code>` and `<span class="aa">`.
+
+* Fixed Kohlchan multiline `<code>`.
+
+0.4.17 / 22.03.2020
+==================
+
+* Fixed LynxChan 2.3 replacing all `<br>`s with `\n`-s.
+
 0.4.0 / 27.12.2019
 ==================
 

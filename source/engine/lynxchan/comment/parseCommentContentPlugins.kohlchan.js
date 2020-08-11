@@ -72,10 +72,21 @@ function createPostLink(content, util, { commentUrlParser }) {
 	}
 }
 
+const multilineCode = {
+	tag: 'code',
+	createBlock(content) {
+		return {
+			type: 'code',
+			content
+		}
+	}
+}
+
 export default [
 	emoji,
 	quoteLinkLegacy1,
 	quoteLinkLegacy2,
+	multilineCode,
 	...PARSE_COMMENT_CONTENT_PLUGINS,
 	...LEGACY_MARKUP_PLUGINS
 ]
