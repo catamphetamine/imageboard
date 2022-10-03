@@ -1,21 +1,35 @@
-require('regenerator-runtime/runtime')
-var fetch = require('node-fetch')
-var imageboard = require('..')
-var getCommentText = require('..').getCommentText
+import fetch from 'node-fetch'
+import imageboard, { getCommentText } from 'imageboard'
 
-var fourChan = imageboard('4chan', {
+const IMAGEBOARD_ID = '4chan'
+
+const fourChan = imageboard(IMAGEBOARD_ID, {
   // Sends an HTTP request.
   // Any HTTP request library can be used here.
   // Must return a `Promise` resolving to response text.
   request: (method, url, { body, headers }) => {
     return fetch(url, { method, headers, body }).then((response) => {
       if (response.ok) {
-        return response.text()
+        return response.text().then((responseText) => ({
+          url: response.url,
+          response: responseText
+        }))
       }
-      throw new Error(response.status)
+      const error = new Error(response.statusText)
+      // Set HTTP Response status code on the error.
+      error.status = response.status
+      throw error
     })
   }
 })
+
+// // Test `2ch.hk` really old archived thread.
+// return fourChan.getThread({
+//   boardId: 'b',
+//   threadId: 119034529
+// }).then((thread) => {
+//   console.log(JSON.stringify(thread, null, 2))
+// });
 
 // Prints the first 10 boards.
 fourChan.getBoards().then((boards) => {
@@ -37,7 +51,7 @@ fourChan.getBoards().then((boards) => {
 
   // Prints the first five threads on `/a/` board.
   fourChan.getThreads({
-    boardId: 'a'
+    boardId: boards[0].id
   }).then((threads) => {
     const threadsList = threads.slice(0, 5).map(({
       id,
@@ -65,7 +79,7 @@ fourChan.getBoards().then((boards) => {
 
     // Prints the first five comments of thread #193605320 on `/a/` board.
     fourChan.getThread({
-      boardId: 'a',
+      boardId: boards[0].id,
       threadId: threads[0].id
     }).then((thread) => {
       const commentsList = thread.comments.slice(0, 5).map((comment) => {
@@ -86,7 +100,7 @@ fourChan.getBoards().then((boards) => {
         if (attachments) {
           parts.push(`${attachments.length} attachments`)
         }
-        if (title) {
+        if (replies) {
           parts.push(`${replies.length} replies`)
         }
         return parts.join('\n\n')

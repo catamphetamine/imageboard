@@ -1,0 +1,161 @@
+{
+	"id": "2ch",
+	"domain": "2ch.hk",
+	"engine": "makaba",
+	"tripcode": {
+		"!!%adm%!!": "administrator",
+		"!!%mod%!!": "moderator"
+	},
+	"threadUrl": "/{boardId}/res/{threadId}.html",
+	"commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
+	"authResetUrl": "https://2ch.hk/makaba/makaba.fcgi?task=restore",
+	"api": {
+		"getThread": "/{boardId}/res/{threadId}.json",
+		"getThreadIncremental": "/api/mobile/v2/after/{boardId}/{threadId}/{commentId}",
+		"getArchivedThread": "/{boardId}/arch/res/{threadId}.json",
+		"getThreads": "/{boardId}/catalog.json",
+		"getThreadsStats": "/{boardId}/threads.json",
+		"getThreadsWithLatestCommentsFirstPage": "/{boardId}/index.json",
+		"getThreadsWithLatestCommentsPage": "/{boardId}/{pageIndex}.json",
+		"getBoards": "/api/mobile/v2/boards",
+		"vote": {
+			"method": "GET",
+			"url": "/api/{action}",
+			"urlParameters": {
+				"action": {
+					"parameter": "up",
+					"type": "boolean",
+					"switch": {
+						"true": "like",
+						"false": "dislike"
+					}
+				}
+			},
+			"parameters": {
+				"board": {
+					"parameter": "boardId"
+				},
+				"num": {
+					"parameter": "commentId"
+				}
+			}
+		},
+		"post": {
+			"method": "POST",
+			"url": "/user/posting",
+			"parameters": {
+				"task": {
+					"value": "post"
+				},
+				"board": {
+					"parameter": "boardId"
+				},
+				"thread": {
+					"parameter": "threadId",
+					"default": 0
+				},
+				"op_mark": {
+					"type": "numeric-boolean",
+					"parameter": "authorIsThreadAuthor"
+				},
+				"usercode": {
+					"parameter": "accessToken"
+				},
+				"captcha_type": {
+					"parameter": "captchaType"
+				},
+				"email": {
+					"parameter": "authorEmail"
+				},
+				"name": {
+					"parameter": "authorName"
+				},
+				"subject": {
+					"parameter": "title"
+				},
+				"icon": {
+					"parameter": "authorBadgeId",
+					"default": -1
+				},
+				"comment": {
+					"parameter": "content"
+				},
+				"tags": {
+					"parameter": "tags"
+				},
+				"formimages": {
+					"parameter": "attachments"
+				},
+				"g-recaptcha-response": {
+					"if": {
+						"captchaType": [
+							"recaptcha",
+							"invisible_recaptcha"
+						]
+					},
+					"parameter": "captchaSolution"
+				},
+				"2chaptcha_id": {
+					"if": {
+						"captchaType": [
+							"recaptcha",
+							"invisible_recaptcha"
+						]
+					},
+					"parameter": "captchaId"
+				},
+				"2chcaptcha_id": {
+					"if": {
+						"captchaType": "2chcaptcha"
+					},
+					"parameter": "captchaId"
+				},
+				"2chcaptcha_value": {
+					"if": {
+						"captchaType": "2chcaptcha"
+					},
+					"parameter": "captchaSolution"
+				}
+			}
+		},
+		"report": {
+			"method": "POST",
+			"url": "/user/report",
+			"parameters": {
+				"board": {
+					"parameter": "boardId"
+				},
+				"thread": {
+					"parameter": "threadId"
+				},
+				"posts": {
+					"parameter": "commentId"
+				},
+				"comment": {
+					"parameter": "content"
+				}
+			}
+		},
+		"logIn": {
+			"method": "POST",
+			"url": "/makaba/makaba.fcgi?json=1",
+			"parameters": {
+				"task": {
+					"value": "auth"
+				},
+				"usercode": {
+					"parameter": "authToken"
+				}
+			}
+		},
+		"logOut": {
+			"method": "POST",
+			"url": "/makaba/posting.fcgi?json=1",
+			"parameters": {
+				"task": {
+					"value": "logout"
+				}
+			}
+		}
+	}
+}

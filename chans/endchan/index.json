@@ -1,0 +1,18 @@
+{
+	"id": "endchan",
+	"domain": "endchan.net",
+	"engine": "lynxchan",
+	"thumbnailSize": 255,
+	"defaultAuthorName": {
+		"*": "Anonymous",
+		"ausneets": "NEET",
+		"kc": "Bernd"
+	},
+	"threadUrl": "/{boardId}/res/{threadId}.html",
+	"commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
+	"api": {
+		"getThread": "/{boardId}/res/{threadId}.json",
+		"getThreads": "/{boardId}/catalog.json",
+		"getBoards": "/index.json"
+	}
+}

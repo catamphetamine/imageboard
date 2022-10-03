@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "name": "imageboard/DOMParser",
+  "version": "0.0.0",
+  "description": "A cross-platform implementation of DOMParser",
+  "type": "module",
+  "exports": {
+    ".": {
+      "node": "./node.js",
+      "default": "./browser.js"
+    }
+  },
+  "sideEffects": false
+}

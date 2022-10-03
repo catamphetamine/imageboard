@@ -1,5 +1,6 @@
-var DOMParser = require('xmldom').DOMParser
-module.exports = function parseDocument(html) {
+import { DOMParser } from '@xmldom/xmldom'
+
+export default function parseDocument(html) {
 	// Web browsers seem to discard whitespace.
 	html = html.trim()
 	// Without the `<body/>` wrapper it would discard root-level text nodes.

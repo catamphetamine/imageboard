@@ -1,1 +1,0 @@
-export { default as default, getExtension as getExtension } from 'social-components/commonjs/utility/getMimeType'

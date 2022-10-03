@@ -2,7 +2,15 @@
 
 `8ch.net` is built on [`OpenIB`](https://github.com/OpenIB/OpenIB) engine which is a security-focused fork of [`infinity`](https://github.com/ctrlcctrlv/infinity) enging which is a fork of [`vichan`](https://github.com/vichan-devel/vichan) engine which is a fork of [`Tinyboard`](https://github.com/savetheinternet/Tinyboard) engine.
 
-`vichan` API is mostly compatible to [`4chan` API](https://gitlab.com/catamphetamine/captchan/blob/master/docs/4chan.org.md). For example, compare the official [`vichan` API readme](https://github.com/vichan-devel/vichan-API) to the official [`4chan` API readme](https://github.com/4chan/4chan-API): they're mostly the same.
+`vichan` API is mostly compatible to [`4chan` API](https://gitlab.com/catamphetamine/anychan/blob/master/docs/4chan.org.md). For example, compare the official [`vichan` API readme](https://github.com/vichan-devel/vichan-API) to the official [`4chan` API readme](https://github.com/4chan/4chan-API): they're mostly the same.
+
+### Differences from `vichan`
+
+* `tim` is a 64-character string. Looks like a hash of some sort.
+
+* Posts have an `fpath` property that can be `0` or `1`. It controls the URL ("file path") of the attachments. See [Attachments](#attachments) section for more info.
+
+* Posts have a `bumplocked` property that can be `"0"` or `"1"`. For some weird reason, it's not a number but rather a string. "Bumplocked" threads are in ["autosage"](https://twitter.com/infinitechan/status/555013038839848961) mode. In other words, "bumplocked" threads never get bumped, even when someone leaves a comment.
 
 ### Post
 

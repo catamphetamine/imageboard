@@ -1,1 +1,0 @@
-export { default } from 'social-components/commonjs/utility/post/trimWhitespace'

@@ -1,3 +1,72 @@
+0.5.0 / 12.09.2022
+==================
+
+* Changed package exports to "ES Modules".
+
+* Refactored some code.
+
+* Added some new features.
+
+* Renamed `isArchived` parameter of `getThread()` to `archived`.
+
+* Renamed some properties of `Thread`:
+  * `isSticky` → `onTop`, with an optional `onTopOrder: number` (ex. `makaba` engine)
+  * `isRolling` → `trimming`
+  * `isArchived` → `archived`
+  * `isLocked` → `locked`
+  * `isBumpLimitReached` → `bumpLimitReached`
+  * `isAttachmentLimitReached` → `attachmentLimitReached`
+
+* Renamed some properties of `Board`:
+  * `areSubjectsAllowed` → `features.subject`
+  * `areAttachmentsAllowed` → `features.attachments`
+  * `areTagsAllowed` → `features.tags`
+  * `hasVoting` → `features.votes`
+  * `isSageAllowed` → `features.sage`
+  * `areNamesAllowed` → `features.authorName`
+  * `isTextOnly: true` → `features.attachments: false`
+  * `forceAnonymity: true` → `features.authorName: false`
+  * `isNotSafeForWork` → `notSafeForWork`
+  * `usesShiftJISArt` → `features.shiftJISArt`
+  * `usesCodeTags` → `features.codeTag`
+  * `usesOekaki` → `features.oekaki`
+  * `usesMath` → `features.math`
+
+* Renamed some properties of `Comment`:
+	* `isThreadAuthor` → `authorIsThreadAuthor`
+	* `isSage` → `sage`
+
+0.4.38 / 16.05.2021
+==================
+
+* `commentsCount` and `attachmentsCount` now include the "original" ("opening" / "main") comment of a thread.
+
+* Added `withLatestComments` and `maxLatestCommentsPages` options to `getThreads()`.
+
+* Added a "get boards list" API method on `lynxchan`.
+
+* Added `lynxchan` API description.
+
+0.4.37 / 04.05.2021
+==================
+
+* Updated `makaba` engine: new voting API response.
+
+* Updated `4chan` engine to use the new ["Board Flags"](https://github.com/4chan/4chan-API/commit/d095a7af76d0a5a48e3008fb9a05e5b3bbb6c2bb) feature.
+
+* Updated engine docs: `4chan`, `makaba`.
+
+* Refactored voting API code.
+
+* Added some basic posting API code (not tested).
+
+0.4.35 / 08.04.2021
+==================
+
+* Added archived thread support in `makaba` engine.
+
+* (miscellaneous) (advanced) The `request()` function, when throwing an error, should set the `.status` property of that error to the HTTP Response status code. The rationale is that the error status code is compared to `404` in `makaba` engine during `getThread()` call to determine whether it should look for the thread in the archive.
+
 0.4.22 / 08.08.2020
 ==================
 

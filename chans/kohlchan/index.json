@@ -1,0 +1,37 @@
+{
+	"id": "kohlchan",
+	"domain": "kohlchan.net",
+	"engine": "lynxchan",
+	"thumbnailSize": 200,
+	"defaultAuthorName": {
+		"*": "Bernd",
+		"ru": "Бернд"
+	},
+  "capcode": {
+    "Administrator": {
+    	"role": "administrator"
+    },
+    "Global Moderator": {
+    	"role": "moderator"
+    },
+    "Board Owner": {
+    	"role": "moderator",
+    	"scope": "board"
+    }
+  },
+  "threadUrl": "/{boardId}/res/{threadId}.html",
+  "commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
+	"api": {
+		"getThread": "/{boardId}/res/{threadId}.json",
+		"getThreads": "/{boardId}/catalog.json",
+		"getThreadsWithLatestCommentsPage": "/{boardId}/{page}.json",
+		"getBoardsPage": "/boards.js?json=1&page={page}"
+	},
+	"boardCategoryTitleById": {
+		"vip": "VIP",
+		"allgemein": "Allgemein",
+		"weltweit": "Weltweit",
+		"sonstiges": "Sonstiges",
+		"*": "Andere"
+	}
+}

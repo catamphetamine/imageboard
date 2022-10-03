@@ -1,8 +1,10 @@
 # `imageboard`
 
-An easy uniform wrapper over the popular imageboards' API.
+An easy uniform wrapper over the popular [imageboards](https://tvtropes.org/pmwiki/pmwiki.php/Main/Imageboards)' API.
 
-Originally created as part of the [`captchan`](https://gitlab.com/catamphetamine/captchan) imageboard GUI.
+[More on each engine's API](#imageboards-api)
+
+Originally created as part of the [`anychan`](https://gitlab.com/catamphetamine/anychan) imageboard GUI.
 
 Supported engines:
 
@@ -32,16 +34,11 @@ Features:
 * (optional) Parse comments HTML into structured JSON documents.
 * (optional) Automatically generate shortened "previews" for long comments.
 * (optional) Automatically insert quoted posts' text when none provided.
-* (optional) [Censor](#censorship) certain words using regular expression syntax.
 * (optional) Automatically generate thread title when it's missing.
 
 To do:
 
 * Add methods for creating threads and posting comments.
-
-## GitHub
-
-On March 9th, 2020, GitHub, Inc. silently [banned](https://medium.com/@catamphetamine/how-github-blocked-me-and-all-my-libraries-c32c61f061d3) my account (and all my libraries) without any notice. I opened a support ticked but they didn't answer. Because of that, I had to move all my libraries to [GitLab](https://gitlab.com/catamphetamine).
 
 ## Install
 
@@ -49,20 +46,17 @@ On March 9th, 2020, GitHub, Inc. silently [banned](https://medium.com/@catamphet
 npm install imageboard --save
 ```
 
-This library uses `async`/`await` syntax so including `regenerator-runtime/runtime` is required when using it. In Node.js that usually means including `@babel/runtime`. In a web browser that usually means including `@babel/polyfill` (though starting from Babel `7.4.0` `@babel/polyfill` [has been deprecated](https://babeljs.io/docs/en/babel-polyfill) in favor of manually including `core-js/stable` and `regenerator-runtime/runtime`).
-
 ## Example
 
-This example will be using [`fetch()`](https://developer.mozilla.org/docs/Web/API/Fetch_API/Using_Fetch) for making HTTP requests (though any other library could be used). Node.js doesn't have `fetch()` yet so first install a "polyfill" for it, and also install `regenerator-runtime` (because `imageboard` package requires it).
+This example will be using [`fetch()`](https://developer.mozilla.org/docs/Web/API/Fetch_API/Using_Fetch) for making HTTP requests (though any other library could be used). Node.js doesn't have `fetch()` yet so install a "polyfill" for it.
 
 ```
-npm install node-fetch regenerator-runtime/runtime --save
+npm install node-fetch --save
 ```
 
 Then, create an imageboard instance. This example will use `4chan.org` as a data source.
 
 ```js
-require('regenerator-runtime/runtime')
 var fetch = require('node-fetch')
 var imageboard = require('imageboard')
 
@@ -75,7 +69,10 @@ var fourChan = imageboard('4chan', {
       if (response.ok) {
         return response.text()
       }
-      throw new Error(response.status)
+      var error = new Error(response.statusText)
+      // Set HTTP Response status code on the error.
+      error.status = response.status
+      throw error
     })
   }
 })
@@ -248,23 +245,36 @@ See [Imageboard config](#imageboard-config) for the available imageboard `config
 
 Available `options`:
 
-* `request(method: string, url: string, parameters: object?): Promise` — (required) Sends HTTP requests to imageboard API. Must return a `Promise` resolving to response JSON. Example: `request("GET", "https://8kun.top/boards.json")`.
+* `request(method: string, url: string, parameters: object?): Promise` — (required) Sends HTTP requests to imageboard API. Must return a `Promise` resolving to response text.
+
+```js
+request("GET", "https://8kun.top/boards.json") === "[
+  { "uri": "b", "title": "Random" },
+  ...
+]"
+```
+
+<details>
+<summary>Reading archived threads on <code>2ch.hk</code> imageboard requires modifying the <code>request()</code> return type a bit.</summary>
+
+######
+
+The `request()` function can also return a `Promise` resolving to an object of shape `{ response, url }` where `response` is the response text and `url` is the "final" URL (after any redirects): this `url` is used internally when requesting archived threads from `2ch.hk` imageboard in order to get their `archivedAt` timestamp that can only be obtained from the URL the engine redirects to.
+</details>
 
 * `commentUrl: string?` — (optional) A template for the `url` of all `type: "post-link"`s (links to other comments) in parsed comments' `content`. Is `"/{boardId}/{threadId}#{commentId}"` by default.
 
 * `messages: Messages?` — (optional) "Messages" ("strings", "labels") used when parsing comments `content`. See [Messages](#messages).
 
-* `censoredWords: object[]?` — (optional) An array of pre-compiled word filters which can be used for censoring certain words in parsed comments' `content` or `title`. See the [Censorship](#censorship) section of this README.
-
 * `commentLengthLimit: number` — (optional) A `number` telling the maximum comment length (in "points" which can be thought of as "characters and character equivalents for non-text content") upon exceeding which a preview is generated for a comment (as `comment.contentPreview`).
 
 * `useRelativeUrls: boolean` — (optional) Determines whether to use relative or absolute URLs for attachments. Relative URLs are for the cases when an imageboard is temporarily hosted on an alternative domain and so all attachments are too meaning that the default imageboard domain name shouldn't be present in attachment URLs. Is `false` by default.
 
-* `parseContent: boolean` — (optional) Can be set to `false` to skip parsing comment HTML into [`Content`](#content). The rationale is that when there're 500-some comments in a thread parsing all of them up-front can take up to a second on a modern desktop CPU which results in subpar user experience. By deferring parsing comments' HTML an application could first only parse the first N comments' HTML and only as the user starts scrolling would it proceed to parsing the next comments. Or maybe a developer wants to use their own HTML parser or even render comments' HTML as is. If `parseContent` is set to `false` then each non-empty comment will have their `content` being the original unmodified HTML string. In such cases `thread.title` won't be autogenerated when it's missing. `imageboard.parseCommentContent(comment, { boardId, threadId })` method can be used to parse comment content later (for example, as the user scrolls).
+* `parseContent: boolean` — (optional) Can be set to `false` to skip parsing comment HTML into [`Content`](#content). The rationale is that when there're 500-some comments in a thread parsing all of them up-front can take up to a second on a modern desktop CPU which results in subpar user experience. By deferring parsing comments' HTML an application could first only parse the first N comments' HTML and only as the user starts scrolling would it proceed to parsing the next comments. Or maybe a developer wants to use their own HTML parser or even render comments' HTML as is. If `parseContent` is set to `false` then each non-empty comment will have their `content` being the original unmodified HTML string. In such cases `thread.title` won't be autogenerated when it's missing.
 
-* `addParseContent: boolean` — (optional) Pass `true` to add `.parseContent()` method to each comment. Can be used if `parseContent: false` option is passed.
+* `addParseContent: boolean` — (optional) Pass `true` to add a `.parseContent()` method to each comment. This could be used in scenarios when `parseContent: false` option is passed, for example, to only parse comments as they become visible on screen as the user scrolls rather than parsing all the comments in a thread up-front. When passing `addParseContent: true` option, also pass `expandReplies: true` option, otherwise `.parseContent()` won't go up the chain of quoted comments.
 
-* `expandReplies: boolean` — (optional) Set to `true` to expand the optional `comment.replies[]` array from a list of comment ids to the list of the actual comment objects. Is `false` by default to prevent JSON circular structure: this way a whole thread could be serialized into a file.
+* `expandReplies: boolean` — (optional) Set to `true` to expand the optional `comment.replies[]` and `comment.inReplyTo[]` arrays from lists of comment ids to lists of the actual comment objects. Is `false` by default to prevent JSON circular structure: this way a whole thread could be serialized into a `*.json` file.
 
 ## `imageboard` methods
 
@@ -272,25 +282,51 @@ Available `options`:
 
 Returns a list of [Boards](#board). For some imageboards this isn't gonna be a full list of boards because, for example, `8ch.net (8kun.top)` has about `20,000` boards so `getBoards()` returns just the "top 20 boards" list.
 
-### `getAllBoards(): Board[]`
-
-Returns a list of all [Boards](#board). For example, `8ch.net (8kun.top)` has about `20,000` boards so `getBoards()` returns just the "top 20 boards" list while `getAllBoards()` returns all `20,000` boards.
-
 ### `hasMoreBoards(): boolean`
 
-Returns `true` if an imageboard has a "get all boards" API endpoint that's different from the regular "get boards" API endpoint. In other words, returns `true` if an imageboard provides separate API endpoints for getting a list of "most popular boards" and a list of "all boards available".
+Returns `true` if the "get boards" API doesn't return the full list of boards. For example, `8ch.net (8kun.top)` has about `20,000` boards, so `getBoards()` returns just the "top 20 boards", and to indicate that, `hasMoreBoards()` returns `true`.
+
+### `getAllBoards(): Board[]`
+
+Returns the list of all [Boards](#board). For example, `8ch.net (8kun.top)` has about `20,000` boards, so `getBoards()` returns just the "top 20 boards", while `getAllBoards()` returns all `20,000` boards.
+
+### `findBoards(query: string): Board[]`
+
+Returns a (non-full) list of [Boards](#board) matching a `query`. For example, if an imageboard supports creating "user boards", and there're a lot of them, then `getBoards()` should return just the most popular ones, and to discover all other boards, searching by a query should be used.
+
+This method isn't currently implemented in any of the supported imageboard engines.
+
+### `canSearchForBoards(): boolean`
+
+Returns `true` if the imageboard supports searching for boards by a query.
 
 ### `getThreads({ boardId: string }, options: object?): Thread[]`
 
 Returns a list of [Threads](#thread).
 
+The optional `options` argument can be used to override some of the `options` of the `imageboard()` function.
+
+Additional options:
+
+* `withLatestComments: boolean` — Pass `true` to get latest comments for each thread. Latest comments are added to `thread.comments[]`. The result might differ depending on the engine. For example, `4chan` provides latest comments for each thread in its "get threads list" API response, while other engines don't — which is lame — and so the latest comments have to somehow be fetched separately. In such case, latest comments are available in the "get threads list page" API response.
+
+* `maxLatestCommentsPages: number` — The maximum number of threads list pages to fetch in order to get the latest comments. When the engine doesn't provide latest comments for each thread in its "get threads list" API response, the latest comments are fetched via "get threads list page" API which only outputs them for a single page, not for all threads on a board. Therefore, to get the latest comments for all threads on a board, the code has to fetch all pages of the threads list, of which there may be many (for example, 10). At the same time, usually imageboards warn the user of the "max one API request per second" rate limit (which, of course, isn't actually imposed). So, the code decides to play it safe and defaults to fetching just a single threads list page to get those threads' latest comments. A developer may specify a larger count of pages to be fetched. It is safe to specify "over the top" pages count because the code will just discard all "Not found" errors. All pages are fetched simultaneously for better UX due to shorter loading time.
+
 ### `getThread({ boardId: string, threadId: number }, options: object?): Thread`
 
 Returns a [Thread](#thread).
 
+The optional `options` argument can be used to override some of the `options` of the `imageboard()` function.
+
+Other available `options`:
+
+* `archived` — (optional) Pass `true` when requesting an archived thread. This flag is not required in any way, but, for `makaba` engine, it reduces the number of HTTP Requests from 2 to 1 because in that case it doesn't have to attempt to read the thread by a non-"archived" URL (which returns `404 Not Found`) before attempting to read it by an "archived" URL.
+
+<!--
 ### `parseCommentContent(comment: Comment, { boardId: string, threadId: number })`
 
 Parses `comment` content if `parseContent: false` option was used when creating an `imageboard` instance.
+-->
 
 ### `vote({ up: boolean, boardId: string, threadId: number, commentId: number }): boolean`
 
@@ -300,19 +336,13 @@ Returns `true` if the vote has been accepted. Returns `false` if the user has al
 
 ## Miscellaneous API
 
-The following functions are exported for "advanced" use cases. In other words, they're being used in [`captchan`](https://gitlab.com/catamphetamine/captchan) and that's the reason why they're exported.
+The following functions are exported for "advanced" use cases. In other words, they're being used in [`anychan`](https://gitlab.com/catamphetamine/anychan) and that's the reason why they're exported.
 
 ### `getConfig(id: string): object?`
 
 Returns an imageboard config by its `id`. Example: `getConfig("4chan")`.
 
 Can be used in cases when an application for whatever reasons needs to know the imageboard info defined in the `*.json` file, such as `domain`, `engine`, etc.
-
-### `compileWordPatterns(wordPatterns: string[]): object[]`
-
-Compiles [word patterns](#censorship). This is just a `compileWordPatterns()` function re-exported from [`social-components`](https://gitlab.com/catamphetamine/social-components) for convenience.
-
-Can be used for passing a custom `censoredWords` option to the `imageboard` constructor.
 
 ### `getCommentText(comment: Comment, options: object?): string?`
 
@@ -360,7 +390,7 @@ The `options`:
 -->
 
 <!--
-### `generatePreview(comment: Comment, maxCommentLength: number)`
+### `generatePreview(comment: Comment, { maxLength: number, minimizeGeneratedPostLinkBlockQuotes: boolean })`
 
 Generates `contentPreview` for the `comment` if its too long.
 
@@ -376,14 +406,16 @@ Can be used, for example, in cases when a thread has no title (and so thread tit
 
 Available `options` (optional argument):
 
-* `censoredWords: object[]?` — (optional) Compiled word patterns for [censoring](#censorship) comment text.
 * `messages: Messages?` — (optional) "Messages" ("strings", "labels") used when generating comment `content` text. See [Messages](#messages).
+* `maxLength: number` — (optional) See `maxLength` argument of `trimText()` in `social-components`.
+* `minFitFactor: number` — (optional) See `minFitFactor` option of `trimText()` in `social-components`.
+* `maxFitFactor: number` — (optional) See `maxFitFactor` option of `trimText()` in `social-components`.
 * `parseContent: boolean?` — (optional) If `parseContent: false` is used to skip parsing comments' `content` when using `imageboard` methods then `parseContent: false` option should also be passed here so indicate that the "opening" comment `content` (raw unparsed HTML markup) should be ignored.
 -->
 
 ## Attachments
 
-This library doesn't parse links to YouTube/Twitter/etc. Instead, this type of functionality is offloaded to a separate library. For example, [`captchan`](https://gitlab.com/catamphetamine/captchan) uses `loadResourceLinks()` and `expandStandaloneAttachmentLinks()` from [`social-components`](https://gitlab.com/catamphetamine/social-components) library when rendering comments to load YouTube/Twitter/etc links and embed the attachments directly in comments.
+This library doesn't parse links to YouTube/Twitter/etc. Instead, this type of functionality is offloaded to a separate library. For example, [`anychan`](https://gitlab.com/catamphetamine/anychan) uses `loadResourceLinks()` and `expandStandaloneAttachmentLinks()` from [`social-components`](https://gitlab.com/catamphetamine/social-components) library when rendering comments to load YouTube/Twitter/etc links and embed the attachments directly in comments.
 
 ## Models
 
@@ -394,44 +426,71 @@ This library doesn't parse links to YouTube/Twitter/etc. Instead, this type of f
   // Board ID.
   // Example: "b".
   id: string,
+
   // Board title.
   // Example: "Anime & Manga".
   title: string,
+
   // Board description.
   description: string,
+
   // Is this board "Not Safe For Work".
-  isNotSafeForWork: boolean?,
+  notSafeForWork: boolean?,
+
   // "Bump limit" for threads on this board.
   bumpLimit: number?,
+
+  // "Comments posted per hour" stats for this board.
+  // Is supported by `makaba` and `lynxchan`.
+  commentsPerHour: number?,
+
   // The maximum attachments count in a thread.
   // Only present for 4chan.org
   maxAttachmentsInThread: number?,
+
   // Maximum comment length in a thread on the board (a board-wide setting).
   // Only present for `4chan.org`.
   // `2ch.hk` also has it but doesn't return it as part of the `/boards.json` response.
   maxCommentLength: number?,
+
+  // Maximum attachment size in a thread on the board (a board-wide setting).
+  // Only present for `4chan.org`.
+  maxAttachmentSize: number?,
+
+  // Maximum video attachment size in a thread on the board (a board-wide setting).
+  // Only present for `4chan.org`.
+  maxVideoAttachmentSize: number?,
+
+  // Maximum video attachment duration (in seconds) in a thread on the board (a board-wide setting).
+  // Only present for `4chan.org`.
+  maxVideoAttachmentDuration: number?,
+
   // Maximum total attachments size in a thread on the board (a board-wide setting).
-  // Only present for `4chan.org`.
-  // `2ch.hk` also has it but doesn't return it as part of the `/boards.json` response.
+  // Only present for `4chan.org` or `2ch.hk`.
   maxAttachmentsSize: number?,
-  // Maximum total video attachments size in a thread on the board (a board-wide setting).
-  // Only present for `4chan.org`.
-  maxVideoAttachmentsSize: number?,
+
   // Create new thread cooldown.
   // Only present for `4chan.org`.
   createThreadCooldown: number?,
+
   // Post new comment cooldown.
   // Only present for `4chan.org`.
   postCommentCooldown: number?,
+
   // Post new comment with an attachment cooldown.
   // Only present for `4chan.org`.
   attachFileCooldown: number?,
-  // Whether "sage" is allowed when posting comments on this board.
-  // Only present for `4chan.org`.
-  isSageAllowed: boolean?,
-  // Whether to show a "Name" field in a "post new comment" form on this board.
-  // Only present for `2ch.hk`.
-  areNamesAllowed: boolean?
+
+  // The "features" supported or not supported on this board.
+  features: {
+    // Whether "sage" is allowed when posting comments on this board.
+    // Only present for `4chan.org`.
+    sage: boolean?,
+
+    // Whether to show a "Name" field in a "post new comment" form on this board.
+    // Only present for `2ch.hk`.
+    name: boolean?
+  }
 }
 ```
 
@@ -442,38 +501,71 @@ This library doesn't parse links to YouTube/Twitter/etc. Instead, this type of f
   // Thread ID.
   // Same as the "id" of the first comment.
   id: number,
+
   // Board ID.
   // Example: "b".
   boardId: string,
+
   // Comments count in this thread.
-  // (not including the main comment of the thread).
+  // (including the main comment of the thread).
   commentsCount: number,
+
   // Attachments count in this thread.
   // (including the attachments of the main comment of the thread).
   attachmentsCount: number,
+
   // Thread title ("subject").
-  // Either the first comment's `title` or is
-  // autogenerated from the first comment's content.
   title: string?,
-  // If `title` contains ignored words then a censored title
-  // containing "censored" "spoilers" will be generated.
-  // (with "spoilers" represented by "​░​" characters)
-  titleCensored: string?,
-  // Comments in this thread.
+
+  // If the thread has no `title`, then `autogeneratedTitle`
+  // is generated from the thread's "original comment" `content`.
+  // This could be empty too: for example, if the "original comment"
+  // has no `content`.
+  autogeneratedTitle: string?,
+
+  // The list of comments in this thread.
   // (including the main comment of the thread).
   comments: Comment[],
-  // Is this thread "sticky" (pinned).
-  isSticky: boolean?,
+
+  // Is this thread "sticky" ("pinned") (on top of others).
+  onTop: boolean?,
+  // The order of a "sticky" ("pinned") thread amongst other "sticky" ("pinned") ones.
+  onTopOrder: number?,
+
   // Is this thread locked.
-  isLocked: boolean?,
-  // A "rolling" thread is the one where old messages are purged as new ones come in.
-  isRolling: boolean?,
+  locked: boolean?,
+
+  // A "trimming" thread is one where old messages are purged as new ones come in,
+  // so that the total comments count doesn't exceed a certain threshold.
+  trimming: boolean?,
+
+  // On imageboards, threads "expire" due to being pushed off the
+  // last page of a board because there haven't been new replies.
+  // On some boards, such "expired" threads are moved into an "archive"
+  // rather than just being deleted immediately.
+  // Eventually, a thread is deleted from the archive too.
+  // If a thread is archived, then it's locked too (by definition).
+  archived: boolean?,
+
+  // If `archived` is `true`, then `archivedAt` date might be defined.
+  // So far, only `4chan`, `makaba` and `lynxchan` seem to have the archive feature.
+  // * `4chan` provides both `archived` and `archivedAt` data in thread properties.
+  // * `makaba` doesn't provide such data, but the code employs some hacks
+  //   to find out whether a thread is archived, and, if it is, when has it been archived.
+  //   `makaba` requires the `request()` function to return a `{ response, url }` object
+  //   in order to get the `archivedAt` date of an `archived` thread.
+  // * `lynxchan` allows admins or moderators to manually archive threads,
+  //   but doesn't provide `archivedAt` date.
+  archivedAt: Date?,
+
   // Was the "bump limit" reached for this thread already.
-  // Is `false` when the thread is "sticky" or "rolling"
+  // Is `false` when the thread is "sticky" or "trimming"
   // because such threads don't expire.
-  isBumpLimitReached: boolean?,
+  bumpLimitReached: boolean?,
+
   // `4chan.org` sets a limit on maximum attachments count in a thread.
-  isAttachmentLimitReached: boolean?,
+  attachmentLimitReached: boolean?,
+
   // `2ch.hk` and `lynxchan` don't specify board settings in `/boards.json` API response.
   // Instead, they return various limits as part of "get threads" or
   // "get thread comments" API responses (`2ch.hk` returns for both
@@ -485,52 +577,70 @@ This library doesn't parse links to YouTube/Twitter/etc. Instead, this type of f
     // (both `lynxchan` and `2ch.hk`)
     // Board title.
     title: string,
+
     // (`2ch.hk` only)
     // "Bump limit" for threads on this board.
     bumpLimit: number,
+
     // (both `lynxchan` and `2ch.hk`)
     // Maximum comment length.
     maxCommentLength: number,
+
     // (`2ch.hk` only)
     // Maximum total attachments size for a post.
     maxAttachmentsSize: number,
+
     // (`lynxchan` only)
     // Maximum attachment size for a post.
     maxAttachmentSize: number,
+
     // (`lynxchan` only)
     // Maximum attachments count for a post.
     maxAttachments: number,
-    // (`2ch.hk` only)
-    // Whether this board allows "Subject" when posting a new reply or creating a new thread.
-    areSubjectsAllowed: boolean,
-    // (`2ch.hk` only)
-    // Whether this board allows attachments on posts.
-    areAttachmentsAllowed: boolean,
-    // (`2ch.hk` only)
-    // Whether this board allows specifying "tags" when creating a new thread.
-    areTagsAllowed: boolean,
-    // (`2ch.hk` only)
-    // Whether this board allows voting for comments/threads.
-    hasVoting: boolean,
+
+    // Board "feature" flags.
+    features: {
+      // (`2ch.hk` only)
+      // If this board disallows "Subject" field when posting a new reply
+      // or creating a new thread, this flag is gonna be `false`.
+      subject: boolean,
+
+      // (`2ch.hk` only)
+      // Whether this board allows attachments on posts.
+      attachments: boolean,
+
+      // (`2ch.hk` only)
+      // Whether this board allows specifying "tags" when creating a new thread.
+      tags: boolean,
+
+      // (`2ch.hk` only)
+      // Whether this board allows voting for comments/threads.
+      votes: boolean
+    },
+
     // (both `lynxchan` and `2ch.hk`)
     // An array of "badges" (like country flags but not country flags)
     // that can be used when posting a new reply or creating a new thread.
     // Each "badge" has an `id` and a `title`.
     badges: object[]?
   },
+
   // The date on which the thread was created.
   // Is absent in "get threads list" API response
   // of `lynxchan` engine which is a bug
   // but seems like they don't want to fix it.
   createdAt: Date?,
+
   // "Last Modified Date", usually including:
   // posting new comments, deleting existing comments, sticky/closed status changes.
   // Is usually present on all imageboards in "get threads list" API response
   // but not in "get thread comments" API response.
   updatedAt: Date?,
+
   // Custom spoiler ID (if custom spoilers are used on the board).
   // Only present for `4chan.org`.
   customSpoilerId: number?,
+
   // Unique poster IP address subnets count.
   // Only present in "get thread" API response.
   uniquePostersCount: number?
@@ -543,43 +653,57 @@ This library doesn't parse links to YouTube/Twitter/etc. Instead, this type of f
 {
   // Comment ID.
   id: number,
+
   // Comment title ("subject").
   title: string?,
-  // If `title` contains ignored words then a censored title
-  // containing "censored" "spoilers" will be generated.
-  titleCensored: InlineContent?,
+
   // The date on which the comment was posted.
   createdAt: Date,
+
   // "Last Modified Date".
   // I guess it includes all possible comment "modification"
   // actions like editing comment text, deleting attachments, etc.
   // Is present on "modified" comments in "get thread comments"
   // API response of `lynxchan` engine.
   updatedAt: Date?,
+
   // `2ch.hk` provides means for "original posters" to identify themselves
   // when replying in their own threads with a previously set "OP" cookie.
-  isThreadAuthor: boolean?,
+  authorIsThreadAuthor: boolean?,
+
   // Some imageboards identify their users by a hash of their IP address subnet
   // on some of their boards (for example, all imageboards do that on `/pol/` boards).
   // On `8ch` and `lynxchan` it's a three-byte hex string (like "d1e8f1"),
   // on `4chan` it's a 8-character case-sensitive alphanumeric string (like "Bg9BS7Xl").
+  //
+  // Even when a thread uses `authorIds` for its comments, not all of them
+  // might have it. For example, on `4chan`, users with "capcodes" (moderators, etc)
+  // don't have an `authorId`.
+  //
   authorId: String?,
+
   // If `authorId` is present then it's converted into a HEX color.
   // Example: "#c05a7f".
   authorIdColor: String?,
+
   // `2ch.hk` autogenerates names based on IP address subnet hash on `/po` board.
   // If this flag is `true` then it means that `authorName` is an equivalent of an `authorId`.
   authorNameIsId: boolean?,
+
   // Comment author name.
   authorName: String?,
+
   // Comment author's email address.
   authorEmail: String?
+
   // Comment author's "tripcode".
   // https://encyclopediadramatica.rs/Tripcode
   authorTripCode: String?,
+
   // A two-letter ISO country code (or "ZZ" for "Anonymized").
   // Imageboards usually show poster flags on `/int/` boards.
   authorCountry: String?,
+
   // Some imageboards allow icons for posts on some boards.
   // For example, `kohlchan.net` shows user icons on `/int/` board.
   // Author icon examples in this case: "UA", "RU-MOW", "TEXAS", "PROXYFAG", etc.
@@ -591,54 +715,71 @@ This library doesn't parse links to YouTube/Twitter/etc. Instead, this type of f
   // `authorBadgeName` examples in this case: "Nya", "Либерализм", "Коммунизм", "Либертарианство", etc.
   authorBadgeUrl: String?,
   authorBadgeName: String?,
+
   // If the comment was posted by a "priviliged" user
   // then it's gonna be the role of the comment author.
   // Examples: "administrator", "moderator".
   authorRole: String?,
+
   // `8ch.net (8kun.top)` and `lynxchan` have "global adiministrators"
   // and "board administrators", and "global moderators"
   // and "board moderators", so `authorRoleScope` is gonna be
   // "board" for a "board administrator" or "board moderator".
   authorRoleScope: String?,
+
   // If `true` then it means that the author was banned for the message.
   authorBan: boolean?,
+
   // An optional `String` with the ban reason.
   authorBanReason: String?,
+
   // If `true` then it means that the author has been verified
   // to be the one who they're claiming to be.
   // For example, `{ authorName: "Gabe Newell", authorVerified: true }`
   // would mean that that's real Gabe Newell posting in an "Ask Me Anything" thread.
   // It's the same as the "verified" checkmark on celebrities pages on social media like Twitter.
   authorVerified: Boolean?,
+
   // If this comment was posted with a "sage".
   // https://knowyourmeme.com/memes/sage
-  isSage: boolean?,
+  sage: boolean?,
+
   // Downvotes count for this comment.
   // Only for boards like `/po/` on `2ch.hk`.
   upvotes: number?,
+
   // Downvotes count for this comment.
   // Only for boards like `/po/` on `2ch.hk`.
   downvotes: number?,
+
   // Comment content.
   // If `parseContent: false` option was passed
   // then `content` is an HTML string (or `undefined`).
   // Otherwise, it's `Content` (or `undefined`).
   // Content example: `[['Comment text']]`.
   content: (string|Content)?,
+
   // If the `content` is too long a preview is generated.
   contentPreview: Content?,
+
   // Comment attachments.
   attachments: Attachment[]?,
+
   // The IDs of the comments to which this comment replies.
   // (excluding deleted comments).
   // If `expandReplies: true` option was passed
   // then `inReplyTo` is a list of `Comment`s.
-  inReplyTo: number[]?,
+  inReplyTo: (number[]|Comment[])?,
+
+  // If the comment replies to some comments that have been deleted,
+  // then this is gonna be the list of IDs of such deleted comments.
+  inReplyToRemoved: number[]?,
+
   // The IDs of the comments which are replies to this comment.
   // (excluding deleted comments).
   // If `expandReplies: true` option was passed
   // then `replies` is a list of `Comment`s.
-  replies: number[]?
+  replies: (number[]|Comment[])?
 }
 ```
 
@@ -667,36 +808,6 @@ Additional fields:
 * [`Video`](https://gitlab.com/catamphetamine/social-components/tree/master/docs/Post/PostAttachments.md#video) attachment
 
 * [`File`](https://gitlab.com/catamphetamine/social-components/tree/master/docs/Post/PostAttachments.md#file) attachment
-
-## Censorship
-
-A `censoredWords` option can be passed to the `imageboard` function to censor certain words in parsed comments' `content` or `title`. The `censoredWords: object[]?` option must be a list of word filters pre-compiled via the exported `compileWordPatterns(censoredWords, language)` function:
-
-* `language: string` — (required) A lowercase two-letter language code (examples: `"en"`, `"ru"`, `"de"`) used to generate a regular expression for splitting text into individual words.
-
-* `censoredWords: string[]` — (required) An array of `string` word patterns. The standard regular expression syntax applies, `^` meaning "word start", `$` meaning "word end", `.` meaning "any letter", etc. The patterns are applied to each individual word and if there's a match then the whole word is censored.
-
-Word pattern examples:
-
-* `^mother.*` — Matches `"mothercare"` and `"motherfather"`.
-
-* `^mother[f].*` — Matches `"motherfather"` but not `"mothercare"`.
-
-* `^mother[^f].*` — Matches `"mothercare"` but not `"motherfather"`.
-
-* `^cock$` — Matches `"cock"` in `"my cock is big"` but won't match `"cocktail"` or `"peacock"`.
-
-* `cock` — Matches `"cock"`, `"cocktail"` and `"peacock"`.
-
-* `cock$` — Matches `"cock"` and `"peacock"` but not `"cocktail"` .
-
-* `^cocks?` — Matches `"cock"` and `"cocks"`.
-
-* `^cock.{0,3}` — Matches `"cock"`, `"cocks"`, `"cocker"`, `"cockers"`.
-
-Censored words in parsed comments' `content` will be replaced with `{ type: "spoiler", censored: true, content: "the-word-that-got-censored" }`.
-
-Censored words in comment/thread `title`s don't result in their replacement but rather a new `titleCensored` property is generated with the words censored. The rationale is that `title` is a `string`, not `Content`, therefore it should stay a `string`. `content`, on the other hand, is already of `Content` type so it's edited in-place.
 
 ## Imageboard config
 
@@ -750,11 +861,11 @@ Censored words in comment/thread `title`s don't result in their replacement but 
     "getBoards": "/boards-top20.json",
 
     // (optional)
-    // "Get all boards list" API URL.
-    // `8ch.net (8kun.top)` has about `20,000` boards total
-    // so "getBoards" API only returns top 20 of them
-    // while "getAllBoards" API returns all `20,000` of them.
-    "getAllBoards": "/boards.json",
+    // "Find boards by a query" API URL.
+    // `8ch.net (8kun.top)` has about `20,000` boards total,
+    // so "getBoards()" API only returns top 20 of them,
+    // while "findBoards('')" API returns all `20,000` of them.
+    "findBoards": "/boards.json",
 
     // (required)
     // "Get threads list" API URL template.
@@ -763,10 +874,26 @@ Censored words in comment/thread `title`s don't result in their replacement but 
     // (required)
     // "Get thread comments" API URL template.
     "getThread": "/{boardId}/res/{threadId}.json"
+
+    // (optional)
+    // "Get archived thread comments" API URL template.
+    // Some engines (like `4chan`) use the same URLs
+    // for both ongoing and archived threads.
+    // Some engines (like `makaba`) use different URLs
+    // for ongoing and archived threads.
+    "getArchivedThread": "/{boardId}/arch/res/{threadId}.json"
   },
 
   // (required)
-  // A template for parsing links to other comments in comment HTML.
+  // A template for a thread URL.
+  // Isn't used anywhere in this library,
+  // but third party applications like `anychan`
+  // might use it to generate a link to the "original" thread.
+  "threadUrl": "/{boardId}/res/{threadId}.html",
+
+  // (required)
+  // A template for a comment URL.
+  // Is used when parsing links to other comments in comment HTML.
   "commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
 
   // (optional)
@@ -953,10 +1080,13 @@ Messages used when generating `content` text (autogenerated quotes, autogenerate
 
 * [`4chan.org` API (with examples)](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/4chan.md)
 * [`4chan.org` API (brief official docs)](https://github.com/4chan/4chan-API)
+* The ["leaked" source code](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/4chan.php) from 2014 (may be outdated in some parts).
 
 ### vichan
 
-[`vichan`](https://github.com/vichan-devel/vichan) engine was originally a fork of [`Tinyboard`](https://github.com/savetheinternet/Tinyboard) engine having more features. After `4chan.org` added their [JSON API](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/4chan.md) in 2012 so did `vichan`, and they did it in a way that it's compatible with `4chan.org` JSON API. For example, compare the official [`vichan` API readme](https://github.com/vichan-devel/vichan-API) to the official [`4chan` API readme](https://github.com/4chan/4chan-API): they're mostly the same. As of November 2017, `vichan` engine is no longer being maintained.
+[`vichan`](https://github.com/vichan-devel/vichan) engine was originally a fork of [`Tinyboard`](https://github.com/savetheinternet/Tinyboard) engine having more features. As of November 2017, `vichan` engine is no longer being maintained.
+
+* Brief notes on [`vichan` API](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/vichan.md).
 
 Chans running on their own `vichan` forks:
 
@@ -969,7 +1099,7 @@ Chans running on their own `vichan` forks:
 
 The only imageboard running on `infinity` engine is currently [`8ch.net (8kun.top)`](https://8kun.top).
 
-* [`8ch.net (8kun.top)` API (with examples)](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/OpenIB.md).
+* [`8ch.net (8kun.top)` API](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/OpenIB.md).
 
 ### makaba
 
@@ -980,11 +1110,13 @@ The only imageboard running on `makaba` engine is currently [`2ch.hk`](https://2
 
 ### lynxchan
 
-[`lynxchan`](https://gitgud.io/LynxChan/LynxChan) seems to be the only still-being-maintained imageboard engine left. Has [JSON API](https://gitgud.io/LynxChan/LynxChan/blob/master/doc/Json.txt).
+[`lynxchan`](https://gitgud.io/LynxChan/LynxChan) seems to be the only still-being-maintained imageboard engine left. Has [JSON API](https://gitgud.io/LynxChan/LynxChan/blob/master/doc/Json.txt) and [POST API](https://gitgud.io/LynxChan/LynxChan/-/blob/master/doc/Form.txt).
+
+* [`lynxchan` API](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/lynxchan.md).
 
 Chans running on `lynxchan`:
 
-* [`kohlchan.net`](http://kohlchan.net)
+* [`kohlchan.net`](http://kohlchan.net).
 
 <!--
 * [Old API (with examples)](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/kohlchan.net.old.md) (the old `vichan` API is no longer relevant: since May 28th, 2019 `kohlchan.net` [has been migrated](https://kohlchan.net/kohl/res/13096.html) from `vichan` to `lynxchan`)
@@ -998,9 +1130,24 @@ There're some very minor limitations for `8ch.net (8kun.top)` caused by its `Ope
 
 There're [some very minor bugs](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/makaba-issues.md) for `2ch.hk` caused by its `makaba` engine.
 
-## What else
+## Testing
 
-You made it. There's not much else to document here, for now. Move along.
+Unit tests:
+
+```
+npm test
+```
+
+Real-world tests:
+
+```
+npm run build
+node test/test
+```
+
+## GitHub
+
+On March 9th, 2020, GitHub, Inc. silently [banned](https://medium.com/@catamphetamine/how-github-blocked-me-and-all-my-libraries-c32c61f061d3) my account (erasing all my repos, issues and comments) without any notice or explanation. Because of that, all source codes had to be promptly moved to GitLab. The [GitHub repo](https://github.com/catamphetamine/imageboard) is now only used as a backup (you can star the repo there too), and the primary repo is now the [GitLab one](https://gitlab.com/catamphetamine/imageboard). Issues can be reported in any repo.
 
 ## License
 
@@ -1018,13 +1165,13 @@ var grabbedBoards = Array.prototype.slice.apply(document.querySelectorAll('.link
   .map(node => ({
     id: node.innerHTML.split(' - ')[0].replace('/', '').replace('/', ''),
     title: node.innerHTML.split(' - ')[1],
-    isNotSafeForWork: node.nextSibling.nextSibling.innerHTML === '*NVIP*' ? undefined : true,
+    notSafeForWork: node.nextSibling.nextSibling.innerHTML === '*NVIP*' ? undefined : true,
     category: 'Allgemein'
   }))
 
 grabbedBoards.forEach(board => {
-  if (!board.isNotSafeForWork) {
-    delete board.isNotSafeForWork
+  if (!board.notSafeForWork) {
+    delete board.notSafeForWork
   }
 })
 
