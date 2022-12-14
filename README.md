@@ -312,6 +312,8 @@ Additional options:
 
 * `maxLatestCommentsPages: number` — The maximum number of threads list "pages" to fetch in order to get the latest comments for each thread. When the engine doesn't provide the latest comments for each thread as part of its generic "get threads list" API response, the latest comments are fetched by going through every "page" of threads on a board. Therefore, to get the latest comments for all threads on a board, the code has to fetch all "pages", of which there may be many (for example, 10). At the same time, usually imageboards warn the user of the "max one API request per second" rate limit (which, of course, isn't actually imposed). So the code decides to play it safe and defaults to fetching just the first "page" of threads to get just those threads' latest comments, and doesn't set the latest comments for the rest of the threads. A developer may specify a larger count of "pages" to be fetched. It would be safe to specify "over the top" (larger than actual) pages count because the code will just discard all "Not found" errors. All pages are fetched simultaneously for better UX due to shorter loading time, so consider web browser limits for the maximum number of concurrent HTTP requests when setting this parameter to a high number.
 
+* `latestCommentLengthLimit: number` — Same as `commentLengthLimit` but for `thread.latestComments`.
+
 ### `getThread({ boardId: string, threadId: number }, options: object?): Thread`
 
 Returns a [Thread](#thread).
