@@ -1,3 +1,8 @@
+0.6.0 / 14.12.2022
+==================
+
+* Moved latest comments from `thread.comments` to `thread.latestComments`.
+
 0.5.0 / 12.09.2022
 ==================
 
