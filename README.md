@@ -262,7 +262,9 @@ request("GET", "https://8kun.top/boards.json") === "[
 The `request()` function can also return a `Promise` resolving to an object of shape `{ response, url }` where `response` is the response text and `url` is the "final" URL (after any redirects): this `url` is used internally when requesting archived threads from `2ch.hk` imageboard in order to get their `archivedAt` timestamp that can only be obtained from the URL the engine redirects to.
 </details>
 
-* `commentUrl: string?` — (optional) A template for the `url` of all `type: "post-link"`s (links to other comments) in parsed comments' `content`. Is `"/{boardId}/{threadId}#{commentId}"` by default.
+* `commentUrl: string?` — (optional) A template to use when formatting the `url` property of `type: "post-link"`s (links to other comments) in parsed comments' `content`. Is `"/{boardId}/{threadId}#{commentId}"` by default.
+
+* `threadUrl: string?` — (optional) A template to use when formatting the `url` property of `type: "post-link"`s (links to threads) in parsed comments' `content`. Is `"/{boardId}/{threadId}"` by default.
 
 * `messages: Messages?` — (optional) "Messages" ("strings", "labels") used when parsing comments `content`. See [Messages](#messages).
 
