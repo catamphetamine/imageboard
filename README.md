@@ -436,7 +436,7 @@ This library doesn't parse links to YouTube/Twitter/etc. Instead, this type of f
   title: string,
 
   // Board description.
-  description: string,
+  description: string?,
 
   // Is this board "Not Safe For Work".
   notSafeForWork: boolean?,

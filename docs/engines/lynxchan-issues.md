@@ -18,6 +18,8 @@ In `/catalog.json` response, it only returns a thread thumbnail's MIME type and 
 
 Without having `width` and `height` of a thumbnail, a 3rd party client [won't be able](https://gitlab.com/catamphetamine/imageboard/-/issues/1#note_394935541) to display such thumbnail correctly if the client doesn't simply expand-and-clip thread thumbnails in order to fit them in squares and instead shows thread thumbnails as is in their true aspect ratio.
 
+This bug is not present on `kohlchan.net` (as of 2022) because they're using their own fork of `lynxchan`. The bug could be observed at the offical `lynxchan` demo site by looking at JSON API response: `https://<website>/<board>/catalog.json`.
+
 ### No thread creation date in catalog API response
 
 There's [no thread creation date](https://gitlab.com/catamphetamine/imageboard/-/issues/1) property returned on threads in `/catalog.json` API response. There's only `lastBump` property but that's the date of the latest comment in a thread, not the thread's creation date.
