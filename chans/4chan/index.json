@@ -18,6 +18,7 @@
 	"attachmentUrl": "https://i.4cdn.org/{boardId}/{name}{ext}",
 	"attachmentThumbnailUrl": "https://i.4cdn.org/{boardId}/{name}s.jpg",
 	"fileAttachmentUrl": "https://i.4cdn.org/{boardId}/{originalName}{ext}",
+	"channelUrl": "/{boardId}",
 	"threadUrl": "/{boardId}/thread/{threadId}",
 	"commentUrl": "/{boardId}/thread/{threadId}#p{commentId}",
 	"authorBadgeUrl": "https://s.4cdn.org/image/flags/{boardId}/{flagId}.gif",

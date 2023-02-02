@@ -8,6 +8,7 @@
 	"engine": "vichan",
 	"attachmentUrl": "/{boardId}/src/{name}{ext}",
 	"attachmentThumbnailUrl": "/{boardId}/thumb/{name}{ext}",
+	"channelUrl": "/{boardId}",
   "threadUrl": "/{boardId}/res/{threadId}.html",
   "commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
 	"api": {
