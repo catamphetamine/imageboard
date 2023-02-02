@@ -891,6 +891,13 @@ Additional fields:
   },
 
   // (required)
+  // A template for a board URL.
+  // Isn't used anywhere in this library,
+  // but third party applications like `anychan`
+  // might use it to generate a link to the "original" board.
+  "boardUrl": "/{boardId}",
+
+  // (required)
   // A template for a thread URL.
   // Isn't used anywhere in this library,
   // but third party applications like `anychan`

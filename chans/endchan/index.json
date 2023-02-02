@@ -8,7 +8,7 @@
 		"ausneets": "NEET",
 		"kc": "Bernd"
 	},
-	"channelUrl": "/{boardId}",
+	"boardUrl": "/{boardId}",
 	"threadUrl": "/{boardId}/res/{threadId}.html",
 	"commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
 	"api": {

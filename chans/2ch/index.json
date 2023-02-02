@@ -6,7 +6,7 @@
 		"!!%adm%!!": "administrator",
 		"!!%mod%!!": "moderator"
 	},
-	"channelUrl": "/{boardId}",
+	"boardUrl": "/{boardId}",
 	"threadUrl": "/{boardId}/res/{threadId}.html",
 	"commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
 	"authResetUrl": "https://2ch.hk/makaba/makaba.fcgi?task=restore",
