@@ -276,6 +276,8 @@ The `request()` function can also return a `Promise` resolving to an object of s
 
 * `addParseContent: boolean` — (optional) Pass `true` to add a `.parseContent()` method to each comment. This could be used in scenarios when `parseContent: false` option is passed, for example, to only parse comments as they become visible on screen as the user scrolls rather than parsing all the comments in a thread up-front. When passing `addParseContent: true` option, also pass `expandReplies: true` option, otherwise `.parseContent()` won't go up the chain of quoted comments.
 
+  * The `.parseContent()` function will set `.hasContentBeenParsed` flag to `true` after it has parsed the comment's content.
+
 * `expandReplies: boolean` — (optional) Set to `true` to expand the optional `comment.replies[]` and `comment.inReplyTo[]` arrays from lists of comment ids to lists of the actual comment objects. Is `false` by default to prevent JSON circular structure: this way a whole thread could be serialized into a `*.json` file.
 
 ## `imageboard` methods
