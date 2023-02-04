@@ -938,12 +938,12 @@ Additional fields:
   // `fpath: 1` attachments are hosted at the global
   // board-agnostic URLs (not having `{boardId}` as part of their URL)
   // and all other attachments are hosted at board-specific URLs.
-  "attachmentUrlFpath": "https://media.8kun.top/file_store/{name}{ext}",
+  "attachmentUrlFpath": "https://media.128ducks.com/file_store/{name}{ext}",
 
   // (is only required by `8ch.net (8kun.top)`)
   // Attachment thumbnail URL pattern for `fpath: 1` attachments.
   // Same as "attachmentUrlFpath" but for thumbnails.
-  "attachmentThumbnailUrlFpath": "https://media.8kun.top/file_store/{name}{ext}",
+  "attachmentThumbnailUrlFpath": "https://media.128ducks.com/file_store/{name}{ext}",
 
   // (optional)
   // Most imageboards set author name to some default placeholder

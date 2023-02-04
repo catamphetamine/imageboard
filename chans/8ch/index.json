@@ -38,10 +38,10 @@
 			"role": "moderator"
 		}
 	},
-	"attachmentUrlFpath": "https://media.8kun.top/file_store/{name}{ext}",
-	"attachmentThumbnailUrlFpath": "https://media.8kun.top/file_store/thumb/{name}{ext}",
-	"attachmentUrl": "https://media.8kun.top/{boardId}/src/{name}{ext}",
-	"attachmentThumbnailUrl": "https://media.8kun.top/{boardId}/thumb/{name}{ext}",
+	"attachmentUrlFpath": "https://media.128ducks.com/file_store/{name}{ext}",
+	"attachmentThumbnailUrlFpath": "https://media.128ducks.com/file_store/thumb/{name}{ext}",
+	"attachmentUrl": "https://media.128ducks.com/{boardId}/src/{name}{ext}",
+	"attachmentThumbnailUrl": "https://media.128ducks.com/{boardId}/thumb/{name}{ext}",
 	"boardUrl": "/{boardId}",
 	"threadUrl": "/{boardId}/res/{threadId}.html",
 	"commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
