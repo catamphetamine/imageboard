@@ -309,7 +309,8 @@ getPostLinkText(postLink) {
   }
 }
 
-// Returns some properties of a `post` object.
+// Returns additional `post-link` properties.
+// These properties don't get refreshed in `comment.onContentChange()`.
 getPostLinkProperties(post) {
   return {
     // Whether the application has marked the `post` object as "hidden".
