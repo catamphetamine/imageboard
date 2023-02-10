@@ -1014,21 +1014,23 @@ Additional fields:
 * Create `index.json` and `index.js` files in the imageboard's directory (see other imageboards as an example). See [Imageboard config](#imageboard-config) for the explanation of the `index.json` file format.
 * Add an export for the imageboard in `./src/imageboard/chan/index.js` (same as for the existing imageboards).
 
-If the imageboard runs on an already supported engine then it most likely has its own comment HTML syntax which could be different from other imageboards running on the same engine. In such case, go to the engine directory (`./src/imageboard/engine/${engineName}`) and edit `index.js` file to use the set of ["comment parser plugins"](#comment-parser-plugins) specific to this new imageboard (see other imageboards' comment parser plugins as an example). Otherwise, if it's a new engine:
+If the imageboard runs on an already supported engine then it most likely has its own comment HTML syntax which could be different from other imageboards running on the same engine. In such case, go to the engine directory (`./src/imageboard/engine/${engineName}`) and edit `index.js` file to use the ["comment markup syntax"](#comment-markup-syntax) specific to this new imageboard (see other imageboards' comment markup syntax as an example). Otherwise, if it's a new engine:
 
 * Create the engine directory in `./src/imageboard/engine`.
-* Create `index.js` file in the engine directory (same as for the existing engines). The engine class must extend `./src/imageboard/Engine.js` and implement at least four methods (`parseBoards()`, `parseThreads()`, `parseThread()` and `parseComment()`) and also provide a list of HTML ["comment parser plugins"](#comment-parser-plugins) (see other engines as an example).
+* Create `index.js` file in the engine directory (same as for the existing engines). The engine class must extend `./src/imageboard/Engine.js` and implement at least four methods (`parseBoards()`, `parseThreads()`, `parseThread()` and `parseComment()`) and also describe [comment markup syntax](#comment-markup-syntax) (see other engines as an example).
 * Add the engine in `./src/imageboard/engine/index.js` file (same as for the existing engines).
 
-## Comment parser plugins
+## Comment markup syntax
 
-Imageboard comments are formatted in HTML. Different imageboards use their own comment HTML syntax. For example, bold text could be `<strong>bold</strong>` at some imageboards, `<b>bold</b>` at other imageboards and `<span class="bold">bold</span>` at the other imageboards, even if they all used the same engine. Hence, every imageboard requires defining their own set of "comment parser plugins" in `./src/imageboard/engine/${engine}` directory.
+Imageboard comments are originally formatted in HTML, so they're parsed into a tree structure using [`social-components-parser`](https://gitlab.com/catamphetamine/social-components-parser). Different imageboards use their own comment HTML syntax. For example, bold text could be `<strong>bold</strong>` at some imageboards, `<b>bold</b>` at other imageboards and `<span class="bold">bold</span>` at the other imageboards, even if they all used the same engine. Hence, every imageboard requires defining their own "comment markup syntax" in `./src/imageboard/engine/${engine}` directory.
 
-A "comment parser plugin" is an object having properties:
+"Comment markup syntax" is a list of "content element type" descriptors.
+
+A "content element type" descriptor is an object having properties:
 
 * `tag: String` — HTML tag (in lower case).
 * `attributes: object[]?` — A set of HTML tag attribute filters. An attribute filter is an object of shape `{ name: String, value: String }`.
-* `createBlock(content: PostContent, node, options): PostContent?` — Receives child `content` and wraps it in a parent content block (see [Post Content](https://gitlab.com/catamphetamine/social-components/blob/master/docs/Post/PostContent.md) docs). Can return `undefined`. Can return a string, an object or an array of strings or objects. `node` is the DOM `Node` and provides methods like `getAttribute(name: String)`. `options` is an object providing some configuration options like `commentUrl` template for parsing comment links (`<a href="/b/123#456">&gt;&gt;456</a>`).
+* `createElement(content: PostContent, node, options): PostContent?` — Receives child `content` and wraps it in a parent content element (see [Post Content](https://gitlab.com/catamphetamine/social-components/blob/master/docs/Post/PostContent.md) docs). Can return `undefined`. Can return a string, an object or an array of strings or objects. `node` is the DOM `Node` and provides methods like `getAttribute(name: String)`. `options` is an object providing some configuration options like `commentUrl` template for parsing comment links (`<a href="/b/123#456">&gt;&gt;456</a>`).
 
 Example:
 
@@ -1041,7 +1043,7 @@ Plugins:
 ```js
 const parseBold = {
   tag: 'strong',
-  createBlock(content) {
+  createElement(content) {
     return {
       type: 'text',
       style: 'bold',
@@ -1056,7 +1058,7 @@ const parseItalic = {
     name: 'class',
     value: 'italic'
   }],
-  createBlock(content) {
+  createElement(content) {
     return {
       type: 'text',
       style: 'italic',
@@ -1094,9 +1096,9 @@ Result:
 
 ## Messages
 
-Sometimes an optional `messages` object can be passed to define "messages" ("strings", "labels") used when parsing comments `content`. There're no defaults so these should be passed even for English.
+Sometimes an optional `messages` object can be passed to define "messages" ("strings", "labels") used when parsing comments `content`.
 
-Messages used for quoted comment links:
+Messages used for setting the content of comment links:
 
 ```js
 {
@@ -1105,6 +1107,9 @@ Messages used for quoted comment links:
     default: "Comment",
     deleted: "Deleted comment",
     external: "Comment from another thread"
+  },
+  thread: {
+    default: "Thread"
   }
 }
 ```
@@ -1114,13 +1119,8 @@ Messages used when generating `content` text (autogenerated quotes, autogenerate
 ```js
 {
   ...,
-  contentType: {
-    picture: "Picture",
-    video: "Video",
-    audio: "Audio",
-    attachment: "Attachment",
-    link: "Link",
-    linkTo: "Link to"
+  textContent: {
+    ... // See the "Messages" section in the readme of `social-components` package.
   }
 }
 ```
