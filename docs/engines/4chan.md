@@ -562,9 +562,71 @@ function calculateThreadRating(thread) {
 
 Alternatively, a precise "posts per minute" stats for a thread could be calculated by first storing `thread.replies` count somewhere in a state, and then, at the next refresh, after `N` minutes, the precise "posts per minute" stats for the thread would be calculated as `(thread.replies - getStateForMinutesAgo(N).findThreadById(thread.id).replies) / N`. Such "more precise" approach would require storing more data in the database and is therefore more complex. It's likely that the "stateless" approximation already provides good-enough results.
 
+### CAPTCHA
+
+Previously, `4chan` was using Google ReCaptcha.
+
+Now it seems to be using its homemade captcha. Perhaps because Google started charging for ReCaptcha, or perhaps to make it more "challenged".
+
+To get a captcha "challenge", one could `GET` `https://sys.4chan.org/captcha?board=<board-id>&thread_id=<thread-id>`.
+
+The `thread_id` parameter is gonna be absent when creating a new thread.
+
+It returns something like this:
+
+```js
+{
+  "challenge": "<captcha-challenge-id>",
+  "ttl": 120, // Captcha challenge lifetime, in seconds.
+  "cd": 45, // Some kind of a "cooldown"? Perhaps in seconds. Perhaps a time to pass before the user could request another captcha challenge.
+  "img": "<base64-encoded captcha foreground image>",
+  "img_width": 270, // captcha foreground image width.
+  "img_height": 80, // captcha foreground image height.
+  "bg": "<base64-encoded captcha background image>",
+  "bg_width": 319 // captcha background image width.
+}
+```
+
+The captcha is comprised of two images that're supposed to be superimposed on each other. The horizontal shift for superimposing the images is supposed to be found interactively by the user. After the correct horizontal shift is found, the user can attempt to guess the characters depicted on the superimposed image.
+
+`GET`-ting the URL described above is only available from `sys.4chan.org` domain itself (CORS policy), so 3rd-party websites should add an additional query parameter — `&framed=1` — which makes it return a HTML page with the interactive superimposition shift slider UI control. That HTML page could be embedded as an `<iframe/>` on any 3rd-party website.
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script>
+			window.parent.postMessage({
+				"twister": {
+					"challenge": "<captcha-challenge-id>",
+					"ttl": 120,
+					... // The parameters are the same ones that're returned when not using "&framed=1".
+				}
+			}, '*')
+			// "*" means that any 3rd-party domain could embed this page in an <iframe/> and receive the message.
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
+```
+
+To listen to the captcha event, a 3rd-party website should add the following code on a page:
+
+```js
+window.addEventListener('message', function(event) {
+  // `event.origin` — "https://sys.4chan.org"
+  // `event.data` — `{ twister: { challenge: "...", ... } }`
+  // `event.source` — Can message back via `event.source.postMessage(...)`
+  console.log('Captcha', event.data.twister)
+})
+```
+
 ### Post a comment
 
-`POST` `https://sys.4chan.org/<board-id>/post`
+`POST` `https://sys.4channel.org/<board-id>/post`
 
 Parameters:
 
@@ -580,9 +642,21 @@ Parameters:
 * `upfile` — Attachment file binary object (optional).
 * `spoiler` — A boolean indicating whether the attachment should be marked as a "spoiler" (optional). <!-- Maybe set to "on" if `true`. -->
 * `filetag` — Is only used on `/f/` board. An ID of the "tag" of a file: `0` (Hentai), `1` (Japanese), `2` (Anime), `3` (Game), `4` (Other), `5` (Loop), `6` (Porn).
+
+Additional parameters for Google ReCaptcha:
+
 * `recaptcha_challenge_field` — (Alternative?) CAPTCHA "challenge" id.
 * `recaptcha_response_field` — (Alternative?) CAPTCHA "challenge" solution.
 * `g-recaptcha-response` — Google ReCaptcha solution.
+
+Additional parameters for 4chan captcha:
+
+* `t-response` — CAPTCHA "challenge" solution (the characters depicted on the captcha image).
+* `t-challenge` — CAPTCHA "challenge" id.
+
+Unknown parameters:
+
+* `awt: 1` — ???
 
 The response is in HTML format.
 
@@ -596,7 +670,16 @@ Error response example:
 
 ```html
 ...
-<hr class="abovePostForm"><table style="text-align: center; width: 100%; height: 300px;"><tr valign="middle"><td align="center" style="font-size: x-large; font-weight: bold;"><span id="errmsg" style="color: red;">Error: Specified thread does not exist.</span><br><br>[<a href=http://boards.4chan.org/b/>Return</a>]</td></tr></table><br><br><hr size=1><div id="absbot" class="absBotText">
+<span id="errmsg" style="color: red;">Error: Specified thread does not exist.</span><br><br>[<a href=http://boards.4chan.org/b/>Return</a>]
+...
+```
+
+CAPTCHA error response example:
+
+
+```html
+...
+<span id="errmsg" style="color: red;">Error: You seem to have mistyped the CAPTCHA. Please try again.<br><br>4chan Pass users can bypass this CAPTCHA. [<a href="https://www.4chan.org/pass" target="_blank">Learn More</a>]</span><br><br>[<a href=https://boards.4channel.org/g/>Return</a>]
 ...
 ```
 
