@@ -477,11 +477,12 @@ Parameters:
 * `q` — Search query
 * `o` — Offset (how many search results to skip)
 * `l` — Limit (how many search results to return: from `o` to `o + l`)
+* `b` — (optional) Board ID to search on.
 
 Result:
 
 * `body`
-  * `board: string` — Board ID to search at. `""` when no board ID has been specified.
+  * `board: string` — Board ID to search on. `""` when no board ID has been specified.
   * `nhits: number` — Search results count.
   * `offset: string` — The offset parameter. For some weird reason, a stringified number.
   * `query: string` — The search query.
