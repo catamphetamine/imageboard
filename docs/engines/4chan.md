@@ -468,6 +468,32 @@ https://a.4cdn.org/a/thread/THREAD-ID.json
 
 The first `Post` has various thread info being a [Thread](#thread) object. The other posts are regular [Post](#post) objects.
 
+### Search
+
+`GET` https://p.4chan.org/api/search?q=<search-query>&o=0&l=50
+
+Parameters:
+
+* `q` — Search query
+* `o` — Offset (how many search results to skip)
+* `l` — Limit (how many search results to return: from `o` to `o + l`)
+
+Result:
+
+* `body`
+  * `board: string` — Board ID to search at. `""` when no board ID has been specified.
+  * `nhits: number` — Search results count.
+  * `offset: string` — The offset parameter. For some weird reason, a stringified number.
+  * `query: string` — The search query.
+  * `threads: object[]`
+    * `board: string` — Board ID.
+    * `thread: string` — Some kind of a weird thread ID. Seems to be a stringified thread ID prefixed with a `"t"`. Example: `"t248833993"`.
+    * `posts: Post[]` — An array of `Post` objects.
+
+Response headers:
+
+* No CORS headers. A proxy is required for any application not running at `p.4chan.org` domain.
+
 ### Get "Popular threads" list
 
 Seems to be [no such API endpoint](https://github.com/4chan/4chan-API/issues/64).
