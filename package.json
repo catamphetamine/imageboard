@@ -1,6 +1,6 @@
 {
   "name": "imageboard",
-  "version": "0.6.19",
+  "version": "0.6.20",
   "description": "An easy uniform wrapper over the popular imageboards' API",
   "main": "index.js",
   "type": "module",
@@ -14,7 +14,7 @@
   "dependencies": {
     "@xmldom/xmldom": "^0.8.2",
     "social-components": "^0.3.5",
-    "social-components-parser": "^0.2.1"
+    "social-components-parser": "^0.2.3"
   },
   "devDependencies": {
     "chai": "^4.3.6",

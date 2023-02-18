@@ -560,6 +560,10 @@ This library doesn't parse links to YouTube/Twitter/etc. Instead, this type of f
   // (including the attachments of the main comment of the thread).
   attachmentsCount: number,
 
+  // Attachments count in comments of this thread.
+  // (not including the attachments of the main comment of the thread).
+  commentAttachmentsCount: number,
+
   // Thread title ("subject").
   title: string?,
 
