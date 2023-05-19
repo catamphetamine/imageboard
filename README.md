@@ -70,8 +70,8 @@ var fourChan = imageboard('4chan', {
         return response.text()
       }
       var error = new Error(response.statusText)
-      // Set HTTP Response status code on the error.
-      error.status = response.status
+      // // Set HTTP Response status code on the error.
+      // error.status = response.status
       throw error
     })
   }
@@ -179,7 +179,7 @@ fourChan.getThread({
     if (attachments) {
       parts.push(`${attachments.length} attachments`)
     }
-    if (title) {
+    if (title && replies) {
       parts.push(`${replies.length} replies`)
     }
     return parts.join('\n\n')
@@ -294,7 +294,7 @@ Advanced `options`:
 
 * `expandReplies?: boolean` — Set to `true` to expand the optional `comment.replies[]` and `comment.inReplyTo[]` arrays from lists of comment ids to lists of the actual comment objects. Is `false` by default to prevent JSON circular structure: this way a whole thread could be serialized into a `*.json` file.
 
-* `getPostLinkProperties?: (post?) => object` — Returns an object all properties of which will be added to the `post-link` object. The `post` argument will be `undefined` if the post was removed.
+* `getPostLinkProperties?: (comment?: Comment) => object` — Returns an object all properties of which will be added to the `post-link` object. The `comment` argument will be `undefined` if the comment was removed.
 
 * `getPostLinkText?: (postLink: object) => string?` — A function that can be used to define the text `content` of `post-link`s. It should return either a text for a `post-link`, or `undefined`, in which case it's simply ignored. An example of how it might be used:
 
@@ -311,10 +311,10 @@ getPostLinkText(postLink) {
 
 // Returns additional `post-link` properties.
 // These properties don't get refreshed in `comment.onContentChange()`.
-getPostLinkProperties(post) {
+getPostLinkProperties(comment) {
   return {
-    // Whether the application has marked the `post` object as "hidden".
-    postIsHidden: post.hidden
+    // Whether the application has marked the `comment` object as "hidden".
+    postIsHidden: comment.hidden
   }
 }
 ```
@@ -357,6 +357,8 @@ Additional options:
 
 * `latestCommentLengthLimit: number` — Same as `commentLengthLimit` but for `thread.latestComments`.
 
+* `sortByRating: boolean` — Set to `true` to sort threads by "rating". In that case, the imageboard configuration should also specify `getThreadsStats` URL template.
+
 ### `getThread({ boardId: string, threadId: number }, options: object?): Thread`
 
 Returns a [Thread](#thread).
@@ -365,7 +367,11 @@ The optional `options` argument can be used to override some of the `options` of
 
 Other available `options`:
 
-* `archived` — (optional) Pass `true` when requesting an archived thread. This flag is not required in any way, but, for `makaba` engine, it reduces the number of HTTP Requests from 2 to 1 because in that case it doesn't have to attempt to read the thread by a non-"archived" URL (which returns `404 Not Found`) before attempting to read it by an "archived" URL.
+* `archived: boolean` — (optional) Pass `true` when requesting an archived thread. This flag is not required in any way, but, for `makaba` engine, it reduces the number of HTTP Requests from 2 to 1 because in that case it doesn't have to attempt to read the thread by a non-"archived" URL (which returns `404 Not Found`) before attempting to read it by an "archived" URL.
+
+* `afterCommentId: number` — (optional) (experimental) Could be used to only fetch comments after a certain comment.
+
+* `afterCommentsCount: number` — (optional) (experimental) Could be used to only fetch comments after a certain comments count (counting from the first comment in the thread).
 
 <!--
 ### `parseCommentContent(comment: Comment, { boardId: string, threadId: number })`
@@ -480,6 +486,9 @@ This library doesn't parse links to YouTube/Twitter/etc. Instead, this type of f
   // Board description.
   description: string?,
 
+  // Board category.
+  category: string?,
+
   // Is this board "Not Safe For Work".
   notSafeForWork: boolean?,
 
@@ -526,6 +535,11 @@ This library doesn't parse links to YouTube/Twitter/etc. Instead, this type of f
   // Post new comment with an attachment cooldown.
   // Only present for `4chan.org`.
   attachFileCooldown: number?,
+
+  // An array of "badges" (like country flags but not country flags)
+  // that can be used when posting a new reply or creating a new thread.
+  // Each "badge" has an `id` and a `title`.
+  badges: object[]?,
 
   // The "features" supported or not supported on this board.
   features: {
@@ -920,6 +934,22 @@ Additional fields:
     // (required)
     // "Get threads list" API URL template.
     "getThreads": "/{boardId}/catalog.json",
+
+    // (optional)
+    // "Get threads list including their latest comments" API URL template.
+    "getThreadsWithLatestComments": "https://a.4cdn.org/{boardId}/catalog.json",
+
+    // (optional)
+    // "Get threads list (first page) including their latest comments" API URL template.
+    "getThreadsWithLatestCommentsFirstPage": "/{boardId}/index.json",
+
+    // (optional)
+    // "Get threads list (N-th page) including their latest comments" API URL template.
+    "getThreadsWithLatestCommentsPage": "/{boardId}/{pageIndex}.json",
+
+    // (optional)
+    // "Get threads stats" API URL template.
+    "getThreadsStats": "/{boardId}/threads.json",
 
     // (required)
     // "Get thread comments" API URL template.
