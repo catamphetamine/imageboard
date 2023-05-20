@@ -1,4 +1,15 @@
-type ImageboardId = '4chan' | '2ch' | '8ch' | 'kohlchan' | 'arisuchan' | 'endchan' | 'lainchan';
+import {
+  ContentBlock,
+  Attachment
+} from './types/social-components/index.d.js';
+
+export * from './types/social-components/index.d.js';
+
+// export {
+//   Attachment
+// } from './types/social-components/index.d.js';
+
+export type ImageboardId = '4chan' | '2ch' | '8ch' | 'kohlchan' | 'arisuchan' | 'endchan' | 'lainchan';
 
 type ImageboardEngine = '4chan' | 'vichan' | 'OpenIB' | 'lynxchan' | 'makaba';
 
@@ -38,7 +49,7 @@ interface ImageboardConfigApi {
 	getArchivedThread?: string;
 }
 
-interface ImageboardConfig {
+export interface ImageboardConfig {
 	id: string;
 	domain: string;
 	engine: ImageboardEngine;
@@ -65,16 +76,16 @@ interface ImageboardConfig {
   thumbnailSize?: number;
 }
 
-type HttpRequestMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+export type HttpRequestMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
-interface HttpRequestOptions {
+export interface HttpRequestOptions {
 	body?: string;
 	headers?: Record<string, string>;
 }
 
-type HttpRequestResult = string;
+export type HttpRequestResult = string;
 
-interface HttpRequestResultWithRedirectToUrl {
+export interface HttpRequestResultWithRedirectToUrl {
 	response: string;
 	url: string;
 }
@@ -121,9 +132,9 @@ interface ImageboardOptions extends ImageboardOptionsOverridable {
 	getPostLinkText?: (postLink: object) => string?;
 }
 
-type BoardId = string;
-type ThreadId = number;
-type CommentId = number;
+export type BoardId = string;
+export type ThreadId = number;
+export type CommentId = number;
 
 export interface Board {
   id: BoardId;
@@ -148,7 +159,7 @@ export interface Board {
   };
 }
 
-interface BoardBadge {
+export interface BoardBadge {
 	id: string;
 	title: string;
 }
@@ -191,138 +202,16 @@ export interface Thread {
   }
 }
 
-type GetCommentById = (id: CommentId) => Comment | undefined;
+export type GetCommentById = (id: CommentId) => Comment | undefined;
 
-type RawCommentContent = string;
+export type RawCommentContent = string;
 
-// https://github.com/catamphetamine/social-components/blob/master/docs/Content.md
-
-interface InlineElementStyledText {
-  type: 'text';
-  style: 'bold' | 'italic' | 'underlined' | 'strikethrough' | 'subscript' | 'superscript';
-  content: InlineContent;
-}
-
-type InlineElementNewLine = '\n';
-
-interface InlineElementEmoji {
-  type: 'emoji';
-  name: string;
-  url: string;
-}
-
-interface InlineElementQuote {
-  type: 'quote';
-  content: InlineContent;
-  kind?: string;
-  block?: boolean;
-}
-
-interface InlineElementSpoiler {
-  type: 'spoiler';
-  content: InlineContent;
-  censored?: boolean;
-}
-
-interface InlineElementLink {
-  type: 'link';
-  url: string;
-  service?: string;
-  attachment?: Attachment;
-  content: InlineContent;
-  contentGenerated?: boolean;
-}
-
-interface InlineElementPostLink {
-  type: 'post-link';
-  url: string;
-  boardId: BoardId;
-  threadId: ThreadId;
-  postId: CommentId;
-  content: InlineContent;
-}
-
-interface InlineElementCode {
-  type: 'code';
-  language?: string;
-  content: InlineContent;
-}
-
-interface InlineElementReadMore {
-	type: 'read-more';
-}
-
-type InlineElement =
-	string |
-	InlineElementStyledText |
-	InlineElementNewLine |
-	InlineElementEmoji |
-	InlineElementQuote |
-	InlineElementSpoiler |
-	InlineElementLink |
-	InlineElementPostLink |
-	InlineElementCode |
-	InlineElementReadMore;
-
-type InlineContent = string | InlineElement[];
-
-interface BlockElementSubheading {
-  type: 'heading';
-  content: InlineContent;
-}
-
-interface BlockElementList {
-  type: 'list';
-  items: InlineContent[];
-}
-
-interface BlockElementCode {
-  type: 'code';
-  language?: string;
-  content: InlineContent;
-}
-
-interface BlockElementQuote {
-  type: 'quote';
-  url?: string;
-  source?: string;
-  content: InlineContent;
-}
-
-interface BlockElementAttachmentReference {
-  type: 'attachment';
-  attachmentId: number;
-  expand?: boolean;
-  link?: string;
-}
-
-interface BlockElementAttachment {
-  type: 'attachment';
-  attachment: Attachment;
-  expand?: boolean;
-  link?: string;
-}
-
-interface BlockElementReadMore {
-	type: 'read-more';
-}
-
-type BlockElement =
-	BlockElementSubheading |
-	BlockElementList |
-	BlockElementCode |
-	BlockElementQuote |
-	BlockElementAttachmentReference |
-	BlockElementAttachment |
-	BlockElementReadMore;
-
-type ContentBlock = BlockElement | InlineContent;
-
-// In this library specifically, `Content` is always an array of content blocks.
-// type Content = string | ContentBlock[];
-type Content = ContentBlock[];
-
-type ParsedCommentContent = Content;
+// This library always returns an array of content blocks when parsing a comment's content,
+// even when it's just a single "block" of simple text like `[["Text"]]`.
+// That's just how `social-components-parser` works.
+//
+// export type ParsedCommentContent = Content;
+export type ParsedCommentContent = ContentBlock[];
 
 export interface Comment {
   id: CommentId;
@@ -360,106 +249,6 @@ export interface Comment {
   hasContentBeenParsed?: () => boolean;
   onContentChange?: (options?: { getCommentById: GetCommentById }) => void;
 }
-
-interface PictureSize {
-  type: string;
-  width: number;
-  height: number;
-  url: string;
-}
-
-interface Picture {
-  type: string;
-  width: number;
-  height: number;
-  size?: number;
-  url: string;
-  title?: string;
-  transparentBackground?: boolean;
-  sizes?: PictureSize[]
-}
-
-interface PictureAttachment {
-  type: 'picture';
-  spoiler?: boolean;
-  picture: Picture;
-}
-
-interface Video {
-  type?: string;
-  url?: string;
-  provider?: 'youtube' | 'vimeo';
-  id?: string;
-  width?: number;
-  height?: number;
-  size?: number;
-  duration?: number;
-  picture: Picture;
-}
-
-interface VideoAttachment {
-  type: 'video';
-  spoiler?: boolean;
-  video: Video;
-}
-
-interface Audio {
-  type?: string;
-  url?: string;
-  provider?: string;
-  id?: string;
-  bitrate?: number;
-  date?: Date;
-  author?: string;
-  title?: string;
-}
-
-interface AudioAttachment {
-  type: 'audio';
-  audio: Audio;
-}
-
-interface File {
-  type: string;
-  title?: string;
-  ext?: string;
-  size?: number;
-  url: string;
-  picture?: Picture;
-}
-
-interface FileAttachment {
-  type: 'file';
-  file: File;
-}
-
-interface Social {
-  provider: 'twitter' | 'instagram';
-  id: string;
-  url?: string;
-  date?: Date;
-  author?: {
-    id: string;
-    name?: string;
-    url?: string;
-    picture?: Picture;
-  };
-  content?: string;
-  attachments?: Attachment[];
-}
-
-interface SocialAttachment {
-	type: 'social';
-	social: Social;
-}
-
-// https://github.com/catamphetamine/social-components/blob/master/docs/Attachments.md
-export type Attachment =
-	PictureAttachment |
-	VideoAttachment |
-	AudioAttachment |
-	FileAttachment |
-	SocialAttachment;
 
 interface GetThreadsOptions extends ImageboardOptionsOverridable {
 	withLatestComments?: boolean;
