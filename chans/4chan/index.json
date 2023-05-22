@@ -33,91 +33,122 @@
 		"post": {
 			"method": "POST",
 			"url": "https://sys.4chan.org/{boardId}/post",
-			"urlParameters": {
-				"boardId": {
-					"parameter": "boardId"
+			"urlParameters": [{
+				"name": "boardId",
+				"input": {
+					"name": "boardId"
 				}
-			},
+			}],
 			"responseType": "text/html",
-			"parameters": {
-				"mode": {
-					"value": "regist"
-				},
-				"resto": {
-					"parameter": "threadId"
-				},
-				"name": {
-					"parameter": "authorName"
-				},
-				"email": {
-					"parameter": "authorEmail"
-				},
-				"pwd": {
-					"parameter": "accessToken"
-				},
-				"sub": {
-					"parameter": "title"
-				},
-				"com": {
-					"parameter": "content"
-				},
-				"upfile": {
-					"parameter": "attachments",
-					"index": 0
-				},
-				"spoiler": {
-					"parameter": "attachmentSpoiler"
-				},
-				"filetag": {
-					"parameter": "attachmentFileTag"
-				},
-				"textonly": {
-					"parameter": "textOnly"
-				},
-				"g-recaptcha-response": {
-					"parameter": "captchaSolution"
+			"parameters": [{
+				"name": "mode",
+				"defaultValue": "regist"
+			}, {
+				"name": "resto",
+				"input": {
+					"name": "threadId"
 				}
-			}
+			}, {
+				"name": "name",
+				"input": {
+					"name": "authorName"
+				}
+			}, {
+				"name": "email",
+				"input": {
+					"name": "authorEmail"
+				}
+			}, {
+				"name": "pwd",
+				"input": {
+					"name": "accessToken"
+				}
+			}, {
+				"name": "sub",
+				"input": {
+					"name": "title"
+				}
+			}, {
+				"name": "com",
+				"input": {
+					"name": "content"
+				}
+			}, {
+				"name": "upfile",
+				"input": {
+					"name": "attachments",
+					"index": 0
+				}
+			}, {
+				"name": "spoiler",
+				"input": {
+					"name": "attachmentSpoiler"
+				}
+			}, {
+				"name": "filetag",
+				"input": {
+					"name": "attachmentFileTag"
+				}
+			}, {
+				"name": "textonly",
+				"input": {
+					"name": "textOnly"
+				}
+			}, {
+				"name": "g-recaptcha-response",
+				"input": {
+					"name": "captchaSolution"
+				}
+			}]
 		},
 		"report": {
 			"method": "POST",
 			"url": "https://sys.4chan.org/{boardId}/imgboard.php",
-			"urlParameters": {
-				"boardId": {
-					"parameter": "boardId"
+			"urlParameters": [{
+				"name": "boardId",
+				"input": {
+					"name": "boardId"
 				}
-			},
+			}],
 			"responseType": "text/html",
-			"parameters": {
-				"mode": {
-					"value": "report"
-				},
-				"no": {
-					"parameter": "commentId"
-				},
-				"g-recaptcha-response": {
-					"parameter": "captchaSolution"
+			"parameters": [{
+				"name": "mode",
+				"defaultValue": "report"
+			}, {
+				"name": "no",
+				"input": {
+					"name": "commentId"
 				}
-			}
+			}, {
+				"name": "g-recaptcha-response",
+				"input": {
+					"name": "captchaSolution"
+				}
+			}]
 		},
 		"logIn": {
 			"method": "POST",
 			"url": "https://sys.4chan.org/auth",
 			"responseType": "text/html",
-			"parameters": {
-				"act": {
-					"value": "do_login"
-				},
-				"id": {
-					"parameter": "authToken"
-				},
-				"pin": {
-					"parameter": "authTokenPassword"
-				},
-				"long_login": {
-					"value": "yes"
+			"parameters": [{
+				"name": "act",
+				"input": {
+					"name": "do_login"
 				}
-			}
+			}, {
+				"name": "id",
+				"input": {
+					"name": "authToken"
+				}
+			}, {
+				"name": "pin",
+				"input": {
+					"name": "authTokenPassword"
+				}
+			}, {
+				"name": "long_login",
+				"defaultValue": "yes"
+			}]
 		},
 		"logOut": {
 			"method": "POST",

@@ -22,141 +22,178 @@
 		"vote": {
 			"method": "GET",
 			"url": "/api/{action}",
-			"urlParameters": {
-				"action": {
-					"parameter": "up",
-					"type": "boolean",
-					"switch": {
+			"urlParameters": [{
+				"name": "action",
+				"input": {
+					"name": "up",
+					"map": {
 						"true": "like",
 						"false": "dislike"
 					}
 				}
-			},
-			"parameters": {
-				"board": {
-					"parameter": "boardId"
-				},
-				"num": {
-					"parameter": "commentId"
+			}],
+			"parameters": [{
+				"name": "board",
+				"input": {
+					"name": "boardId"
 				}
-			}
+			}, {
+				"name": "num",
+				"input": {
+					"name": "commentId"
+				}
+			}]
 		},
 		"post": {
 			"method": "POST",
 			"url": "/user/posting",
-			"parameters": {
-				"task": {
-					"value": "post"
-				},
-				"board": {
-					"parameter": "boardId"
-				},
-				"thread": {
-					"parameter": "threadId",
-					"default": 0
-				},
-				"op_mark": {
-					"type": "numeric-boolean",
-					"parameter": "authorIsThreadAuthor"
-				},
-				"usercode": {
-					"parameter": "accessToken"
-				},
-				"captcha_type": {
-					"parameter": "captchaType"
-				},
-				"email": {
-					"parameter": "authorEmail"
-				},
-				"name": {
-					"parameter": "authorName"
-				},
-				"subject": {
-					"parameter": "title"
-				},
-				"icon": {
-					"parameter": "authorBadgeId",
-					"default": -1
-				},
-				"comment": {
-					"parameter": "content"
-				},
-				"tags": {
-					"parameter": "tags"
-				},
-				"formimages": {
-					"parameter": "attachments"
-				},
-				"g-recaptcha-response": {
-					"if": {
-						"captchaType": [
-							"recaptcha",
-							"invisible_recaptcha"
-						]
-					},
-					"parameter": "captchaSolution"
-				},
-				"2chaptcha_id": {
-					"if": {
-						"captchaType": [
-							"recaptcha",
-							"invisible_recaptcha"
-						]
-					},
-					"parameter": "captchaId"
-				},
-				"2chcaptcha_id": {
-					"if": {
-						"captchaType": "2chcaptcha"
-					},
-					"parameter": "captchaId"
-				},
-				"2chcaptcha_value": {
-					"if": {
-						"captchaType": "2chcaptcha"
-					},
-					"parameter": "captchaSolution"
+			"parameters": [{
+				"name": "task",
+				"defaultValue": "post"
+			}, {
+				"name": "board",
+				"input": {
+					"name": "boardId"
 				}
-			}
+			}, {
+				"name": "thread",
+				"defaultValue": 0,
+				"input": {
+					"name": "threadId"
+				}
+			}, {
+				"name": "op_mark",
+				"input": {
+					"name": "authorIsThreadAuthor",
+					"transform": "zero-or-one"
+				}
+			}, {
+				"name": "usercode",
+				"input": {
+					"name": "accessToken"
+				}
+			}, {
+				"name": "captcha_type",
+				"input": {
+					"name": "captchaType"
+				}
+			}, {
+				"name": "email",
+				"input": {
+					"name": "authorEmail"
+				}
+			}, {
+				"name": "name",
+				"input": {
+					"name": "authorName"
+				}
+			}, {
+				"name": "subject",
+				"input": {
+					"name": "title"
+				}
+			}, {
+				"name": "icon",
+				"defaultValue": -1,
+				"input": {
+					"name": "authorBadgeId"
+				}
+			}, {
+				"name": "comment",
+				"input": {
+					"name": "content"
+				}
+			}, {
+				"name": "tags",
+				"input": {
+					"name": "tags"
+				}
+			}, {
+				"name": "formimages",
+				"input": {
+					"name": "attachments"
+				}
+			}, {
+				"name": "g-recaptcha-response",
+				"when": {
+					"input": {
+						"captchaType": [
+							"recaptcha",
+							"invisible_recaptcha",
+							"recaptcha3"
+						]
+					}
+				},
+				"input": {
+					"name": "captchaSolution"
+				}
+			}, {
+				"name": "2chcaptcha_id",
+				"when": {
+					"input": {
+						"captchaType": "2chcaptcha"
+					}
+				},
+				"input": {
+					"name": "captchaId"
+				}
+			}, {
+				"name": "2chcaptcha_value",
+				"when": {
+					"input": {
+						"captchaType": "2chcaptcha"
+					}
+				},
+				"input": {
+					"name": "captchaSolution"
+				}
+			}]
 		},
 		"report": {
 			"method": "POST",
 			"url": "/user/report",
-			"parameters": {
-				"board": {
-					"parameter": "boardId"
-				},
-				"thread": {
-					"parameter": "threadId"
-				},
-				"posts": {
-					"parameter": "commentId"
-				},
-				"comment": {
-					"parameter": "content"
+			"parameters": [{
+				"name": "board",
+				"input": {
+					"name": "boardId"
 				}
-			}
+			}, {
+				"name": "thread",
+				"input": {
+					"name": "threadId"
+				}
+			}, {
+				"name": "post",
+				"input": {
+					"name": "commentId"
+				}
+			}, {
+				"name": "comment",
+				"input": {
+					"name": "content"
+				}
+			}]
 		},
 		"logIn": {
 			"method": "POST",
 			"url": "/makaba/makaba.fcgi?json=1",
-			"parameters": {
-				"task": {
-					"value": "auth"
-				},
-				"usercode": {
-					"parameter": "authToken"
+			"parameters": [{
+				"name": "task",
+				"defaultValue": "auth"
+			}, {
+				"name": "usercode",
+				"input": {
+					"name": "authToken"
 				}
-			}
+			}]
 		},
 		"logOut": {
 			"method": "POST",
 			"url": "/makaba/posting.fcgi?json=1",
-			"parameters": {
-				"task": {
-					"value": "logout"
-				}
-			}
+			"parameters": [{
+				"name": "task",
+				"defaultValue": "logout"
+			}]
 		}
 	}
 }
