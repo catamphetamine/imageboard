@@ -29,50 +29,32 @@
 			"method": "GET",
 			"url": "https://a.4cdn.org/{boardId}/thread/{threadId}.json",
 			"urlParameters": [{
-				"name": "boardId",
-				"input": {
-					"name": "boardId"
-				}
+				"name": "boardId"
 			}, {
-				"name": "threadId",
-				"input": {
-					"name": "threadId"
-				}
+				"name": "threadId"
 			}]
 		},
 		"getThreadIncremental": {
 			"method": "GET",
 			"url": "https://a.4cdn.org/{boardId}/thread/{threadId}-tail.json",
 			"urlParameters": [{
-				"name": "boardId",
-				"input": {
-					"name": "boardId"
-				}
+				"name": "boardId"
 			}, {
-				"name": "threadId",
-				"input": {
-					"name": "threadId"
-				}
+				"name": "threadId"
 			}]
 		},
 		"getThreads": {
 			"method": "GET",
 			"url": "https://a.4cdn.org/{boardId}/catalog.json",
 			"urlParameters": [{
-				"name": "boardId",
-				"input": {
-					"name": "boardId"
-				}
+				"name": "boardId"
 			}]
 		},
 		"getThreadsWithLatestComments": {
 			"method": "GET",
 			"url": "https://a.4cdn.org/{boardId}/catalog.json",
 			"urlParameters": [{
-				"name": "boardId",
-				"input": {
-					"name": "boardId"
-				}
+				"name": "boardId"
 			}]
 		},
 		"getBoards": {
@@ -83,10 +65,7 @@
 			"method": "POST",
 			"url": "https://sys.4chan.org/{boardId}/post",
 			"urlParameters": [{
-				"name": "boardId",
-				"input": {
-					"name": "boardId"
-				}
+				"name": "boardId"
 			}],
 			"responseType": "text/html",
 			"parameters": [{
@@ -154,10 +133,7 @@
 			"method": "POST",
 			"url": "https://sys.4chan.org/{boardId}/imgboard.php",
 			"urlParameters": [{
-				"name": "boardId",
-				"input": {
-					"name": "boardId"
-				}
+				"name": "boardId"
 			}],
 			"responseType": "text/html",
 			"parameters": [{

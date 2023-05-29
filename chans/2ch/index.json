@@ -15,95 +15,59 @@
 			"method": "GET",
 			"url": "/{boardId}/res/{threadId}.json",
 			"urlParameters": [{
-				"name": "boardId",
-				"input": {
-					"name": "boardId"
-				}
+				"name": "boardId"
 			}, {
-				"name": "threadId",
-				"input": {
-					"name": "threadId"
-				}
+				"name": "threadId"
 			}]
 		},
 		"getThreadIncremental": {
 			"method": "GET",
 			"url": "/api/mobile/v2/after/{boardId}/{threadId}/{commentId}",
 			"urlParameters": [{
-				"name": "boardId",
-				"input": {
-					"name": "boardId"
-				}
+				"name": "boardId"
 			}, {
-				"name": "threadId",
-				"input": {
-					"name": "threadId"
-				}
+				"name": "threadId"
 			}, {
-				"name": "commentId",
-				"input": {
-					"name": "commentId"
-				}
+				"name": "commentId"
 			}]
 		},
 		"getArchivedThread": {
 			"method": "GET",
 			"url": "/{boardId}/arch/res/{threadId}.json",
 			"urlParameters": [{
-				"name": "boardId",
-				"input": {
-					"name": "boardId"
-				}
+				"name": "boardId"
 			}, {
-				"name": "threadId",
-				"input": {
-					"name": "threadId"
-				}
+				"name": "threadId"
 			}]
 		},
 		"getThreads": {
 			"method": "GET",
 			"url": "/{boardId}/catalog.json",
 			"urlParameters": [{
-				"name": "boardId",
-				"input": {
-					"name": "boardId"
-				}
+				"name": "boardId"
 			}]
 		},
 		"getThreadsStats": {
 			"method": "GET",
 			"url": "/{boardId}/threads.json",
 			"urlParameters": [{
-				"name": "boardId",
-				"input": {
-					"name": "boardId"
-				}
+				"name": "boardId"
 			}]
 		},
 		"getThreadsWithLatestCommentsFirstPage": {
 			"method": "GET",
 			"url": "/{boardId}/index.json",
 			"urlParameters": [{
-				"name": "boardId",
-				"input": {
-					"name": "boardId"
-				}
+				"name": "boardId"
 			}]
 		},
 		"getThreadsWithLatestCommentsPage": {
 			"method": "GET",
 			"url": "/{boardId}/{pageIndex}.json",
 			"urlParameters": [{
-				"name": "boardId",
-				"input": {
-					"name": "boardId"
-				}
+				"name": "boardId"
 			}, {
-				"name": "pageIndex",
-				"input": {
-					"name": "pageIndex"
-				}
+				"name": "pageIndex"
 			}]
 		},
 		"getBoards": {

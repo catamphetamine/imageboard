@@ -27,50 +27,32 @@
 			"method": "GET",
 			"url": "/{boardId}/res/{threadId}.json",
 			"urlParameters": [{
-				"name": "boardId",
-				"input": {
-					"name": "boardId"
-				}
+				"name": "boardId"
 			}, {
-				"name": "threadId",
-				"input": {
-					"name": "threadId"
-				}
+				"name": "threadId"
 			}]
 		},
 		"getThreads": {
 			"method": "GET",
 			"url": "/{boardId}/catalog.json",
 			"urlParameters": [{
-				"name": "boardId",
-				"input": {
-					"name": "boardId"
-				}
+				"name": "boardId"
 			}]
 		},
 		"getThreadsWithLatestCommentsPage": {
 			"method": "GET",
 			"url": "/{boardId}/{page}.json",
 			"urlParameters": [{
-				"name": "boardId",
-				"input": {
-					"name": "boardId"
-				}
+				"name": "boardId"
 			}, {
-				"name": "page",
-				"input": {
-					"name": "page"
-				}
+				"name": "page"
 			}]
 		},
 		"getBoardsPage": {
 			"method": "GET",
 			"url": "/boards.js?json=1&page={page}",
 			"urlParameters": [{
-				"name": "page",
-				"input": {
-					"name": "page"
-				}
+				"name": "page"
 			}]
 		}
 	},
