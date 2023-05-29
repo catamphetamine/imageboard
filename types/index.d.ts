@@ -79,12 +79,13 @@ export interface Board {
   notSafeForWork?: boolean;
   bumpLimit?: number;
   commentsPerHour?: number;
-  maxAttachmentsInThread?: number;
   maxCommentLength?: number;
+  maxAttachments?: number;
+  maxAttachmentsInThread?: number;
   maxAttachmentSize?: number;
+  maxAttachmentsSize?: number;
   maxVideoAttachmentSize?: number;
   maxVideoAttachmentDuration?: number;
-  maxAttachmentsSize?: number;
   createThreadCooldown?: number;
   postCommentCooldown?: number;
   attachFileCooldown?: number;

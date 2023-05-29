@@ -79,43 +79,43 @@ interface ImageboardConfigApiMethod {
 interface ImageboardConfigApi {
 	// "Get boards list" API URL.
 	// `api.getBoards` is required if there's no `boards` parameter.
-	getBoards?: string;
+	getBoards?: ImageboardConfigApiMethod;
 
   // "Get boards list page" API URL.
   // Is used when the API to get the list of boards uses pagination.
-  getBoardsPage?: string;
+  getBoardsPage?: ImageboardConfigApiMethod;
 
   // "Get all boards list" API URL.
   // Can be used when `getBoards` doesn't return the full list of boards, like it does on `8ch`.
-  getAllBoards?: string;
+  getAllBoards?: ImageboardConfigApiMethod;
 
 	// "Find boards by a query" API URL.
-	findBoards?: string;
+	findBoards?: ImageboardConfigApiMethod;
 
 	// "Get threads list" API URL template.
-	getThreads: string;
+	getThreads: ImageboardConfigApiMethod;
 
 	// "Get threads list including their latest comments" API URL template.
-	getThreadsWithLatestComments?: string;
+	getThreadsWithLatestComments?: ImageboardConfigApiMethod;
 
 	// "Get threads list (first page) including their latest comments" API URL template.
-	getThreadsWithLatestCommentsFirstPage?: string;
+	getThreadsWithLatestCommentsFirstPage?: ImageboardConfigApiMethod;
 
 	// "Get threads list (N-th page) including their latest comments" API URL template.
-	getThreadsWithLatestCommentsPage?: string;
+	getThreadsWithLatestCommentsPage?: ImageboardConfigApiMethod;
 
 	// "Get threads stats" API URL template.
   // "Stats" might include the "ratings" of threads.
-	getThreadsStats?: string;
+	getThreadsStats?: ImageboardConfigApiMethod;
 
   // "Get thread" API URL template.
-  getThread: string;
+  getThread: ImageboardConfigApiMethod;
 
   // "Get thread with comments after ..." API URL template.
-  getThreadIncremental?: string;
+  getThreadIncremental?: ImageboardConfigApiMethod;
 
 	// "Get archived thread" API URL template.
-	getArchivedThread?: string;
+	getArchivedThread?: ImageboardConfigApiMethod;
 
   // Vote API.
   vote?: ImageboardConfigApiMethod;

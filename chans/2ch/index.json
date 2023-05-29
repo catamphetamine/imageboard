@@ -11,14 +11,105 @@
 	"commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
 	"authResetUrl": "https://2ch.hk/makaba/makaba.fcgi?task=restore",
 	"api": {
-		"getThread": "/{boardId}/res/{threadId}.json",
-		"getThreadIncremental": "/api/mobile/v2/after/{boardId}/{threadId}/{commentId}",
-		"getArchivedThread": "/{boardId}/arch/res/{threadId}.json",
-		"getThreads": "/{boardId}/catalog.json",
-		"getThreadsStats": "/{boardId}/threads.json",
-		"getThreadsWithLatestCommentsFirstPage": "/{boardId}/index.json",
-		"getThreadsWithLatestCommentsPage": "/{boardId}/{pageIndex}.json",
-		"getBoards": "/api/mobile/v2/boards",
+		"getThread": {
+			"method": "GET",
+			"url": "/{boardId}/res/{threadId}.json",
+			"urlParameters": [{
+				"name": "boardId",
+				"input": {
+					"name": "boardId"
+				}
+			}, {
+				"name": "threadId",
+				"input": {
+					"name": "threadId"
+				}
+			}]
+		},
+		"getThreadIncremental": {
+			"method": "GET",
+			"url": "/api/mobile/v2/after/{boardId}/{threadId}/{commentId}",
+			"urlParameters": [{
+				"name": "boardId",
+				"input": {
+					"name": "boardId"
+				}
+			}, {
+				"name": "threadId",
+				"input": {
+					"name": "threadId"
+				}
+			}, {
+				"name": "commentId",
+				"input": {
+					"name": "commentId"
+				}
+			}]
+		},
+		"getArchivedThread": {
+			"method": "GET",
+			"url": "/{boardId}/arch/res/{threadId}.json",
+			"urlParameters": [{
+				"name": "boardId",
+				"input": {
+					"name": "boardId"
+				}
+			}, {
+				"name": "threadId",
+				"input": {
+					"name": "threadId"
+				}
+			}]
+		},
+		"getThreads": {
+			"method": "GET",
+			"url": "/{boardId}/catalog.json",
+			"urlParameters": [{
+				"name": "boardId",
+				"input": {
+					"name": "boardId"
+				}
+			}]
+		},
+		"getThreadsStats": {
+			"method": "GET",
+			"url": "/{boardId}/threads.json",
+			"urlParameters": [{
+				"name": "boardId",
+				"input": {
+					"name": "boardId"
+				}
+			}]
+		},
+		"getThreadsWithLatestCommentsFirstPage": {
+			"method": "GET",
+			"url": "/{boardId}/index.json",
+			"urlParameters": [{
+				"name": "boardId",
+				"input": {
+					"name": "boardId"
+				}
+			}]
+		},
+		"getThreadsWithLatestCommentsPage": {
+			"method": "GET",
+			"url": "/{boardId}/{pageIndex}.json",
+			"urlParameters": [{
+				"name": "boardId",
+				"input": {
+					"name": "boardId"
+				}
+			}, {
+				"name": "pageIndex",
+				"input": {
+					"name": "pageIndex"
+				}
+			}]
+		},
+		"getBoards": {
+			"method": "GET",
+			"url": "/api/mobile/v2/boards"
+		},
 		"vote": {
 			"method": "GET",
 			"url": "/api/{action}",

@@ -12,9 +12,46 @@
   "threadUrl": "/{boardId}/res/{threadId}.html",
   "commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
 	"api": {
-		"getThread": "/{boardId}/res/{threadId}.json",
-		"getThreads": "/{boardId}/catalog.json",
-		"getThreadsWithLatestCommentsPage": "/{boardId}/{pageIndex}.json"
+		"getThread": {
+			"method": "GET",
+			"url": "/{boardId}/res/{threadId}.json",
+			"urlParameters": [{
+				"name": "boardId",
+				"input": {
+					"name": "boardId"
+				}
+			}, {
+				"name": "threadId",
+				"input": {
+					"name": "threadId"
+				}
+			}]
+		},
+		"getThreads": {
+			"method": "GET",
+			"url": "/{boardId}/catalog.json",
+			"urlParameters": [{
+				"name": "boardId",
+				"input": {
+					"name": "boardId"
+				}
+			}]
+		},
+		"getThreadsWithLatestCommentsPage": {
+			"method": "GET",
+			"url": "/{boardId}/{pageIndex}.json",
+			"urlParameters": [{
+				"name": "boardId",
+				"input": {
+					"name": "boardId"
+				}
+			}, {
+				"name": "pageIndex",
+				"input": {
+					"name": "pageIndex"
+				}
+			}]
+		}
 	},
 	"boards": [
 		{

@@ -50,7 +50,7 @@ fourChan.getBoards().then((boards) => {
   console.log()
 
   // Prints the first five threads on `/a/` board.
-  fourChan.getThreads({
+  return fourChan.getThreads({
     boardId: boards[0].id
   }).then((threads) => {
     const threadsList = threads.slice(0, 5).map(({
@@ -78,7 +78,7 @@ fourChan.getBoards().then((boards) => {
     console.log()
 
     // Prints the first five comments of thread #193605320 on `/a/` board.
-    fourChan.getThread({
+    return fourChan.getThread({
       boardId: boards[0].id,
       threadId: threads[0].id
     }).then((thread) => {

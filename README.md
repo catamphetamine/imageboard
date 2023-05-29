@@ -499,7 +499,11 @@ This library doesn't parse links to YouTube/Twitter/etc. Instead, this type of f
   // Is supported by `makaba` and `lynxchan`.
   commentsPerHour: number?,
 
-  // The maximum attachments count in a thread.
+  // The maximum attachments count in a comment or when posting a new thread.
+  // Only present for 4chan.org
+  maxAttachments: number?,
+
+  // The maximum overall attachments count in a thread.
   // Only present for 4chan.org
   maxAttachmentsInThread: number?,
 
@@ -512,6 +516,10 @@ This library doesn't parse links to YouTube/Twitter/etc. Instead, this type of f
   // Only present for `4chan.org`.
   maxAttachmentSize: number?,
 
+  // Maximum total attachments size in a thread on the board (a board-wide setting).
+  // Only present for `4chan.org` or `2ch.hk`.
+  maxAttachmentsSize: number?,
+
   // Maximum video attachment size in a thread on the board (a board-wide setting).
   // Only present for `4chan.org`.
   maxVideoAttachmentSize: number?,
@@ -519,10 +527,6 @@ This library doesn't parse links to YouTube/Twitter/etc. Instead, this type of f
   // Maximum video attachment duration (in seconds) in a thread on the board (a board-wide setting).
   // Only present for `4chan.org`.
   maxVideoAttachmentDuration: number?,
-
-  // Maximum total attachments size in a thread on the board (a board-wide setting).
-  // Only present for `4chan.org` or `2ch.hk`.
-  maxAttachmentsSize: number?,
 
   // Create new thread cooldown.
   // Only present for `4chan.org`.

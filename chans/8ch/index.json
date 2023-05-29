@@ -46,10 +46,53 @@
 	"threadUrl": "/{boardId}/res/{threadId}.html",
 	"commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
 	"api": {
-		"getThread": "/{boardId}/res/{threadId}.json",
-		"getThreads": "/{boardId}/catalog.json",
-		"getThreadsWithLatestCommentsPage": "/{boardId}/{pageIndex}.json",
-		"getBoards": "/boards-top20.json",
-		"getAllBoards": "/boards.json"
+		"getThread": {
+			"method": "GET",
+			"url": "/{boardId}/res/{threadId}.json",
+			"urlParameters": [{
+				"name": "boardId",
+				"input": {
+					"name": "boardId"
+				}
+			}, {
+				"name": "threadId",
+				"input": {
+					"name": "threadId"
+				}
+			}]
+		},
+		"getThreads": {
+			"method": "GET",
+			"url": "/{boardId}/catalog.json",
+			"urlParameters": [{
+				"name": "boardId",
+				"input": {
+					"name": "boardId"
+				}
+			}]
+		},
+		"getThreadsWithLatestCommentsPage": {
+			"method": "GET",
+			"url": "/{boardId}/{pageIndex}.json",
+			"urlParameters": [{
+				"name": "boardId",
+				"input": {
+					"name": "boardId"
+				}
+			}, {
+				"name": "pageIndex",
+				"input": {
+					"name": "pageIndex"
+				}
+			}]
+		},
+		"getBoards": {
+			"method": "GET",
+			"url": "/boards-top20.json"
+		},
+		"getAllBoards": {
+			"method": "GET",
+			"url": "/boards.json"
+		}
 	}
 }

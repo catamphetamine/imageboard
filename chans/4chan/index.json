@@ -25,11 +25,60 @@
 	"authResetUrl": "https://www.4chan.org/pass?reset",
 	"incrementalThreadUpdateStartsAtCommentsCount": 101,
 	"api": {
-		"getThread": "https://a.4cdn.org/{boardId}/thread/{threadId}.json",
-		"getThreadIncremental": "https://a.4cdn.org/{boardId}/thread/{threadId}-tail.json",
-		"getThreads": "https://a.4cdn.org/{boardId}/catalog.json",
-		"getThreadsWithLatestComments": "https://a.4cdn.org/{boardId}/catalog.json",
-		"getBoards": "https://a.4cdn.org/boards.json",
+		"getThread": {
+			"method": "GET",
+			"url": "https://a.4cdn.org/{boardId}/thread/{threadId}.json",
+			"urlParameters": [{
+				"name": "boardId",
+				"input": {
+					"name": "boardId"
+				}
+			}, {
+				"name": "threadId",
+				"input": {
+					"name": "threadId"
+				}
+			}]
+		},
+		"getThreadIncremental": {
+			"method": "GET",
+			"url": "https://a.4cdn.org/{boardId}/thread/{threadId}-tail.json",
+			"urlParameters": [{
+				"name": "boardId",
+				"input": {
+					"name": "boardId"
+				}
+			}, {
+				"name": "threadId",
+				"input": {
+					"name": "threadId"
+				}
+			}]
+		},
+		"getThreads": {
+			"method": "GET",
+			"url": "https://a.4cdn.org/{boardId}/catalog.json",
+			"urlParameters": [{
+				"name": "boardId",
+				"input": {
+					"name": "boardId"
+				}
+			}]
+		},
+		"getThreadsWithLatestComments": {
+			"method": "GET",
+			"url": "https://a.4cdn.org/{boardId}/catalog.json",
+			"urlParameters": [{
+				"name": "boardId",
+				"input": {
+					"name": "boardId"
+				}
+			}]
+		},
+		"getBoards": {
+			"method": "GET",
+			"url": "https://a.4cdn.org/boards.json"
+		},
 		"post": {
 			"method": "POST",
 			"url": "https://sys.4chan.org/{boardId}/post",
