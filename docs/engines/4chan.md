@@ -16,6 +16,19 @@ Contains both the comment and the attachment file info.
 
 	// Post creation date (in milliseconds).
 	// Same as `time` but in milliseconds rather than seconds.
+	//
+	// For some weird reason, sometimes `time` is present and `tim` is not,
+	// so prefer using `time` instead of `tim`. A real-world example:
+	//
+	// {
+	//   "no": 21654916,
+	//   "now": "05/30/23(Tue)01:40:17",
+	//   "name": "Anonymous",
+	//   "com": "<a href=\"#p21652742\" class=\"quotelink\">&gt;&gt;21652742</a><br>Do you have more of this beauty?",
+	//   "time": 1685425217,
+	//   "resto": 21652051
+	// }
+	//
 	"tim": 1549182611000,
 
 	// Post creation date (text).

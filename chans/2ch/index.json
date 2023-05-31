@@ -52,7 +52,8 @@
 			"url": "/{boardId}/threads.json",
 			"urlParameters": [{
 				"name": "boardId"
-			}]
+			}],
+			"features": ["rating", "views"]
 		},
 		"getThreadsWithLatestCommentsFirstPage": {
 			"method": "GET",

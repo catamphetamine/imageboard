@@ -357,7 +357,7 @@ Additional options:
 
 * `latestCommentLengthLimit: number` — Same as `commentLengthLimit` but for `thread.latestComments`.
 
-* `sortByRating: boolean` — Set to `true` to sort threads by "rating". In that case, the imageboard configuration should also specify `getThreadsStats` URL template.
+* `sortByRating: boolean` — Set to `true` to sort threads by "rating", if it's available.
 
 ### `getThread({ boardId: string, threadId: number }, options: object?): Thread`
 
@@ -596,9 +596,9 @@ This library doesn't parse links to YouTube/Twitter/etc. Instead, this type of f
   comments: Comment[],
 
   // Is this thread "sticky" ("pinned") (on top of others).
-  onTop: boolean?,
+  pinned: boolean?,
   // The order of a "sticky" ("pinned") thread amongst other "sticky" ("pinned") ones.
-  onTopOrder: number?,
+  pinnedOrder: number?,
 
   // Is this thread locked.
   locked: boolean?,
@@ -926,38 +926,69 @@ Additional fields:
   "api": {
     // (required if there's no "boards" config parameter)
     // "Get boards list" API URL.
-    "getBoards": "/boards-top20.json",
+    "getBoards": {
+      "method": "GET",
+      "url": "/boards-top20.json"
+    },
 
     // (optional)
     // "Find boards by a query" API URL.
     // `8ch.net (8kun.top)` has about `20,000` boards total,
     // so "getBoards()" API only returns top 20 of them,
     // while "findBoards('')" API returns all `20,000` of them.
-    "findBoards": "/boards.json",
+    "findBoards": {
+      "method": "GET",
+      "url": "/boards.json"
+    },
 
     // (required)
     // "Get threads list" API URL template.
-    "getThreads": "/{boardId}/catalog.json",
+    "getThreads": {
+      "method": "GET",
+      "url": "/{boardId}/catalog.json",
+      "urlParameters": [{ "name": "boardId" }]
+    },
 
     // (optional)
     // "Get threads list including their latest comments" API URL template.
-    "getThreadsWithLatestComments": "https://a.4cdn.org/{boardId}/catalog.json",
+    "getThreadsWithLatestComments": {
+      "method": "GET",
+      "url": "https://a.4cdn.org/{boardId}/catalog.json",
+      "urlParameters": [{ "name": "boardId" }]
+    },
 
     // (optional)
     // "Get threads list (first page) including their latest comments" API URL template.
-    "getThreadsWithLatestCommentsFirstPage": "/{boardId}/index.json",
+    "getThreadsWithLatestCommentsFirstPage": {
+      "method": "GET",
+      "url": "/{boardId}/index.json",
+      "urlParameters": [{ "name": "boardId" }]
+    },
 
     // (optional)
     // "Get threads list (N-th page) including their latest comments" API URL template.
-    "getThreadsWithLatestCommentsPage": "/{boardId}/{pageIndex}.json",
+    // Available parameters for the page: `pageIndex`, `page` (= `pageIndex` + 1).
+    "getThreadsWithLatestCommentsPage": {
+      "method": "GET",
+      "url": "/{boardId}/{pageIndex}.json",
+      "urlParameters": [{ "name": "boardId" }, { "name": "pageIndex" }]
+    },
 
     // (optional)
     // "Get threads stats" API URL template.
-    "getThreadsStats": "/{boardId}/threads.json",
+    "getThreadsStats": {
+      "method": "GET",
+      "url": "/{boardId}/threads.json",
+      "urlParameters": [{ "name": "boardId" }]
+    },
 
     // (required)
     // "Get thread comments" API URL template.
-    "getThread": "/{boardId}/res/{threadId}.json"
+    "getThread": {
+      "method": "GET",
+      "url": "/{boardId}/res/{threadId}.json",
+      "urlParameters": [{ "name": "boardId" }, { "name": "threadId" }]
+    },
 
     // (optional)
     // "Get archived thread comments" API URL template.
@@ -965,7 +996,11 @@ Additional fields:
     // for both ongoing and archived threads.
     // Some engines (like `makaba`) use different URLs
     // for ongoing and archived threads.
-    "getArchivedThread": "/{boardId}/arch/res/{threadId}.json"
+    "getArchivedThread": {
+      "method": "GET",
+      "url": "/{boardId}/arch/res/{threadId}.json",
+      "urlParameters": [{ "name": "boardId" }, { "name": "threadId" }]
+    }
   },
 
   // (required)
