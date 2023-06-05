@@ -40,6 +40,7 @@ export interface Audio {
   date?: Date;
   author?: string;
   title?: string;
+  picture?: Picture;
 }
 
 export interface File {
