@@ -2,6 +2,7 @@ import {
 	default as Chan,
 	getConfig,
 	getCommentText,
+	sortThreadsWithPinnedOnTop,
 	// generateQuotes,
 	// generatePreview,
 	// generateThreadTitle,
@@ -14,6 +15,7 @@ describe('exports', () => {
 		getConfig.should.be.a('function')
 		getConfig('4chan').id.should.equal('4chan')
 		getCommentText.should.be.a('function')
+		sortThreadsWithPinnedOnTop.should.be.a('function')
 		// generateQuotes.should.be.a('function')
 		// generatePreview.should.be.a('function')
 		// generateThreadTitle.should.be.a('function')

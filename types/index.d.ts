@@ -222,6 +222,8 @@ export function getCommentText(comment: Comment, options?: {
 	skipGeneratedPostQuoteBlocks?: boolean;
 }): string | undefined;
 
+export function sortThreadsWithPinnedOnTop(threads: Thread[], sortThreads: (threads: Thread[]) => Thread[]): Thread[];
+
 function Imageboard(imageboardIdOrConfig: ImageboardId | ImageboardConfig, options: ImageboardOptions): Imageboard;
 
 export default Imageboard;
