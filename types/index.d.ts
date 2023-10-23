@@ -199,6 +199,50 @@ interface GetThreadOptions extends ImageboardOptionsOverridable {
 	afterCommentsCount?: number;
 }
 
+type PostFormAttachmentFile = File | Blob;
+
+interface GetCaptchaOptions {
+	boardId: BoardId;
+	threadId?: ThreadId;
+}
+
+interface GetCaptchaResultImage {
+	type: 'image/png' | 'image/jpeg';
+	url: string;
+	width: number;
+	height: number;
+}
+
+interface GetCaptchaResult {
+	id: string;
+	type: 'text';
+	characterSet?: 'numeric' | 'russian';
+	expiresAt: Date;
+	image: GetCaptchaResultImage;
+}
+
+interface CreateThreadOptions {
+	boardId: BoardId;
+	authorIsThreadAuthor?: boolean;
+	accessToken?: string;
+	authorEmail?: string;
+	authorName?: string;
+	attachments?: PostFormAttachmentFile[];
+	title?: string;
+	content?: string;
+
+	// `makaba`-specific properties:
+	authorBadgeId?: number;
+	tags?: string[];
+	captchaType?: string;
+	captchaId?: string;
+	captchaSolution?: string;
+}
+
+interface CreateCommentOptions extends CreateThreadOptions {
+	threadId: ThreadId;
+}
+
 export type Feature = 'getThreads.sortByRating';
 
 export interface Imageboard {
@@ -212,6 +256,9 @@ export interface Imageboard {
 	getThreads: (parameters: { boardId: BoardId }, options?: GetThreadsOptions) => Promise<Thread[]>;
 	getThread: (parameters: { boardId: BoardId, threadId: ThreadId }, options?: GetThreadOptions) => Promise<Thread>;
 	vote: (parameters: { up: boolean, boardId: BoardId, threadId: ThreadId, commentId: CommentId }) => Promise<boolean>;
+	createThread: (parameters: CreateThreadOptions) => Promise<{ id: ThreadId }>;
+	createComment: (parameters: CreateCommentOptions) => Promise<{ id: CommentId }>;
+	getCaptcha: (parameters: GetCaptchaOptions) => Promise<GetCaptchaResult>;
 }
 
 export function getConfig(imageboardId: ImageboardId): ImageboardConfig;

@@ -22,7 +22,7 @@
 	"threadUrl": "/{boardId}/thread/{threadId}",
 	"commentUrl": "/{boardId}/thread/{threadId}#p{commentId}",
 	"authorBadgeUrl": "https://s.4cdn.org/image/flags/{boardId}/{flagId}.gif",
-	"authResetUrl": "https://www.4chan.org/pass?reset",
+	"authResetUrl": "/pass?reset",
 	"incrementalThreadUpdateStartsAtCommentsCount": 101,
 	"api": {
 		"getThread": {

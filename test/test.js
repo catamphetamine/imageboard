@@ -1,4 +1,4 @@
-import fetch from 'node-fetch'
+import fetch, { FormData } from 'node-fetch'
 import imageboard, { getCommentText } from 'imageboard'
 
 const IMAGEBOARD_ID = '4chan'
@@ -8,6 +8,24 @@ const fourChan = imageboard(IMAGEBOARD_ID, {
   // Any HTTP request library can be used here.
   // Must return a `Promise` resolving to response text.
   request: (method, url, { body, headers }) => {
+    if (headers['Content-Type'] === 'multipart/form-data') {
+      const formData = new FormData()
+      for (const key of Object.keys(body)) {
+        if (body[key] !== undefined && body[key] !== null) {
+          if (Array.isArray(body[key])) {
+            for (const element of body[key]) {
+              formData.append(key + '[]', element)
+            }
+          } else {
+            formData.append(key, body[key])
+          }
+        }
+      }
+      body = formData
+      // Remove `Content-Type` header so that it autogenerates it from the `FormData`.
+      // Example: "multipart/form-data; boundary=----WebKitFormBoundaryZEglkYA7NndbejbB".
+      delete headers['Content-Type']
+    }
     return fetch(url, { method, headers, body }).then((response) => {
       if (response.ok) {
         return response.text().then((responseText) => ({

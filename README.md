@@ -35,10 +35,8 @@ Features:
 * (optional) Automatically generate shortened "previews" for long comments.
 * (optional) Automatically insert quoted posts' text when none provided.
 * (optional) Automatically generate thread title when it's missing.
-
-To do:
-
-* Add methods for creating threads and posting comments.
+* Create threads and post comments.
+  * The feature is currently only supported on engines: `makaba`.
 
 ## Install
 
@@ -57,19 +55,37 @@ npm install node-fetch --save
 Then, create an imageboard instance. This example will use `4chan.org` as a data source.
 
 ```js
-var fetch = require('node-fetch')
-var imageboard = require('imageboard')
+import fetch, { FormData } from 'node-fetch'
+import imageboard from 'imageboard'
 
-var fourChan = imageboard('4chan', {
+const fourChan = imageboard('4chan', {
   // Sends an HTTP request.
   // Any HTTP request library can be used here.
   // Must return a `Promise` resolving to response text.
   request: (method, url, { body, headers }) => {
+    if (headers['Content-Type'] === 'multipart/form-data') {
+      const formData = new FormData()
+      for (const key of Object.keys(body)) {
+        if (body[key] !== undefined && body[key] !== null) {
+          if (Array.isArray(body[key])) {
+            for (const element of body[key]) {
+              formData.append(key + '[]', element)
+            }
+          } else {
+            formData.append(key, body[key])
+          }
+        }
+      }
+      body = formData
+      // Remove `Content-Type` header so that it autogenerates it from the `FormData`.
+      // Example: "multipart/form-data; boundary=----WebKitFormBoundaryZEglkYA7NndbejbB".
+      delete headers['Content-Type']
+    }
     return fetch(url, { method, headers, body }).then((response) => {
       if (response.ok) {
         return response.text()
       }
-      var error = new Error(response.statusText)
+      const error = new Error(response.statusText)
       // // Set HTTP Response status code on the error.
       // error.status = response.status
       throw error
@@ -107,7 +123,7 @@ The output:
 Now, print the first five threads on `4chan.org` `/a/` board:
 
 ```js
-var getCommentText = require('imageboard').getCommentText
+import { getCommentText } from 'imageboard'
 
 // Prints the first five threads on `/a/` board.
 fourChan.getThreads({
@@ -154,7 +170,7 @@ DATABASE DATABASE JUST LIVING IN THE DATABE WO-OH
 Now, print the first five comments of the thread:
 
 ```js
-var getCommentText = require('imageboard').getCommentText
+import { getCommentText } from 'imageboard'
 
 // Prints the first five comments of thread #193605320 on `/a/` board.
 fourChan.getThread({
@@ -384,6 +400,83 @@ Parses `comment` content if `parseContent: false` option was used when creating 
 Some imageboards (like [`2ch.hk`](https://2ch.hk)) allow upvoting or downvoting threads and comments on certain boards (like [`/po/`litics on `2ch.hk`](https://2ch.hk/po)).
 
 Returns `true` if the vote has been accepted. Returns `false` if the user has already voted.
+
+### `createThread({ boardId: string, ... }): number`
+
+Creates a new thread on a board.
+
+Is implemented for engines: `makaba`.
+
+Parameters:
+
+* `boardId: string` — Board ID.
+* `accessToken?: string` — If the user is authenticated, put an `accessToken` here to bypass CAPTCHA.
+* `authorEmail?: string` — Comment author email.
+* `authorName?: string` — Comment author name.
+* `attachments?: File[]` — Attachments.
+* `title?: string` — Comment title (subject).
+* `content?: string` — Comment content (text).
+* `makaba`-specific properties:
+  * `authorIsThreadAuthor?: boolean` — "Comment author is the thread author" flag.
+  * `authorBadgeId?: number` — Comment author icon ID.
+  * `tags?: string[]` — Thread tags.
+  * `captchaType?: string` — CAPTCHA type. Possible values: `"2chcaptcha"`.
+  * `captchaId?: string` — CAPTCHA ID.
+  * `captchaSolution?: string` — CAPTCHA solution.
+
+Returns an object:
+
+* `id: number` — Thread ID
+
+### `createComment({ boardId: string, threadId: number, ... }): object`
+
+Creates a new comment in a thread.
+
+Is implemented for engines: `makaba`.
+
+Parameters:
+
+* `boardId: string` — Board ID.
+* `threadId: number` — Thread ID.
+* `accessToken?: string` — If the user is authenticated, put an `accessToken` here to bypass CAPTCHA.
+* `authorEmail?: string` — Comment author email.
+* `authorName?: string` — Comment author name.
+* `attachments?: File[]` — Attachments.
+* `title?: string` — Comment title (subject).
+* `content?: string` — Comment content (text).
+* `makaba`-specific properties:
+  * `authorIsThreadAuthor?: boolean` — "Comment author is the thread author" flag.
+  * `authorBadgeId?: number` — Comment author icon ID.
+  * `captchaType?: string` — CAPTCHA type. Possible values: `"2chcaptcha"`.
+  * `captchaId?: string` — CAPTCHA ID.
+  * `captchaSolution?: string` — CAPTCHA solution.
+
+Returns an object:
+
+* `id: number` — Comment ID
+
+### `getCaptcha(): object`
+
+Requests a CAPTCHA,
+
+Is implemented for engines: `makaba`.
+
+Parameters:
+
+* `boardId: string` — Board ID.
+* `threadId?: number` — Thread ID, if posting a comment in a thread.
+
+Returns an object:
+
+* `id: string` — CAPTCHA `id`, can be used to get CAPTCHA image URL.
+* `type: string` — CAPTCHA type. Possible values: `"text"`.
+* `characterSet?: string` — A name of a character set for a `"text"` CAPTCHA solution. For example, `"numeric"` or `"russian"`.
+* `expiresAt: Date` — CAPTCHA expiration date.
+* `image` — CAPTCHA image
+  * `type: string` — CAPTCHA image mime-type.
+  * `url: string` — CAPTCHA image URL.
+  * `width: number` — CAPTCHA image width.
+  * `height: number` — CAPTCHA image height.
 
 ## Miscellaneous API
 

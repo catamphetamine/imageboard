@@ -9,7 +9,12 @@
 	"boardUrl": "/{boardId}",
 	"threadUrl": "/{boardId}/res/{threadId}.html",
 	"commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
-	"authResetUrl": "https://2ch.hk/makaba/makaba.fcgi?task=restore",
+	"authResetUrl": "/makaba/makaba.fcgi?task=restore",
+	"captchaExpiresIn": 300,
+	"captchaImageUrl": "/api/captcha/2chcaptcha/show?id={id}",
+	"captchaImageType": "image/png",
+	"captchaImageWidth": 270,
+	"captchaImageHeight": 120,
 	"api": {
 		"getThread": {
 			"method": "GET",
@@ -102,7 +107,8 @@
 		},
 		"post": {
 			"method": "POST",
-			"url": "/user/posting",
+			"requestType": "multipart/form-data",
+			"url": "/user/posting?nc=1",
 			"parameters": [{
 				"name": "task",
 				"defaultValue": "post"
@@ -165,7 +171,7 @@
 					"name": "tags"
 				}
 			}, {
-				"name": "formimages",
+				"name": "file",
 				"input": {
 					"name": "attachments"
 				}
@@ -203,6 +209,22 @@
 				"input": {
 					"name": "captchaSolution"
 				}
+			}]
+		},
+		"getCaptcha": {
+			"method": "GET",
+			"url": "/api/captcha/2chcaptcha/id",
+			"parameters": [{
+				"name": "board",
+				"input": {
+					"name": "boardId"
+				}
+			}, {
+				"name": "thread",
+				"input": {
+					"name": "threadId"
+				},
+				"defaultValue": 0
 			}]
 		},
 		"report": {
