@@ -201,6 +201,20 @@ interface GetThreadOptions extends ImageboardOptionsOverridable {
 
 type PostFormAttachmentFile = File | Blob;
 
+interface VoteForCommentOptions {
+	boardId: BoardId;
+	threadId: ThreadId;
+	commentId: CommentId;
+	up: boolean;
+}
+
+interface ReportCommentOptions {
+	boardId: BoardId;
+	threadId: ThreadId;
+	commentId: CommentId;
+	content: string;
+}
+
 interface GetCaptchaOptions {
 	boardId: BoardId;
 	threadId?: ThreadId;
@@ -265,7 +279,8 @@ export interface Imageboard {
 	canSearchForBoards: () => boolean;
 	getThreads: (parameters: { boardId: BoardId }, options?: GetThreadsOptions) => Promise<Thread[]>;
 	getThread: (parameters: { boardId: BoardId, threadId: ThreadId }, options?: GetThreadOptions) => Promise<Thread>;
-	vote: (parameters: { up: boolean, boardId: BoardId, threadId: ThreadId, commentId: CommentId }) => Promise<boolean>;
+	voteForComment: (parameters: VoteForCommentOptions) => Promise<boolean>;
+	reportComment: (parameters: ReportCommentOptions) => Promise<void>;
 	createThread: (parameters: CreateThreadOptions) => Promise<{ id: ThreadId }>;
 	createComment: (parameters: CreateCommentOptions) => Promise<{ id: CommentId }>;
 	getCaptcha: (parameters: GetCaptchaOptions) => Promise<GetCaptchaResult>;

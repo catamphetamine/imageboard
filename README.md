@@ -426,15 +426,15 @@ Parameters:
 
 * `boardId: string` — Board ID.
 
-* `options?: object` — An optional `options` argument that can be used to override some of the `options` of the `imageboard()` function.
+* `options?: object` — An optional `options` object that can be used to override some of the `options` passed to the `imageboard()` function. Additionally, it could also contain the following options:
 
-* `withLatestComments: boolean` — Pass `true` to get latest comments for each thread. Latest comments are added as `thread.latestComments[]`, but not necessarily for all threads in the list, because the result might differ depending on the imageboard engine. For example, `4chan` provides latest comments for all threads in the list as part of its "get threads list" API response, while other imageboard engines don't — which is lame — and so the latest comments have to somehow be fetched separately by, for example, going through the "pages" of threads on a board. When doing so, some `threads` might not get their `latestComments[]` at all, resulting in `thread.latestComments[]` being `undefined`. That might happen for different reasons. One reason is that the list of threads on a board changes between the individual "read page" requests, so some threads might get lost in this space-time gap. Another reason is that it wouldn't be practical to go through all of the "pages" because that'd put unnecessary load on the server, and that's when `maxLatestCommentsPages` parameter comes into effect.
+  * `withLatestComments: boolean` — Pass `true` to get latest comments for each thread. Latest comments are added as `thread.latestComments[]`, but not necessarily for all threads in the list, because the result might differ depending on the imageboard engine. For example, `4chan` provides latest comments for all threads in the list as part of its "get threads list" API response, while other imageboard engines don't — which is lame — and so the latest comments have to somehow be fetched separately by, for example, going through the "pages" of threads on a board. When doing so, some `threads` might not get their `latestComments[]` at all, resulting in `thread.latestComments[]` being `undefined`. That might happen for different reasons. One reason is that the list of threads on a board changes between the individual "read page" requests, so some threads might get lost in this space-time gap. Another reason is that it wouldn't be practical to go through all of the "pages" because that'd put unnecessary load on the server, and that's when `maxLatestCommentsPages` parameter comes into effect.
 
-* `maxLatestCommentsPages: number` — The maximum number of threads list "pages" to fetch in order to get the latest comments for each thread. When the engine doesn't provide the latest comments for each thread as part of its generic "get threads list" API response, the latest comments are fetched by going through every "page" of threads on a board. Therefore, to get the latest comments for all threads on a board, the code has to fetch all "pages", of which there may be many (for example, 10). At the same time, usually imageboards warn the user of the "max one API request per second" rate limit (which, of course, isn't actually imposed). So the code decides to play it safe and defaults to fetching just the first "page" of threads to get just those threads' latest comments, and doesn't set the latest comments for the rest of the threads. A developer may specify a larger count of "pages" to be fetched. It would be safe to specify "over the top" (larger than actual) pages count because the code will just discard all "Not found" errors. All pages are fetched simultaneously for better UX due to shorter loading time, so consider web browser limits for the maximum number of concurrent HTTP requests when setting this parameter to a high number.
+  * `maxLatestCommentsPages: number` — The maximum number of threads list "pages" to fetch in order to get the latest comments for each thread. When the engine doesn't provide the latest comments for each thread as part of its generic "get threads list" API response, the latest comments are fetched by going through every "page" of threads on a board. Therefore, to get the latest comments for all threads on a board, the code has to fetch all "pages", of which there may be many (for example, 10). At the same time, usually imageboards warn the user of the "max one API request per second" rate limit (which, of course, isn't actually imposed). So the code decides to play it safe and defaults to fetching just the first "page" of threads to get just those threads' latest comments, and doesn't set the latest comments for the rest of the threads. A developer may specify a larger count of "pages" to be fetched. It would be safe to specify "over the top" (larger than actual) pages count because the code will just discard all "Not found" errors. All pages are fetched simultaneously for better UX due to shorter loading time, so consider web browser limits for the maximum number of concurrent HTTP requests when setting this parameter to a high number.
 
-* `latestCommentLengthLimit: number` — Same as `commentLengthLimit` but for `thread.latestComments`.
+  * `latestCommentLengthLimit: number` — Same as `commentLengthLimit` but for `thread.latestComments`.
 
-* `sortByRating: boolean` — Set to `true` to sort threads by "rating", if it's available.
+  * `sortByRating: boolean` — Set to `true` to sort threads by "rating", if it's available.
 
 Returns: a list of [Threads](#thread).
 
@@ -448,13 +448,13 @@ Parameters:
 
 * `threadId: number` — Thread ID.
 
-* `options: object?` — An optional `options` argument that can be used to override some of the `options` of the `imageboard()` function.
+* `options: object?` — An optional `options` object that can be used to override some of the `options` passed to the `imageboard()` function. Additionally, it could also contain the following options:
 
-* `archived: boolean` — (optional) Pass `true` when requesting an archived thread. This flag is not required in any way, but, for `makaba` engine, it reduces the number of HTTP Requests from 2 to 1 because in that case it doesn't have to attempt to read the thread by a non-"archived" URL (which returns `404 Not Found`) before attempting to read it by an "archived" URL.
+  * `archived: boolean` — (optional) Pass `true` when requesting an archived thread. This flag is not required in any way, but, for `makaba` engine, it reduces the number of HTTP Requests from 2 to 1 because in that case it doesn't have to attempt to read the thread by a non-"archived" URL (which returns `404 Not Found`) before attempting to read it by an "archived" URL.
 
-* `afterCommentId: number` — (optional) (experimental) Could be used to only fetch comments after a certain comment.
+  * `afterCommentId: number` — (optional) (experimental) Could be used to only fetch comments after a certain comment.
 
-* `afterCommentsCount: number` — (optional) (experimental) Could be used to only fetch comments after a certain comments count (counting from the first comment in the thread).
+  * `afterCommentsCount: number` — (optional) (experimental) Could be used to only fetch comments after a certain comments count (counting from the first comment in the thread).
 
 Returns: a [Thread](#thread).
 
@@ -464,7 +464,7 @@ Returns: a [Thread](#thread).
 Parses `comment` content if `parseContent: false` option was used when creating an `imageboard` instance.
 -->
 
-### `vote()`
+### `voteForComment()`
 
 Some imageboards (like [`2ch.hk`](https://2ch.hk)) allow upvoting or downvoting threads and comments on certain boards (like [`/po/`litics on `2ch.hk`](https://2ch.hk/po)).
 
@@ -584,7 +584,7 @@ No parameters.
 
 Returns `undefined`.
 
-### `report()`
+### `reportComment()`
 
 Reports a comment or a thread.
 
