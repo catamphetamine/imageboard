@@ -15,6 +15,7 @@
 	"captchaImageType": "image/png",
 	"captchaImageWidth": 270,
 	"captchaImageHeight": 120,
+	"accessTokenCookieName": "passcode_auth",
 	"api": {
 		"getThread": {
 			"method": "GET",
@@ -254,24 +255,21 @@
 		},
 		"logIn": {
 			"method": "POST",
-			"url": "/makaba/makaba.fcgi?json=1",
+			"url": "/user/passlogin",
+			"requestType": "multipart/form-data",
+			"responseType": "text/html",
 			"parameters": [{
-				"name": "task",
-				"defaultValue": "auth"
-			}, {
-				"name": "usercode",
+				"name": "passcode",
 				"input": {
-					"name": "authToken"
+					"name": "token"
 				}
 			}]
 		},
 		"logOut": {
 			"method": "POST",
-			"url": "/makaba/posting.fcgi?json=1",
-			"parameters": [{
-				"name": "task",
-				"defaultValue": "logout"
-			}]
+			"url": "/user/passlogout",
+			"requestType": "multipart/form-data",
+			"responseType": "text/html"
 		}
 	}
 }

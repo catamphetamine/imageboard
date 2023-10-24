@@ -163,12 +163,12 @@
 			}, {
 				"name": "id",
 				"input": {
-					"name": "authToken"
+					"name": "token"
 				}
 			}, {
 				"name": "pin",
 				"input": {
-					"name": "authTokenPassword"
+					"name": "tokenPassword"
 				}
 			}, {
 				"name": "long_login",

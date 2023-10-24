@@ -243,6 +243,16 @@ interface CreateCommentOptions extends CreateThreadOptions {
 	threadId: ThreadId;
 }
 
+interface LogInOptions {
+	token: string;
+	// `4chan` uses "passwords" on login tokens.
+	tokenPassword?: string;
+}
+
+interface LogInResult {
+	accessToken?: string;
+}
+
 export type Feature = 'getThreads.sortByRating';
 
 export interface Imageboard {
@@ -259,6 +269,8 @@ export interface Imageboard {
 	createThread: (parameters: CreateThreadOptions) => Promise<{ id: ThreadId }>;
 	createComment: (parameters: CreateCommentOptions) => Promise<{ id: CommentId }>;
 	getCaptcha: (parameters: GetCaptchaOptions) => Promise<GetCaptchaResult>;
+	logIn: (parameters: LogInOptions) => Promise<LogInResult>;
+	logOut: () => Promise<void>;
 }
 
 export function getConfig(imageboardId: ImageboardId): ImageboardConfig;

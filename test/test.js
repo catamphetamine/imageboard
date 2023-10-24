@@ -6,22 +6,11 @@ const IMAGEBOARD_ID = '4chan'
 const fourChan = imageboard(IMAGEBOARD_ID, {
   // Sends an HTTP request.
   // Any HTTP request library can be used here.
-  // Must return a `Promise` resolving to response text.
   request: (method, url, { body, headers }) => {
+    // If request "Content-Type" is set to be "multipart/form-data",
+    // convert the `body` object to a `FormData` instance.
     if (headers['Content-Type'] === 'multipart/form-data') {
-      const formData = new FormData()
-      for (const key of Object.keys(body)) {
-        if (body[key] !== undefined && body[key] !== null) {
-          if (Array.isArray(body[key])) {
-            for (const element of body[key]) {
-              formData.append(key + '[]', element)
-            }
-          } else {
-            formData.append(key, body[key])
-          }
-        }
-      }
-      body = formData
+      body = createFormData(body)
       // Remove `Content-Type` header so that it autogenerates it from the `FormData`.
       // Example: "multipart/form-data; boundary=----WebKitFormBoundaryZEglkYA7NndbejbB".
       delete headers['Content-Type']
@@ -30,16 +19,48 @@ const fourChan = imageboard(IMAGEBOARD_ID, {
       if (response.ok) {
         return response.text().then((responseText) => ({
           url: response.url,
-          response: responseText
+          response: responseText,
+          headers: response.headers
         }))
       }
-      const error = new Error(response.statusText)
-      // Set HTTP Response status code on the error.
-      error.status = response.status
-      throw error
+      return rejectWithErrorForResponse(response)
     })
   }
 })
+
+// Creates an error from a `fetch()` response.
+// Returns a `Promise` and rejects it with the error.
+function rejectWithErrorForResponse(response) {
+  const error = new Error(response.statusText)
+  error.status = response.status
+  error.headers = response.headers
+  return response.text().then(
+    (responseText) => {
+      error.responseText = responseText
+      throw error
+    },
+    (error_) => {
+      throw error
+    }
+  )
+}
+
+// Converts an object to a `FormData` instance.
+function createFormData(body) {
+  const formData = new FormData()
+  for (const key of Object.keys(body)) {
+    if (body[key] !== undefined && body[key] !== null) {
+      if (Array.isArray(body[key])) {
+        for (const element of body[key]) {
+          formData.append(key + '[]', element)
+        }
+      } else {
+        formData.append(key, body[key])
+      }
+    }
+  }
+  return formData
+}
 
 // // Test `2ch.hk` really old archived thread.
 // return fourChan.getThread({
