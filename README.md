@@ -62,13 +62,17 @@ const fourChan = imageboard('4chan', {
   // Sends an HTTP request.
   // Any HTTP request library can be used here.
   //
-  // Must return a `Promise`.
-  // When successful, the `Promise` should resolve to response text.
-  // Otherwise, in case of an error, the `Promise` should reject
-  // with an `Error` instance having optional properties:
-  // * `status?: number` — HTTP response status.
-  // * `responseText?: string` — HTTP response text.
-  // * `headers?: object` — An object having a function `.get(headerName: string)`.
+  // Must return a `Promise`:
+  // * When successful, the `Promise` should resolve to an object:
+  //   * `url: string` — HTTP request URL. If there were any redirects in the process, this should be the final URL that it got redrected to.
+  //   * `responseText?: string` — HTTP response text.
+  //   * `headers?: object` — HTTP response headers. An object having a function `.get(headerName: string)`.
+  // * Otherwise, in case of an error, the `Promise` should reject
+  //   with an `Error` instance having optional properties:
+  //   * `url: string` — HTTP request URL. If there were any redirects in the process, this should be the final URL that it got redrected to.
+  //   * `status?: number` — HTTP response status.
+  //   * `responseText?: string` — HTTP response text.
+  //   * `headers?: object` — HTTP response headers. An object having a function `.get(headerName: string)`.
   //
   request: (method, url, { body, headers }) => {
     // If request "Content-Type" is set to be "multipart/form-data",
@@ -83,7 +87,7 @@ const fourChan = imageboard('4chan', {
       if (response.ok) {
         return response.text().then((responseText) => ({
           url: response.url,
-          response: responseText,
+          responseText,
           headers: response.headers
         }))
       }
@@ -96,6 +100,7 @@ const fourChan = imageboard('4chan', {
 // Returns a `Promise` and rejects it with the error.
 function rejectWithErrorForResponse(response) {
   const error = new Error(response.statusText)
+  error.url = response.url
   error.status = response.status
   error.headers = response.headers
   return response.text().then(
@@ -112,14 +117,16 @@ function rejectWithErrorForResponse(response) {
 // Converts an object to a `FormData` instance.
 function createFormData(body) {
   const formData = new FormData()
-  for (const key of Object.keys(body)) {
-    if (body[key] !== undefined && body[key] !== null) {
-      if (Array.isArray(body[key])) {
-        for (const element of body[key]) {
-          formData.append(key + '[]', element)
+  if (body) {
+    for (const key of Object.keys(body)) {
+      if (body[key] !== undefined && body[key] !== null) {
+        if (Array.isArray(body[key])) {
+          for (const element of body[key]) {
+            formData.append(key + '[]', element)
+          }
+        } else {
+          formData.append(key, body[key])
         }
-      } else {
-        formData.append(key, body[key])
       }
     }
   }
@@ -370,35 +377,56 @@ getPostLinkProperties(comment) {
 
 ## `imageboard` methods
 
-### `getBoards(): Board[]`
+### `getBoards()`
 
-Returns a list of [Boards](#board). For some imageboards this isn't gonna be a full list of boards because, for example, `8ch.net (8kun.top)` has about `20,000` boards so `getBoards()` returns just the "top 20 boards" list.
+Fetches a list of boards on an imageboard. For some imageboards this isn't gonna be a full list of boards because, for example, `8ch.net (8kun.top)` has about `20,000` boards so `getBoards()` returns just the "top 20 boards" list.
 
-### `hasMoreBoards(): boolean`
+Returns: a list of [Boards](#board).
 
-Returns `true` if the "get boards" API doesn't return the full list of boards. For example, `8ch.net (8kun.top)` has about `20,000` boards, so `getBoards()` returns just the "top 20 boards", and to indicate that, `hasMoreBoards()` returns `true`.
+### `hasMoreBoards()`
 
-### `getAllBoards(): Board[]`
+Returns:
 
-Returns the list of all [Boards](#board). For example, `8ch.net (8kun.top)` has about `20,000` boards, so `getBoards()` returns just the "top 20 boards", while `getAllBoards()` returns all `20,000` boards.
+* `true` if the "get boards" API doesn't return the full list of boards.
+  * For example, `8ch.net (8kun.top)` has about `20,000` boards, so `getBoards()` returns just the "top 20 boards", and to indicate that, `hasMoreBoards()` returns `true`.
+* `false` otherwise.
 
-### `findBoards(query: string): Board[]`
+### `getAllBoards()`
 
-Returns a (non-full) list of [Boards](#board) matching a `query`. For example, if an imageboard supports creating "user boards", and there're a lot of them, then `getBoards()` should return just the most popular ones, and to discover all other boards, searching by a query should be used.
+Fetches a list of all boards on an imageboard. For example, `8ch.net (8kun.top)` has about `20,000` boards, so `getBoards()` returns just the "top 20 boards", while `getAllBoards()` returns all `20,000` boards.
+
+Returns: a list of [Boards](#board).
+
+### `findBoards()`
+
+Searches for a (non-full) list of boards matching a search `query`. For example, if an imageboard supports creating "user boards", and there're a lot of them, then `getBoards()` should return just the most popular ones, and to discover all other boards, searching by a query should be used.
 
 This method isn't currently implemented in any of the supported imageboard engines.
 
-### `canSearchForBoards(): boolean`
+Parameters:
 
-Returns `true` if the imageboard supports searching for boards by a query.
+* `query: string` — Search query.
 
-### `getThreads({ boardId: string }, options: object?): Thread[]`
+Returns: a list of [Boards](#board)
 
-Returns a list of [Threads](#thread).
+### `canSearchForBoards()`
 
-The optional `options` argument can be used to override some of the `options` of the `imageboard()` function.
+Tells whether `findBoards()` method is supported by the imageboard engine.
 
-Additional options:
+Returns:
+
+* `true` if the imageboard supports searching for boards by a query.
+* `false` otherwise.
+
+### `getThreads()`
+
+Fetches a list of threads on a board.
+
+Parameters:
+
+* `boardId: string` — Board ID.
+
+* `options?: object` — An optional `options` argument that can be used to override some of the `options` of the `imageboard()` function.
 
 * `withLatestComments: boolean` — Pass `true` to get latest comments for each thread. Latest comments are added as `thread.latestComments[]`, but not necessarily for all threads in the list, because the result might differ depending on the imageboard engine. For example, `4chan` provides latest comments for all threads in the list as part of its "get threads list" API response, while other imageboard engines don't — which is lame — and so the latest comments have to somehow be fetched separately by, for example, going through the "pages" of threads on a board. When doing so, some `threads` might not get their `latestComments[]` at all, resulting in `thread.latestComments[]` being `undefined`. That might happen for different reasons. One reason is that the list of threads on a board changes between the individual "read page" requests, so some threads might get lost in this space-time gap. Another reason is that it wouldn't be practical to go through all of the "pages" because that'd put unnecessary load on the server, and that's when `maxLatestCommentsPages` parameter comes into effect.
 
@@ -406,15 +434,21 @@ Additional options:
 
 * `latestCommentLengthLimit: number` — Same as `commentLengthLimit` but for `thread.latestComments`.
 
-* `sortByRating: boolean` — Set to `true` to sort threads by "rating", if it's available.
+* `sortByRating: boolean` — Set to `true` to sort threads by "rating", if it's available.
 
-### `getThread({ boardId: string, threadId: number }, options: object?): Thread`
+Returns: a list of [Threads](#thread).
 
-Returns a [Thread](#thread).
+### `getThread()`
 
-The optional `options` argument can be used to override some of the `options` of the `imageboard()` function.
+Fetches a thread.
 
-Other available `options`:
+Parameters:
+
+* `boardId: string` — Board ID.
+
+* `threadId: number` — Thread ID.
+
+* `options: object?` — An optional `options` argument that can be used to override some of the `options` of the `imageboard()` function.
 
 * `archived: boolean` — (optional) Pass `true` when requesting an archived thread. This flag is not required in any way, but, for `makaba` engine, it reduces the number of HTTP Requests from 2 to 1 because in that case it doesn't have to attempt to read the thread by a non-"archived" URL (which returns `404 Not Found`) before attempting to read it by an "archived" URL.
 
@@ -422,19 +456,33 @@ Other available `options`:
 
 * `afterCommentsCount: number` — (optional) (experimental) Could be used to only fetch comments after a certain comments count (counting from the first comment in the thread).
 
+Returns: a [Thread](#thread).
+
 <!--
 ### `parseCommentContent(comment: Comment, { boardId: string, threadId: number })`
 
 Parses `comment` content if `parseContent: false` option was used when creating an `imageboard` instance.
 -->
 
-### `vote({ up: boolean, boardId: string, threadId: number, commentId: number }): boolean`
+### `vote()`
 
 Some imageboards (like [`2ch.hk`](https://2ch.hk)) allow upvoting or downvoting threads and comments on certain boards (like [`/po/`litics on `2ch.hk`](https://2ch.hk/po)).
 
-Returns `true` if the vote has been accepted. Returns `false` if the user has already voted.
+Is implemented for engines: `makaba`.
 
-### `createThread({ boardId: string, ... }): number`
+Parameters:
+
+* `boardId: string` — Board ID.
+* `threadId: number` — Thread ID.
+* `commentId: number` — Comment ID.
+* `up: boolean` — Upvote or downvote.
+
+Returns:
+
+* `true` — The vote has been accepted.
+* `false` — The vote has not been accepted. For example, if the user has already voted.
+
+### `createThread()`
 
 Creates a new thread on a board.
 
@@ -461,7 +509,7 @@ Returns an object:
 
 * `id: number` — Thread ID
 
-### `createComment({ boardId: string, threadId: number, ... }): object`
+### `createComment()`
 
 Creates a new comment in a thread.
 
@@ -488,7 +536,7 @@ Returns an object:
 
 * `id: number` — Comment ID
 
-### `getCaptcha(): object`
+### `getCaptcha()`
 
 Requests a CAPTCHA,
 
@@ -511,9 +559,11 @@ Returns an object:
   * `width: number` — CAPTCHA image width.
   * `height: number` — CAPTCHA image height.
 
-### `logIn({ token: string, ... })`
+### `logIn()`
 
 Performs a login.
+
+Is implemented for engines: `makaba`.
 
 Parameters:
 
@@ -528,7 +578,24 @@ Returns an object:
 
 Performs a logout.
 
+Is implemented for engines: `makaba`.
+
 No parameters.
+
+Returns `undefined`.
+
+### `report()`
+
+Reports a comment or a thread.
+
+Is implemented for engines: `makaba`.
+
+Parameters:
+
+* `boardId: string` — Board ID.
+* `threadId: number` — Thread ID.
+* `commentId: number` — Comment ID.
+* `content: string` — Report content.
 
 Returns `undefined`.
 

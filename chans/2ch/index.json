@@ -231,6 +231,7 @@
 		"report": {
 			"method": "POST",
 			"url": "/user/report",
+			"requestType": "multipart/form-data",
 			"parameters": [{
 				"name": "board",
 				"input": {
