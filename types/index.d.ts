@@ -212,7 +212,11 @@ interface ReportCommentOptions {
 	boardId: BoardId;
 	threadId: ThreadId;
 	commentId: CommentId;
-	content: string;
+	content?: string;
+	reasonId?: number;
+	legalViolationReasonId?: number;
+	captchaId?: string;
+	captchaSolution?: string;
 }
 
 interface GetCaptchaOptions {
@@ -220,19 +224,36 @@ interface GetCaptchaOptions {
 	threadId?: ThreadId;
 }
 
-interface GetCaptchaResultImage {
+export type Captcha = CaptchaWithImage | CaptchaWithImageSlider;
+
+export interface CaptchaImage {
 	type: 'image/png' | 'image/jpeg';
 	url: string;
 	width: number;
 	height: number;
 }
 
-interface GetCaptchaResult {
+export interface CaptchaWithImage {
 	id: string;
 	type: 'text';
+	challengeType: 'image';
 	characterSet?: 'numeric' | 'russian';
 	expiresAt: Date;
-	image: GetCaptchaResultImage;
+	image: CaptchaImage;
+}
+
+export interface CaptchaWithImageSlider {
+	id: string;
+	type: 'text';
+	challengeType: 'image-slider';
+	expiresAt: Date;
+	image: CaptchaImage;
+	backgroundImage: CaptchaImage;
+}
+
+interface GetCaptchaResult {
+	captcha: Captcha;
+	canRequestNewCaptchaAt?: Date;
 }
 
 interface CreateThreadOptions {

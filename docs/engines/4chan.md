@@ -612,7 +612,7 @@ To get a captcha "challenge", one could `GET` `https://sys.4chan.org/captcha?boa
 
 The `thread_id` parameter is gonna be absent when creating a new thread.
 
-It returns something like this:
+Returns:
 
 ```js
 {
@@ -629,7 +629,13 @@ It returns something like this:
 
 The captcha is comprised of two images that're supposed to be superimposed on each other. The horizontal shift for superimposing the images is supposed to be found interactively by the user. After the correct horizontal shift is found, the user can attempt to guess the characters depicted on the superimposed image.
 
-`GET`-ting the URL described above is only available from `sys.4chan.org` domain itself (CORS policy), so 3rd-party websites should add an additional query parameter — `&framed=1` — which makes it return a HTML page with the interactive superimposition shift slider UI control. That HTML page could be embedded as an `<iframe/>` on any 3rd-party website.
+`GET`-ting the "get captcha" URL described above is only available from `sys.4chan.org` domain itself (CORS policy).
+
+Even when using certain tools to bypass CORS restrictions, when attempting to `GET` a CAPTCHA using the "get captcha" URL, it sometimes returns a standard CloudFlare anti-spam HTML verification page: `Checking your browser before accessing "sys.4chan.org". This process is automatic. Your browser will redirect to your requested content shortly. Please allow up to 5 seconds...`, which means that it would be cumbersome to use for 3rd-party applications, and won't work at all for 3rd-party websites.
+
+To work around those issues, 3rd-party websites could use a slightly different technique for getting CAPTCHA info: by embedding an `<iframe/>` on a page and then setting the `src` URL of that `<iframe/>` to be the same "get captcha" URL but with an additional query parameter — `&framed=1` — which makes it return a HTML page instead of a JSON.
+
+But when attempted to do so, it throws an error: `Refused to display 'sys.4chan.com' in a frame because an ancestor violates the following Content Security Policy directive: "frame-ancestors https://*.4chan.org"`. The reason is [`Content-Security-Policy`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors) HTTP response header having value `frame-ancestors https://*.4chan.org;`. The fix would be either not specifying that HTTP response header at all, or maybe specifying it to be `frame ancestors *;`. So seems like currently the "framed" method [doesn't work](https://github.com/4chan/4chan-API/issues/100) either for 3rd-party websites.
 
 ```html
 <!DOCTYPE html>
@@ -653,7 +659,7 @@ The captcha is comprised of two images that're supposed to be superimposed on ea
 </html>
 ```
 
-To listen to the captcha event, a 3rd-party website should add the following code on a page:
+To get CAPTCHA info from such `<iframe/>`, a 3rd-party website would add the following code on a page:
 
 ```js
 window.addEventListener('message', function(event) {

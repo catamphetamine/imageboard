@@ -549,15 +549,23 @@ Parameters:
 
 Returns an object:
 
-* `id: string` — CAPTCHA `id`, can be used to get CAPTCHA image URL.
-* `type: string` — CAPTCHA type. Possible values: `"text"`.
-* `characterSet?: string` — A name of a character set for a `"text"` CAPTCHA solution. For example, `"numeric"` or `"russian"`.
-* `expiresAt: Date` — CAPTCHA expiration date.
-* `image` — CAPTCHA image
-  * `type: string` — CAPTCHA image mime-type.
-  * `url: string` — CAPTCHA image URL.
-  * `width: number` — CAPTCHA image width.
-  * `height: number` — CAPTCHA image height.
+* `captcha: object`:
+  * `id: string` — CAPTCHA `id`, can be used to get CAPTCHA image URL.
+  * `type: string` — CAPTCHA type. Possible values: `"text"`.
+  * `challengeType: string` — CAPTCHA type. Possible values: `"image"`, `"image-slider"`.
+  * `characterSet?: string` — A name of a character set for a `"text"` CAPTCHA solution. For example, `"numeric"` or `"russian"`.
+  * `expiresAt: Date` — CAPTCHA expiration date.
+  * `image: object` — CAPTCHA image:
+    * `type: string` — image mime-type.
+    * `url: string` — image URL. May be relative or absolute.
+    * `width: number` — image width.
+    * `height: number` — image height.
+  * `backgroundImage?: object` — `"image-slider"` CAPTCHA background image:
+    * `type: string` — image mime-type.
+    * `url: string` — image URL. May be relative or absolute.
+    * `width: number` — image width.
+    * `height: number` — image height.
+* `canRequestNewCaptchaAt?: Date` — When the user is allowed to request a new CAPTCHA.
 
 ### `logIn()`
 
@@ -595,7 +603,11 @@ Parameters:
 * `boardId: string` — Board ID.
 * `threadId: number` — Thread ID.
 * `commentId: number` — Comment ID.
-* `content: string` — Report content.
+* `content?: string` — Report content. Is used in `makaba` engine.
+* `reasonId?: number` — Report reason ID. Is used in `4chan` engine.
+* `legalViolationReasonId?: number` — Report reason ID (`31`) in case of a violation of United States law. No `reasonId` should be passed. Is only used in `4chan` engine.
+* `captchaId?: string` — CAPTCHA ID. Is used in `4chan` engine.
+* `captchaSolution?: string` — CAPTCHA solution. Is used in `4chan` engine.
 
 Returns `undefined`.
 

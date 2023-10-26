@@ -24,6 +24,38 @@
 	"authorBadgeUrl": "https://s.4cdn.org/image/flags/{boardId}/{flagId}.gif",
 	"authResetUrl": "/pass?reset",
 	"incrementalThreadUpdateStartsAtCommentsCount": 101,
+	"reportReasonLegalViolation": {
+		"id": 31,
+		"description": "This post violates United States law"
+	},
+	"reportReasons": [{
+		"id": "32",
+		"description": "This user is underage"
+	}, {
+		"id": "37",
+		"description": "This post contains personal information (\"dox\")"
+	}, {
+		"id": "38",
+		"description": "This post contains a call to invasion (\"raid\")"
+	}, {
+		"id": "42",
+		"description": "Intentionally evading spam/post filters"
+	}, {
+		"id": "43",
+		"description": "This post appears to be an automated spambot"
+	}, {
+		"id": "44",
+		"description": "This post is advertising or begging"
+	}, {
+		"id": "45",
+		"description": "User impersonating 4chan Staff"
+	}, {
+		"id": "46",
+		"description": "Avatar or signature use"
+	}, {
+		"id": "47",
+		"description": "Pony content outside /mlp/"
+	}],
 	"api": {
 		"getThread": {
 			"method": "GET",
@@ -131,24 +163,52 @@
 		},
 		"report": {
 			"method": "POST",
-			"url": "https://sys.4chan.org/{boardId}/imgboard.php",
+			"url": "https://sys.4chan.org/{boardId}/imgboard.php?mode=report&no={commentId}",
 			"urlParameters": [{
 				"name": "boardId"
+			}, {
+				"name": "commentId"
 			}],
 			"responseType": "text/html",
 			"parameters": [{
-				"name": "mode",
-				"defaultValue": "report"
+				"name": "board",
+				"input": {
+					"name": "boardId"
+				}
 			}, {
 				"name": "no",
 				"input": {
 					"name": "commentId"
 				}
 			}, {
-				"name": "g-recaptcha-response",
+				"name": "cat_id",
+				"input": {
+					"name": "reasonId"
+				}
+			}, {
+				"name": "cat",
+				"input": {
+					"name": "legalViolationReasonId"
+				}
+			}, {
+				"name": "t-response",
 				"input": {
 					"name": "captchaSolution"
 				}
+			}, {
+				"name": "t-challenge",
+				"input": {
+					"name": "captchaId"
+				}
+			}]
+		},
+		"getCaptcha": {
+			"method": "GET",
+			"url": "https://sys.4chan.org/captcha?board={boardId}&thread_id={threadId}",
+			"urlParameters": [{
+				"name": "boardId"
+			}, {
+				"name": "threadId"
 			}]
 		},
 		"logIn": {
