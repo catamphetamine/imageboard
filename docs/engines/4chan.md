@@ -682,7 +682,7 @@ Parameters:
 * `resto` — Thread ID.
 * `name` — Author's name (optional).
 * `email` — Author's email (optional).
-* `pwd` — "Pass" id (optional). See the "Pass" section for more info.
+* `pwd` — The value of a legacy `4chan_pass` cookie (optional). See the description of it at the end of this section. The suggested way is not including it.
 * `com` — Comment text.
 * `flag` — Some boards support board-specific "flags" (icons). For example, on `/pol/` board those "flags" indicate comment author's "political preferences". (optional).
 * `upfile` — Attachment file binary object (optional).
@@ -702,7 +702,7 @@ Additional parameters for 4chan captcha:
 
 Unknown parameters:
 
-* `awt: 1` — ???
+* `awt: 1` — ??? Ignore and don't include this one.
 
 The response is in HTML format.
 
@@ -720,7 +720,7 @@ Error response example:
 ...
 ```
 
-CAPTCHA error response example:
+Incorrect CAPTCHA solution response example (this also seems to be the case when the "pass" cookie value is not a valid "pass"):
 
 
 ```html
@@ -788,7 +788,15 @@ Since there seems to be no API for getting a list of valid report categories for
 
 ### Pass
 
-To apply a "pass" code when posting a comment, `4chan_apass` and `4chan_auser` cookies should be set.
+Users can bypass solving a CAPTCHA when posting comments or threads by purchasing a paid subscription called a "pass".
+
+After purchasing a "pass", the user can [log in](https://sys.4chan.org/auth) with that "pass" (a string) and a "PIN" code (password) for it.
+
+After logging the user in, the server sets two cookies:
+* `pass_id` — Some kind of a string. Maybe the "pass" itself. Didn't check.
+* `pass_enabled` — `1`, indicating that the user is authenticated.
+
+The server then checks the `pass_id` cookie value when posting a comment or a thread, or when submitting a report.
 
 To log in with a "pass", send a `POST` request of type `multipart/form-data` to `https://sys.4chan.org/auth` (or `https://sys.4channel.org/auth`) with parameters:
 
