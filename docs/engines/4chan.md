@@ -672,7 +672,7 @@ window.addEventListener('message', function(event) {
 
 ### Post a comment
 
-`POST` `https://sys.4channel.org/<board-id>/post`
+Send a `POST` request of type `multipart/form-data` to `https://sys.4channel.org/<board-id>/post`
 
 Parameters:
 
@@ -738,6 +738,8 @@ Known error messages:
 * Cases when the thread is closed
 * ...
 
+Side effect: When posting a comment or a thread (?), `4chan` seems to set a legacy cookie called [`4chan_pass`](https://github.com/4chan/4chan-API/issues/91#issuecomment-874370066) which has a random-generated "password" that could be used to delete the comment. Since then, they say that `4chan` has tightened their restrictions on comment deletion, so the cookie doesn't seem to be used for that stuff. They also say that `4chan` has found an unrelated use case for that cookie: they say that `4chan` uses it to detect "ban evaders" — people that switch their IP address to an unbanned one to get around their ban. They say `4chan` automatically bans people posting from a different IP address buth with the same `4chan_pass` cookie.
+
 ### Post a thread
 
 Same as posting a comment, but without `resto` and with:
@@ -747,7 +749,7 @@ Same as posting a comment, but without `resto` and with:
 
 ### Report a post
 
-`POST` to `https://sys.4chan.org/{boardId}/imgboard.php`
+Send a `POST` request of type `multipart/form-data` to `https://sys.4chan.org/{boardId}/imgboard.php`
 
 Parameters:
 
@@ -788,52 +790,65 @@ Since there seems to be no API for getting a list of valid report categories for
 
 To apply a "pass" code when posting a comment, `4chan_apass` and `4chan_auser` cookies should be set.
 
-To log in with a "pass", send a `POST` request to `https://sys.4chan.org/auth` (or `https://sys.4channel.org/auth`) with parameters:
+To log in with a "pass", send a `POST` request of type `multipart/form-data` to `https://sys.4chan.org/auth` (or `https://sys.4channel.org/auth`) with parameters:
 
-* `act` — `"do_login"`
+* `xhr` — (optional?) Set to `1` to instruct the server to send the response in `application/json` format. By default, when omitted (?), it would send the response in `text/html` format.
 * `id` — The "pass".
 * `pin` — The PIN code for the "pass".
-* `long_login` — (optional) Set to `"yes"` (or maybe to any other non-empty string) to "remember the device" for 1 year. Basically, the cookie lifetime.
+* `long_login` — (optional) Set to `1` to "remember the device" for 1 year. Leave empty otherwise. Basically, a "Remember me" checkbox.
 
 Response example:
 
-```html
-...
-Your device is now authorized
-...
+```js
+{
+	// (?) status: ...,
+	message: "Your device is now authorized." // Didn't check. Hypothetically, it looks like this.
+}
 ```
 
-The server sets a `pass_id` cookie with some value. Some code on the internet says that the value of the cookie can be `"0"`, in which case it should be ignored. Maybe that's no longer the case.
+After a successful login, the server sets a couple of cookies:
 
-Error examples:
+* `pass_id` — Some kind of value. An old code dump somewhere on the internet says that the value of the cookie can be `"0"`, in which case it should be ignored. Maybe that's no longer the case.
+* `pass_enabled` — `1`. Supposedly, this somehow tells the website or the server that the user is logged in.
 
-```html
-...
-Your Token must be exactly 10 characters
-...
+In case of an error, it still returns an HTTP status 200 response.
+
+Response examples in case of an error:
+
+```js
+{
+	status: -1,
+	message: 'Your Token must be exactly 10 characters.' // The `id` parameter must be a string of 10 characters.
+}
 ```
 
-```html
-...
-You have left one or more fields blank
-...
+```js
+{
+	status: -1,
+	message: 'You have left one or more fields blank.' // Some parameter wasn't specified. Didn't check. Hypothetically, it looks like this.
+}
 ```
 
-```html
-...
-Incorrect Token or PIN
-...
+```js
+{
+	status: -1,
+	message: 'Incorrect Token or PIN.'
+}
 ```
 
-Some other error message regexp:
+<!--
+Some other error message regexp, in case of an HTML response:
 
 ```html
 ...
 <strong style=\"color: red; font-size: larger;\">(.*?)</strong>
 ...
 ```
+-->
 
-To log out, send the same `POST` request but without any parameters.
+They also [say](https://github.com/4chan/4chan-API/issues/91#issuecomment-889684456) that `4chan` restricts the ability to share a "pass" by restricting a "pass" to be used only from a single IP address in a given timeframe. Didn't check.
+
+To log out, one could supposedly send the same `POST` request but without any parameters. Didn't check.
 
 ### Roles
 

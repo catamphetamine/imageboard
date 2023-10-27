@@ -576,7 +576,7 @@ Is implemented for engines: `makaba`.
 Parameters:
 
 * `token: string` — Login token. For example, `4chan` calls them "passes".
-* `tokenPassword?: string` — Login token password. For example, `4chan` uses them.
+* `tokenPassword?: string` — Login token password. For example, `4chan` uses them (it calls it a "PIN").
 
 Returns an object:
 

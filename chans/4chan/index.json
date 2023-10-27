@@ -23,6 +23,9 @@
 	"commentUrl": "/{boardId}/thread/{threadId}#p{commentId}",
 	"authorBadgeUrl": "https://s.4cdn.org/image/flags/{boardId}/{flagId}.gif",
 	"authResetUrl": "/pass?reset",
+	"accessTokenCookieName": "pass_id",
+	"authenticatedCookieName": "pass_enabled",
+	"authenticatedCookieValue": "1",
 	"incrementalThreadUpdateStartsAtCommentsCount": 101,
 	"reportReasonLegalViolation": {
 		"id": 31,
@@ -99,6 +102,7 @@
 			"urlParameters": [{
 				"name": "boardId"
 			}],
+			"requestType": "multipart/form-data",
 			"responseType": "text/html",
 			"parameters": [{
 				"name": "mode",
@@ -169,6 +173,7 @@
 			}, {
 				"name": "commentId"
 			}],
+			"requestType": "multipart/form-data",
 			"responseType": "text/html",
 			"parameters": [{
 				"name": "board",
@@ -214,12 +219,10 @@
 		"logIn": {
 			"method": "POST",
 			"url": "https://sys.4chan.org/auth",
-			"responseType": "text/html",
+			"requestType": "multipart/form-data",
 			"parameters": [{
-				"name": "act",
-				"input": {
-					"name": "do_login"
-				}
+				"name": "xhr",
+				"defaultValue": "1"
 			}, {
 				"name": "id",
 				"input": {
@@ -232,12 +235,17 @@
 				}
 			}, {
 				"name": "long_login",
-				"defaultValue": "yes"
+				"defaultValue": "1",
+				"input": {
+					"name": "rememberMe",
+					"transform": "one-or-absent"
+				}
 			}]
 		},
 		"logOut": {
 			"method": "POST",
 			"url": "https://sys.4chan.org/auth",
+			"requestType": "multipart/form-data",
 			"responseType": "text/html"
 		}
 	}

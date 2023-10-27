@@ -49,7 +49,7 @@ interface ImageboardConfigApiMethodParameter {
 		// type: 'string' | 'number' | 'boolean';
 
 		// Input property trasnformation.
-		transform?: 'zero-or-one';
+		transform?: 'zero-or-one' | 'one-or-absent';
 
 		// The mapping of the function parameter value into the URL parameter value.
 		// Examples:
