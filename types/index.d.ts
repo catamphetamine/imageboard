@@ -280,8 +280,23 @@ interface CreateCommentOptions extends CreateThreadOptions {
 
 interface LogInOptions {
 	token: string;
+
 	// `4chan` uses "passwords" on login tokens.
 	tokenPassword?: string;
+
+	// For some weird reason, even with all the weird shenanigans in place,
+	// `Set-Cookie` headers were still ignored by the web browser when attempting to
+	// read them from `fetch()` response: not with `credentials="include"`,
+	// not with `SameSite=None`, not with `Secure`, not with `HttpOnly`, etc.
+	//
+	// The workaround was simple: just copy the value of `Set-Cookie` header
+	// to some other header when sending the response.
+	//
+	// For example, to tell `imageboard` library to look into `x-set-cookie` header
+	// instead of the unreadable `set-cookie` header, one could pass
+	// `setCookieHeaderName: "x-set-cookie"` option.
+	//
+	setCookieHeaderName?: string;
 }
 
 interface LogInResult {

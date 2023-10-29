@@ -46,13 +46,17 @@ npm install imageboard --save
 
 ## Example
 
-This example will be using [`fetch()`](https://developer.mozilla.org/docs/Web/API/Fetch_API/Using_Fetch) for making HTTP requests (though any other library could be used). Node.js doesn't have `fetch()` yet so install a "polyfill" for it.
+In this example, we'll be using Node.js.
+
+Create a folder and `cd` into it.
+
+For making HTTP requests, we'll be using [`fetch()`](https://developer.mozilla.org/docs/Web/API/Fetch_API/Using_Fetch), though any other library could be used. Node.js doesn't have `fetch()` yet so install a "polyfill" for it.
 
 ```
 npm install node-fetch --save
 ```
 
-Then, create an imageboard instance. This example will use `4chan.org` as a data source.
+This example will be using `4chan.org` as a data source. Create a file called `fourChan.js` and paste the following code into it.
 
 ```js
 import fetch, { FormData } from 'node-fetch'
@@ -96,6 +100,8 @@ const fourChan = imageboard('4chan', {
   }
 })
 
+export default fourChan
+
 // Creates an error from a `fetch()` response.
 // Returns a `Promise` and rejects it with the error.
 function rejectWithErrorForResponse(response) {
@@ -134,9 +140,11 @@ function createFormData(body) {
 }
 ```
 
-Now, print the first ten of `4chan.org` boards:
+Next, create an `index.js` file and paste the following code into it. The code prints the first ten of `4chan.org` boards:
 
 ```js
+import fourChan from './fourChan.js'
+
 // Prints the first 10 boards.
 fourChan.getBoards().then((boards) => {
   const boardsList = boards.slice(0, 10).map(({
@@ -160,7 +168,7 @@ The output:
 ... the other boards ...
 ```
 
-Now, print the first five threads on `4chan.org` `/a/` board:
+Now, add the code that prints the first five threads on `4chan.org` `/a/` board:
 
 ```js
 import { getCommentText } from 'imageboard'
@@ -207,7 +215,7 @@ DATABASE DATABASE JUST LIVING IN THE DATABE WO-OH
 ... the other threads ...
 ```
 
-Now, print the first five comments of the thread:
+Now, add the code that prints the first five comments of a certain thread:
 
 ```js
 import { getCommentText } from 'imageboard'
@@ -301,21 +309,47 @@ See [Imageboard config](#imageboard-config) for the available imageboard `config
 
 Available `options`:
 
-* `request(method: string, url: string, parameters: object?): Promise` — (required) Sends HTTP requests to imageboard API. Must return a `Promise` resolving to response text.
+* `request(method: string, url: string, parameters: object?): Promise` — (required) Sends HTTP requests to an imageboard's API. Must return a `Promise`:
+  * When successful, the `Promise` should resolve to an object:
+    * `url: string` — HTTP request URL. If there were any redirects in the process, this should be the final URL that it got redrected to.
+    * `responseText?: string` — HTTP response text.
+    * `headers?: object` — HTTP response headers. An object having a function `.get(headerName: string)`.
+  * Otherwise, in case of an error, the `Promise` should reject with an `Error` instance having optional properties:
+    * `url: string` — HTTP request URL. If there were any redirects in the process, this should be the final URL that it got redrected to.
+    * `status?: number` — HTTP response status.
+    * `responseText?: string` — HTTP response text.
+    * `headers?: object` — HTTP response headers. An object having a function `.get(headerName: string)`.
 
 ```js
-request("GET", "https://8kun.top/boards.json") === "[
-  { "uri": "b", "title": "Random" },
-  ...
-]"
+await request("GET", "https://8kun.top/boards.json") === {
+  url: "https://8kun.top/boards.json",
+  responseText: "[
+    { "uri": "b", "title": "Random" },
+    ...
+  ]"
+}
 ```
 
 <details>
-<summary>Reading archived threads on <code>2ch.hk</code> imageboard requires modifying the <code>request()</code> return type a bit.</summary>
+<summary>Returning <code>responseText</code> is understandable, but what does it use <code>url</code> and <code>headers</code> for?</summary>
 
 ######
 
-The `request()` function can also return a `Promise` resolving to an object of shape `{ response, url }` where `response` is the response text and `url` is the "final" URL (after any redirects): this `url` is used internally when requesting archived threads from `2ch.hk` imageboard in order to get their `archivedAt` timestamp that can only be obtained from the URL the engine redirects to.
+`url` is used when reading archived threads on `2ch.hk` imageboard. When requesting an archived thread on `2ch.hk`, it always redirects to a URL that looks like `/boardId/arch/yyyy-mm-dd/res/threadId.json`. As one can see, there's the `archivedAt` date in that final "redirect-to" URL, and it's nowhere else to be read. So this library has to have the access to the final URL after any redirects.
+
+`headers` are used when parsing an imageboard API's response to a "log in" request: this library attempts to read the authentication cookie value from that response in order to return it to the application code.
+</details>
+
+<details>
+<summary>Making HTTP requests in a web browser will most likely require a CORS proxy.</summary>
+
+######
+
+None of the imageboards (`4chan.org`, `8kun.top`, `2ch.hk`, etc) allow calling their API from other websites in a web browser: they're all configured to block [Cross-Origin Resource Sharing](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) (CORS), so a CORS proxy is required in order for a third party website to be able to query their API.
+
+To bypass CORS limitations, the `request()` function would have to call `fetch()` not with the original imageboard URL like `https://imageboard.net/boards.json` directly but rather with a "proxied" URL like `https://my-cors-proxy-address.net/?url=${encodeURIComponent('https://imageboard.net/boards.json')}`.
+
+[How to set up a CORS proxy](https://gitlab.com/catamphetamine/anychan/#proxy).
 </details>
 
 * `commentUrl?: string` — A template to use when formatting the `url` property of `type: "post-link"`s (links to other comments) in parsed comments' `content`. Is `"/{boardId}/{threadId}#{commentId}"` by default.
@@ -577,6 +611,7 @@ Parameters:
 
 * `token: string` — Login token. For example, `4chan` calls them "passes".
 * `tokenPassword?: string` — Login token password. For example, `4chan` uses them (it calls it a "PIN").
+* `setCookieHeaderName?: string` — The name of the HTTP response header to look in for the auth cookie value. The default value is `"set-cookie"`. Cookies are cumbersome to deal with an a web browser cause they clash with the stupid "CORS" restrictions. For example, for some weird reason, when making HTTP requests using "CORS", even when performing the full ritual, `Set-Cookie` response header is simply unreadable. One workaround I found is duplicating `Set-Cookie` response header value in some other response header, and that's what this option is for.
 
 Returns an object:
 
