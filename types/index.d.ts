@@ -76,7 +76,7 @@ interface ImageboardOptions extends ImageboardOptionsOverridable {
 	expandReplies?: boolean;
 	getPostLinkProperties?: (comment?: Comment) => object;
 	getPostLinkText?: (postLink: object) => string?;
-	getSetCookieHeaders?: ({ headers?: HttpResponseHeaders }) => string[];
+	getSetCookieHeaders?: (parameters: { headers?: HttpResponseHeaders }) => string[];
 }
 
 export type BoardId = string;

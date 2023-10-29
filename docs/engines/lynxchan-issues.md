@@ -141,6 +141,38 @@ In `/catalog.json` response, it only returns a thread thumbnail's URL and doesn'
 
 Without the full-sized image URL, a 3rd-party client won't be able to show the original image when the user clicks on a thread's thumbnail in the list of threads on a board.
 
+### "Get CAPTCHA (no cookies)" API doesn't return expiration time
+
+The response of "Get CAPTCHA (no cookies)" API doesn't contain CAPTCHA expiration time.
+
+`GET` `https://kohlchan.net/noCookieCaptcha.js?json=1`
+
+```js
+{
+  "status": "ok",
+  "data": "653e904efa7412c9ec6189c8"
+}
+```
+
+One workaround would be to use "Get CAPTCHA (with cookies)" API and then parse the expiration time from `set-cookie` headers.
+
+### "Get CAPTCHA (no cookies)" API doesn't return CAPTCHA image size
+
+The response of "Get CAPTCHA (no cookies)" API doesn't contain CAPTCHA image size.
+
+`GET` `https://kohlchan.net/noCookieCaptcha.js?json=1`
+
+```js
+{
+  "status": "ok",
+  "data": "653e904efa7412c9ec6189c8"
+}
+```
+
+[Issue](https://gitgud.io/LynxChan/LynxChan/-/issues/86).
+
+A workaround would be to use "Get CAPTCHA (with cookies)" API and then parse the expiration time from `set-cookie` headers.
+
 ##### `kohlchan.net`
 
 `kohlchan.net` wrote their own "addon" that provides `files[]` array on threads in `/catalog.json` API response.

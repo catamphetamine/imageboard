@@ -22,6 +22,13 @@
 	"boardUrl": "/{boardId}",
   "threadUrl": "/{boardId}/res/{threadId}.html",
   "commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
+	"captchaImageUrl": "/.global/captchas/{id}",
+	"captchaImageType": "image/png",
+	"captchaImageWidth": 250,
+	"captchaImageHeight": 100,
+	"captchaExpiresAtCookieName": "captchaexpiration",
+	"captchaExpiresAtCookieFormat": "UTC-string",
+	"captchaIdCookieName": "captchaid",
 	"api": {
 		"getThread": {
 			"method": "GET",
@@ -54,6 +61,332 @@
 			"urlParameters": [{
 				"name": "page"
 			}]
+		},
+		"getCaptchaNoCookie": {
+			"method": "GET",
+			"url": "/noCookieCaptcha.js?json=1",
+			"parameters": [{
+				"name": "solvedCaptcha",
+				"input": {
+					"name": "solvedCaptchaId"
+				}
+			}]
+		},
+		"getCaptcha": {
+			"method": "GET",
+			"url": "/captcha.js?json=1"
+		},
+		"solveCaptcha": {
+			"method": "POST",
+			"url": "/solveCaptcha.js?json=1",
+			"parameters": [{
+				"name": "captchaId",
+				"input": {
+					"name": "captchaId"
+				}
+			}, {
+				"name": "answer",
+				"input": {
+					"name": "captchaSolution"
+				}
+			}]
+		},
+		"hasFileBeenUploaded": {
+			"method": "GET",
+			"url": "/checkFileIdentifier.js?json=1",
+			"parameters": [{
+				"name": "identifier",
+				"input": {
+					"name": "sha256"
+				}
+			}]
+		},
+		"createBoard": {
+			"method": "POST",
+			"url": "/createBoard.js?json=1",
+			"parameters": [{
+				"name": "boardUri",
+				"input": {
+					"name": "id"
+				},
+				"validation": {
+					"maxLength": 32,
+					"characterSets": [
+						"lowercase-english-letters",
+						"digits"
+					]
+				}
+			}, {
+				"name": "boardName",
+				"input": {
+					"name": "title"
+				},
+				"validation": {
+					"maxLength": 32
+				}
+			}, {
+				"name": "boardDescription",
+				"input": {
+					"name": "description"
+				},
+				"validation": {
+					"maxLength": 128
+				}
+			}]
+		},
+		"deleteBoard": {
+			"method": "POST",
+			"url": "/deleteBoard.js?json=1",
+			"parameters": [{
+				"name": "boardUri",
+				"input": {
+					"name": "id"
+				}
+			}, {
+				"name": "confirmDeletion",
+				"defaultValue": true
+			}]
+		},
+		"signUp": {
+			"method": "POST",
+			"url": "/registerAccount.js?json=1",
+			"parameters": [{
+				"name": "login",
+				"input": {
+					"name": "username"
+				},
+				"validation": {
+					"characterSets": [
+						"english-letters",
+						"digits",
+						"underscore"
+					],
+					"maxLength": 16
+				}
+			}, {
+				"name": "password",
+				"input": {
+					"name": "password"
+				}
+			}, {
+				"name": "email",
+				"input": {
+					"name": "email",
+					"validation": {
+						"maxLength": 64
+					}
+				}
+			}, {
+				"name": "captcha",
+				"input": {
+					"name": "captchaId"
+				}
+			}]
+		},
+		"post": {
+			"method": "POST",
+			"url": "/{action}Thread.js?json=1",
+			"urlParameters": [{
+				"name": "action",
+				"defaultValues": [{
+					"value": "reply",
+					"when": {
+						"input": {
+							"threadId": {
+								"$exists": true
+							}
+						}
+					}
+				}, {
+					"value": "new",
+					"when": {
+						"input": {
+							"threadId": {
+								"$exists": false
+							}
+						}
+					}
+				}]
+			}],
+			"parameters": [{
+				"name": "noFlag",
+				"input": {
+					"name": "hideCountry"
+				}
+			}, {
+				"name": "name",
+				"input": {
+					"name": "authorName"
+				},
+				"validation": {
+					"maxLength": "32"
+				}
+			}, {
+				"name": "email",
+				"input": {
+					"name": "authorEmail"
+				},
+				"validation": {
+					"maxLength": "64"
+				}
+			}, {
+				"name": "flag",
+				"input": {
+					"name": "authorBadgeId"
+				}
+			}, {
+				"name": "message",
+				"input": {
+					"name": "content"
+				},
+				"validation": {
+					"maxLength": "4096"
+				}
+			}, {
+				"name": "subject",
+				"input": {
+					"name": "title"
+				},
+				"validation": {
+					"maxLength": "128"
+				}
+			}, {
+				"name": "password",
+				"input": {
+					"name": "deletionPassword"
+				},
+				"validation": {
+					"maxLength": "8"
+				}
+			}, {
+				"name": "boardUri",
+				"input": {
+					"name": "boardId"
+				}
+			}, {
+				"name": "threadId",
+				"input": {
+					"name": "threadId"
+				}
+			}, {
+				"name": "captcha",
+				"input": {
+					"name": "captchaId"
+				}
+			}, {
+				"name": "spoiler",
+				"input": {
+					"name": "attachmentSpoilers"
+				}
+			}, {
+				"name": "fileSha256",
+				"input": {
+					"name": "attachmentSha256Hashes"
+				}
+			}, {
+				"name": "fileMime",
+				"input": {
+					"name": "attachmentMimeTypes"
+				}
+			}, {
+				"name": "fileSpoiler",
+				"input": {
+					"name": "attachmentSpoilers"
+				}
+			}, {
+				"name": "fileName",
+				"input": {
+					"name": "attachmentFileNames"
+				}
+			}]
+		},
+		"updateComment": {
+			"method": "POST",
+			"url": "/saveEdit.js?json=1",
+			"parameters": [{
+				"name": "boardUri",
+				"input": {
+					"name": "boardId"
+				}
+			}, {
+				"name": "threadId",
+				"input": {
+					"name": "threadId"
+				}
+			}, {
+				"name": "postId",
+				"input": {
+					"name": "commentId"
+				}
+			}, {
+				"name": "subject",
+				"input": {
+					"name": "title"
+				},
+				"validation": {
+					"maxLength": 128
+				}
+			}, {
+				"name": "message",
+				"input": {
+					"name": "content"
+				},
+				"validation": {
+					"maxLength": "4096"
+				}
+			}]
+		},
+		"report": {
+			"method": "POST",
+			"url": "/contentActions.js?json=1",
+			"parameters": [{
+				"name": "action",
+				"defaultValue": "report"
+			}, {
+				"name": "categoryReport",
+				"input": {
+					"name": "category"
+				}
+			}, {
+				"name": "reasonReport",
+				"input": {
+					"name": "reason"
+				}
+			}, {
+				"name": "globalReport",
+				"input": {
+					"name": "global"
+				}
+			}, {
+				"name": "captchaReport",
+				"input": {
+					"name": "captchaId"
+				}
+			}]
+		},
+		"logIn": {
+			"method": "POST",
+			"url": "/login.js?json=1",
+			"parameters": [{
+				"name": "login",
+				"input": {
+					"name": "username"
+				}
+			}, {
+				"name": "password",
+				"input": {
+					"name": "password"
+				}
+			}, {
+				"name": "remember",
+				"input": {
+					"name": "rememberMe"
+				}
+			}]
+		},
+		"logOut": {
+			"method": "POST",
+			"url": "/logout.js?json=1"
 		}
 	},
 	"boardCategoryTitleById": {

@@ -43,7 +43,7 @@ The `status` can be:
   * `expiration: Date`: when the ban expires.
   * `warning: boolean`: if the ban is actually a warning. Warnings are cleared once they are seen.
   * `asn: number`: asn banned. An "Autonomous System Number" perhaps?
-  * `range`: range banned.
+  * `range`: IP address range that is banned?
   * `banId`: id of the ban.
   * `appealled: boolean`: indicates if the ban has been already appealed.
 * `hashBan`: user tried to upload a banned file. In this case, `data` will be an array where each object contains the following fields:
@@ -338,7 +338,7 @@ Returns a `Thread` object, with the addition of the following properties:
 
 Some actions like posting new threads, posting new comments, reporting posts, banning users, etc require solving a CAPTCHA in order to prevent spam.
 
-#### Request a CAPTCHA
+#### Request a CAPTCHA (with cookies)
 
 To request a CAPTCHA, send a `GET` request to `/captcha.js`.
 
@@ -352,7 +352,7 @@ Also sets two cookies:
 
 * `captchaid` — The CAPTCHA challenge ID. Example cookie parameters: `Path: /` and `Max-Age: 300` meaning that the captcha expires in 300 seconds if not solved.
 
-* `captchaexpiration` — The CAPTCHA challenge expiration date. A stringified javascript date. Example: `"Tue, 04 May 2021 22:16:58 GMT"`. Can be converted back to a `Date` object by passing this string as an argument to the `Date()` constructor.
+* `captchaexpiration` — The CAPTCHA challenge expiration date. A stringified javascript date (`new Date().toUTCString()`). Example: `"Tue, 04 May 2021 22:16:58 GMT"`. Can be converted back to a `Date` object by passing this string as an argument to the `Date()` constructor.
 
 #### Request a CAPTCHA (no cookies)
 
@@ -360,7 +360,9 @@ Also sets two cookies:
 
 URL Parameters:
 
-* `solvedCaptcha` — (optional) If the user has already solved a CAPTCHA before, specify the already solved CAPTCHA challenge ID here. Presumably, the server will determine whether a new CAPTCHA is required to be solved, or the user can post without solving a new CAPTCHA for now. The official docs don't explain the meaning of this parameter.
+* `solvedCaptcha` — (optional) If the user has already solved a CAPTCHA before, specify the already solved CAPTCHA challenge ID here. Presumably, the server will determine whether a new CAPTCHA is required to be solved (for example, if the already-solved one has expired), or the user can post without solving a new CAPTCHA for now. The official docs don't explain the meaning of this parameter.
+
+<!-- Maybe it could somehow be used a workaround for captcha expiration time not present in the response. But if the CAPTCHA has arleady expired and the user hasn't submitted a solution for it yet, the application wouldn't be able to know if it should already show a new CAPTCHA or not. -->
 
 Returns a CAPTCHA challenge ID:
 
@@ -373,7 +375,9 @@ Returns a CAPTCHA challenge ID:
 
 The CAPTCHA challenge image URL is `/.global/captchas/{captchaId}`.
 
-Note that the received CAPTCHA challenge has a timeout that you won't be able to find out.
+LynxChan engine has a bug: the received CAPTCHA challenge has a timeout and you won't be able to find it out because it's not present in the JSON response. Every CAPTCHA usually has a different expiration interval, for some reason.
+
+A workaround for that bug would be using the regular — "with cookies" — variant of "Get CAPTCHA" API and then parse the expiration time from `set-cookie` headers.
 
 #### Solve a CAPTCHA
 
@@ -421,7 +425,7 @@ Parameters:
 * `categoryReport`: Category of the report.
 * `reasonReport`: Report reason.
 * `globalReport`: if a non-empty string, indicates that the report is "global".
-* `captchaReport`: CAPTCHA solution.
+* `captchaReport`: Solved CAPTCHA ID?
 
 ### Delete or restore a post or a thread
 
@@ -553,7 +557,7 @@ Response:
 }
 ```
 
-### Create a board
+### Create Board
 
 `POST` to `/createBoard.js?json=1`
 
@@ -564,7 +568,7 @@ Parameters:
 * `boardDescription`: description of the new board. 128 characters.
 * `captcha`: CAPTCHA solution.
 
-### Delete a board
+### Delete Board
 
 `POST` to `/deleteBoard.js?json=1`
 
@@ -586,7 +590,7 @@ Parameters:
 `login`: 16 characters max. Only `a-Z`,`_` and `0-9` are allowed.
 `password`
 `email`: 64 characters max.
-`captcha`: CAPTCHA solution.
+`captcha`: Solved CAPTCHA ID?
 
 ### Request Email Confirmation
 
@@ -641,7 +645,7 @@ URL parameters (because this link is clicked by the user in an account recovery 
 
 Creates a new random password and e-mails it to the user.
 
-### Post a comment
+### Create Comment
 
 `POST` to `/replyThread.js?json=1`
 
@@ -652,20 +656,27 @@ Parameters:
 * `email`: (optional) e-mail of the poster. 64 characters.
 * `message`: (optional) message to be posted. 4096 characters. Mandatory if no files are sent.
 * `subject`: (optional) subject of the thread. 128 characters.
-* `password`: (optional) password to be used for deletion. 8 characters.
+* `password`: (optional) random autogenerated password to be used for deletion. 8 characters.
 * `boardUri`: Board ID.
 * `threadId`: Thread ID
-* `captcha`: (optional) CAPTCHA solution.
+* `captcha`: (optional) Solved CAPTCHA ID?
 * `spoiler`: (optional) if anything is sent, indicates the images should be spoilered.
 * `flag`: (optional) id of a flag to be used.
 
-Returns the ID of the new post (a number).
+Returns: the ID of the new post (a number).
+
+```js
+{
+  "status": "ok",
+  "data": 123456
+}
+```
 
 When posting any attachments, first [check](#check-an-attachment-before-upload) every attachment on whether it has already been uploaded to the server and whether it's banned.
 
 One may also refer to `KohlNumbra` client [source code](https://gitgud.io/Tjark/KohlNumbra/-/blob/master/src/js/thread.js) for an implementation of posting a comment.
 
-### Post a thread
+### Create Thread
 
 `POST` to `/newThread.js?json=1`
 
@@ -873,7 +884,13 @@ Allows the user to renew their "block bypass". "Bypasses longer than 372 charact
 
 Parameters:
 
-* `captcha`: CAPTCHA solution. Perhaps, a CAPTCHA should be requested first.
+* `captcha` — CAPTCHA solution.
+
+Request Cookies:
+
+* `captchaid` — CAPTCHA ID.
+
+Result:
 
 Sets a `bypass` cookie holding the new "block bypass" ID.
 
