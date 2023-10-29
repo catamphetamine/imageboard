@@ -617,6 +617,8 @@ Parameters:
 * `password`
 * `remember: boolean`: if `true`, the session expiration time will be longer.
 
+Presumably, the result is setting some cookie. Didn't check.
+
 ### Log Out
 
 `POST` to `/logout.js?json=1`
@@ -845,7 +847,7 @@ Returns an array with the offense records found. Contains objects with the follo
 * `expiration: date`: expiration of the action taken.
 * `mod: string`: login of the user that took the action.
 
-### Block bypass
+### Block Bypass
 
 A user may use a "block bypass" feature in order to attempt to bypass a "bypassable" ban. "Block bypass" won't work for "non-bypassable" bans.
 
@@ -856,26 +858,26 @@ The procedure of bypassing a "bypassable" ban is:
   * Use the "block bypass" feature: solve a CAPTCHA and provide a Proof-of-Work.
 * If `error: "banned"` is returned:
   * If `bypass` cookies was passed:
-    * Check the "block bypass" status using "Get block bypass status" API:
+    * Check the "block bypass" status using "Get Block Bypass" API:
       * Examine `response.data`
         * If `valid` is `true` then it means that the ban is "non-bypassable". Won't be able to post (at least on that board).
         * If `valid` is `false`:
           * If `mode` is `0`, then can't use a "block bypass" mechanism. Won't be able to post (at least on that board).
-          * If `mode` is not `0`, then attempt to "renew a bypass" (receive a new `bypass` cookie) using "Renew block bypass" API:
+          * If `mode` is not `0`, then attempt to "renew a bypass" (receive a new `bypass` cookie) using "Create Block Bypass" API:
             * Request a CAPTCHA challenge.
             * Post the CAPTCHA challenge solution to the "Renew bypass" API. Check that the response is `status: "ok"`.
-            * Re-check "block bypass" status (with the new `bypass` cookie being set) using "Get block bypass status" API:
+            * Re-check "block bypass" status (with the new `bypass` cookie being set) using "Get Block Bypass" API:
               * Examine `response.data`
                 * If it's still not `valid` then that would be weird. Won't be able to post (at least on that board).
                 * If it's now `valid` then:
                   * If `validated` is not `false` then try to post.
-                  * If `validated` is `false` then "validate" the "bypass" using the "Validate block bypass" API:
+                  * If `validated` is `false` then "validate" the "bypass" using the "Validate Block Bypass" API:
                     * Provide a Proof-of-Work as the `code` parameter when calling that API.
                     * Examine the `response`
                       * If `status: "ok"`, then re-check "block bypass" status.
                       * Otherwise, the Proof-of-Work might be incorrect.
 
-### Get block bypass status
+### Get Block Bypass
 
 `GET` `/blockBypass.js?json=1`
 
@@ -902,11 +904,11 @@ Response example:
 }
 ```
 
-### Renew block bypass
+### Create Block Bypass
 
-Allows the user to renew their "block bypass". "Renew" means "receive a new one".
+Allows the user to renew their "block bypass". "Renew" means "receive a new one", i.e. "create".
 
-Random note: "Bypasses longer than 372 characters" (presumably, that's the total character count posted using a "bypass") require "validation", see ["Validate block bypass"](#validate-block-bypass).
+Random note: "Bypasses longer than 372 characters" (presumably, that's the total character count posted using a "bypass") require "validation", see ["Validate Block Bypass"](#validate-block-bypass).
 
 First request a new CAPTCHA using "Get CAPTCHA" API.
 
@@ -924,9 +926,9 @@ Result:
 
 Sets a `bypass` cookie holding the new "block bypass" ID.
 
-### Validate block bypass
+### Validate Block Bypass
 
-Proof-of-Work "block bypass" validation mechanism.
+Validates a "block bypass" by performing a Proof-of-Work procedure.
 
 `POST` to `/validateBypass.js?json=1`
 

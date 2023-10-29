@@ -147,6 +147,48 @@
 				"defaultValue": true
 			}]
 		},
+		"getBlockBypass": {
+			"method": "GET",
+			"url": "/blockBypass.js?json=1",
+			"cookies": [{
+				"name": "bypass",
+				"input": {
+					"name": "blockBypassId"
+				}
+			}]
+		},
+		"renewBlockBypass": {
+			"method": "POST",
+			"url": "/renewBypass.js?json=1",
+			"parameters": [{
+				"name": "captcha",
+				"input": {
+					"name": "captchaSolution"
+				}
+			}],
+			"cookies": [{
+				"name": "captchaid",
+				"input": {
+					"name": "captchaId"
+				}
+			}]
+		},
+		"validateBlockBypass": {
+			"method": "POST",
+			"url": "/validateBypass.js?json=1",
+			"parameters": [{
+				"name": "code",
+				"input": {
+					"name": "proofOfWork"
+				}
+			}],
+			"cookies": [{
+				"name": "bypass",
+				"input": {
+					"name": "blockBypassId"
+				}
+			}]
+		},
 		"signUp": {
 			"method": "POST",
 			"url": "/registerAccount.js?json=1",
