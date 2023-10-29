@@ -767,7 +767,24 @@ Bans can be:
 * ASN bans — bans a whole ["Autonomous System"](https://en.wikipedia.org/wiki/Autonomous_system_(Internet)) by its ["Autonomous System Number"](https://afrinic.net/asn).
 * Hash bans — bans a file by its [SHA256](https://en.wikipedia.org/wiki/SHA-2) hash.
 
-Bans, unless marked as "non-bypassable", can be "bypassed" by solving a "computationally intensive" challenge (a "Proof-of-Work" mechanism).
+Bans, unless marked as "non-bypassable", can be "bypassed" by solving a "computationally intensive" challenge (a "Proof-of-Work" mechanism):
+
+> In addition to CAPTCHA, proof of work is required to activate the block bypass.
+
+> It is recommended to use a modern browser like Mozilla Firefox or Google Chrome. For Tor Browser you have to use the standard security level and manually set javascript.options.wasm in about:config to true.
+
+> Once you are finished, you will receive a link to gain access to your session in case you should ever lose your cookies. It will expire after one week of inactivity (i.e. no posting) and you will be asked to solve a single CAPTCHA regularly.
+
+> How to solve this without your browser:
+
+> Use this [Python script](https://gitgud.io/kohlchan-dev/kohlcash-solver/raw/master/solver.py) to activate the block bypass without JavaScript/WebAssembly.
+
+> You will be asked to enter a value:
+JGFyZ29uMmQkdj0xOSRtPTIwMDAwMCx0PTEscD0xJGNHS3llbEdwd0dFbldIMHdLZVRVTVEkQnNtdUlEbmEzYWdTbW9tQWVwZDJOMW9HRFZRNEQyOXlBdmpyUVZUdTB5dywyMDAwMDA=
+
+> After the Python script finishes, enter the solution in the `<input/>` field below.
+
+> Then click "Submit".
 
 ### Ban a user
 
@@ -830,24 +847,33 @@ Returns an array with the offense records found. Contains objects with the follo
 
 ### Block bypass
 
-A user may use a "block bypass" feature in order to attempt to bypass a ban, if the ban was not created as non-bypassable.
+A user may use a "block bypass" feature in order to attempt to bypass a "bypassable" ban. "Block bypass" won't work for "non-bypassable" bans.
 
-The procedure looks like:
+The procedure of bypassing a "bypassable" ban is:
 
 * Try to post.
+* If `{ status: "bypassable" }` response is returned:
+  * Use the "block bypass" feature: solve a CAPTCHA and provide a Proof-of-Work.
 * If `error: "banned"` is returned:
-  * Check the "block bypass" status:
-    * If `valid` then it means that the ban is "non-bypassable". Won't be able to post (at least on that board).
-    * If not `valid`:
-      * If `mode` is `0`, then can't use a "block bypass" mechanism. Won't be able to post (at least on that board).
-      * If `mode` is not `0`, then attempt to "renew" a "bypass":
-        * Request a CAPTCHA challenge.
-        * Post the CAPTCHA challenge solution to the "bypass renewal" API. Check that the response is `status: "ok"`.
-        * Re-check the "block bypass" status:
-          * If still not `valid` then that would be weird. Won't be able to post (at least on that board).
-          * If now `valid` then:
-            * If `validated` is not `false` then try to post.
-            * If `validated` is `false` then "validate" the "bypass" by performing a Proof-of-Work technique. Check that the response is `status: "ok"`, they try to post.
+  * If `bypass` cookies was passed:
+    * Check the "block bypass" status using "Get block bypass status" API:
+      * Examine `response.data`
+        * If `valid` is `true` then it means that the ban is "non-bypassable". Won't be able to post (at least on that board).
+        * If `valid` is `false`:
+          * If `mode` is `0`, then can't use a "block bypass" mechanism. Won't be able to post (at least on that board).
+          * If `mode` is not `0`, then attempt to "renew a bypass" (receive a new `bypass` cookie) using "Renew block bypass" API:
+            * Request a CAPTCHA challenge.
+            * Post the CAPTCHA challenge solution to the "Renew bypass" API. Check that the response is `status: "ok"`.
+            * Re-check "block bypass" status (with the new `bypass` cookie being set) using "Get block bypass status" API:
+              * Examine `response.data`
+                * If it's still not `valid` then that would be weird. Won't be able to post (at least on that board).
+                * If it's now `valid` then:
+                  * If `validated` is not `false` then try to post.
+                  * If `validated` is `false` then "validate" the "bypass" using the "Validate block bypass" API:
+                    * Provide a Proof-of-Work as the `code` parameter when calling that API.
+                    * Examine the `response`
+                      * If `status: "ok"`, then re-check "block bypass" status.
+                      * Otherwise, the Proof-of-Work might be incorrect.
 
 ### Get block bypass status
 
@@ -858,7 +884,7 @@ Requires a `bypass` cookie that holds a "block bypass" ID.
 Responds with an object with information about the current "block bypass" status. Contains the following fields:
 
 * `valid: boolean`: indicates if the user has a valid "block bypass".
-* `validated: boolean`: indicates if the bypass needs Proof-of-Work validation.
+* `validated: boolean`: indicates if the bypass needs Proof-of-Work validation. A Proof-of-Work expires: maybe after a certain amount of time, or maybe after a certain amount of content has been posted by the user. So users will have to periodically re-do their Proof-of-Work.
 * `mode: number`: current "block bypass" mode.
   * `0` — disabled. The user can't use a "block bypass" mechanism.
   * `1` — enabled. The user can use a "block bypass" mechanism if required.
@@ -878,9 +904,13 @@ Response example:
 
 ### Renew block bypass
 
-Allows the user to renew their "block bypass". "Bypasses longer than 372 characters" (presumably, that's the total character count posted using a "bypass") require "validation", see ["Validate block bypass"](#validate-block-bypass).
+Allows the user to renew their "block bypass". "Renew" means "receive a new one".
 
-`POST` to `/renewBypass.js?json=1`
+Random note: "Bypasses longer than 372 characters" (presumably, that's the total character count posted using a "bypass") require "validation", see ["Validate block bypass"](#validate-block-bypass).
+
+First request a new CAPTCHA using "Get CAPTCHA" API.
+
+Then `POST` to `/renewBypass.js?json=1`
 
 Parameters:
 
