@@ -104,6 +104,12 @@
 			}],
 			"requestType": "multipart/form-data",
 			"responseType": "text/html",
+			"cookies": [{
+				"name": "pass_id",
+				"input": {
+					"name": "accessToken"
+				}
+			}],
 			"parameters": [{
 				"name": "mode",
 				"defaultValue": "regist"
@@ -175,6 +181,12 @@
 			}],
 			"requestType": "multipart/form-data",
 			"responseType": "text/html",
+			"cookies": [{
+				"name": "pass_id",
+				"input": {
+					"name": "accessToken"
+				}
+			}],
 			"parameters": [{
 				"name": "board",
 				"input": {

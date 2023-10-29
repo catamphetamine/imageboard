@@ -64,9 +64,17 @@ import imageboard from 'imageboard'
 
 const fourChan = imageboard('4chan', {
   // Sends an HTTP request.
-  // Any HTTP request library can be used here.
+  // Any HTTP request library could be used inside it.
   //
-  // Must return a `Promise`:
+  // Arguments:
+  // * `method: string` — HTTP request method.
+  // * `url: string` — HTTP request URL.
+  // * `options?: object`
+  //   * `body?: object` — POST body parameters.
+  //   * `headers?: object` — HTTP request headers.
+  //   * `cookies?: object` — HTTP request cookies.
+  //
+  // Returns a `Promise`:
   // * When successful, the `Promise` should resolve to an object:
   //   * `url: string` — HTTP request URL. If there were any redirects in the process, this should be the final URL that it got redrected to.
   //   * `responseText?: string` — HTTP response text.
@@ -78,7 +86,7 @@ const fourChan = imageboard('4chan', {
   //   * `responseText?: string` — HTTP response text.
   //   * `headers?: object` — HTTP response headers. An object having a function `.get(headerName: string)`.
   //
-  request: (method, url, { body, headers }) => {
+  request: (method, url, { body, headers, cookies }) => {
     // If request "Content-Type" is set to be "multipart/form-data",
     // convert the `body` object to a `FormData` instance.
     if (headers['Content-Type'] === 'multipart/form-data') {
@@ -313,12 +321,12 @@ Available `options`:
   * When successful, the `Promise` should resolve to an object:
     * `url: string` — HTTP request URL. If there were any redirects in the process, this should be the final URL that it got redrected to.
     * `responseText?: string` — HTTP response text.
-    * `headers?: object` — HTTP response headers. An object having a function `.get(headerName: string)`.
+    * `headers?: object` — HTTP response headers. An object having a function `.getSetCookie()` that returns a list of `set-cookie` header values. For example, `headers` from a `fetch()` `response`.
   * Otherwise, in case of an error, the `Promise` should reject with an `Error` instance having optional properties:
     * `url: string` — HTTP request URL. If there were any redirects in the process, this should be the final URL that it got redrected to.
     * `status?: number` — HTTP response status.
     * `responseText?: string` — HTTP response text.
-    * `headers?: object` — HTTP response headers. An object having a function `.get(headerName: string)`.
+    * `headers?: object` — HTTP response headers. An object having a function `.getSetCookie()` that returns a list of `set-cookie` header values. For example, `headers` from a `fetch()` `response`.
 
 ```js
 await request("GET", "https://8kun.top/boards.json") === {
@@ -408,6 +416,8 @@ getPostLinkProperties(comment) {
   }
 }
 ```
+
+* `getSetCookieHeaders?: ({ headers }) => string[]` — Returns a list of `Set-Cookie` header values for an HTTP response. The default implementation just returns `headers.getSetCookie()`, but a developer could supply their own implementation, for example, to work around web browsers' limitations as they [don't expose](https://developer.mozilla.org/en-US/docs/Web/API/Headers/getSetCookie) `set-cookie` response header.
 
 ## `imageboard` methods
 
@@ -611,7 +621,6 @@ Parameters:
 
 * `token: string` — Login token. For example, `4chan` calls them "passes".
 * `tokenPassword?: string` — Login token password. For example, `4chan` uses them (it calls it a "PIN").
-* `setCookieHeaderName?: string` — The name of the HTTP response header to look in for the auth cookie value. The default value is `"set-cookie"`. Cookies are cumbersome to deal with an a web browser cause they clash with the stupid "CORS" restrictions. For example, for some weird reason, when making HTTP requests using "CORS", even when performing the full ritual, `Set-Cookie` response header is simply unreadable. One workaround I found is duplicating `Set-Cookie` response header value in some other response header, and that's what this option is for.
 
 Returns an object:
 

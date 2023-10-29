@@ -18,11 +18,16 @@ export interface HttpRequestOptions {
 	headers?: Record<string, string>;
 }
 
-export type HttpRequestResult = string;
+interface HttpResponseHeaders {
+	getSetCookie: () => string[];
+}
 
-export interface HttpRequestResultWithRedirectToUrl {
-	response: string;
+export type HttpRequestResultBasic = string;
+
+export interface HttpRequestResult {
 	url: string;
+	responseText?: string;
+	headers?: HttpResponseHeaders;
 }
 
 interface Messages {
@@ -56,8 +61,14 @@ interface ImageboardOptionsOverridable {
 	commentLengthLimit?: number;
 }
 
+interface HttpRequestParameters {
+	body?: Record<string, any>;
+	headers?: Record<string, string>;
+	cookies?: Record<string, string>;
+}
+
 interface ImageboardOptions extends ImageboardOptionsOverridable {
-	request: (method: HttpRequestMethod, url: string, parameters: HttpRequestParameters) => Promise<HttpRequestResult | HttpRequestResultWithRedirectToUrl>;
+	request: (method: HttpRequestMethod, url: string, parameters: HttpRequestParameters) => Promise<HttpRequestResultBasic | HttpRequestResult>;
 	commentUrl?: string;
 	threadUrl?: string;
 	messages?: Messages;
@@ -65,6 +76,7 @@ interface ImageboardOptions extends ImageboardOptionsOverridable {
 	expandReplies?: boolean;
 	getPostLinkProperties?: (comment?: Comment) => object;
 	getPostLinkText?: (postLink: object) => string?;
+	getSetCookieHeaders?: ({ headers?: HttpResponseHeaders }) => string[];
 }
 
 export type BoardId = string;
@@ -283,20 +295,6 @@ interface LogInOptions {
 
 	// `4chan` uses "passwords" on login tokens.
 	tokenPassword?: string;
-
-	// For some weird reason, even with all the weird shenanigans in place,
-	// `Set-Cookie` headers were still ignored by the web browser when attempting to
-	// read them from `fetch()` response: not with `credentials="include"`,
-	// not with `SameSite=None`, not with `Secure`, not with `HttpOnly`, etc.
-	//
-	// The workaround was simple: just copy the value of `Set-Cookie` header
-	// to some other header when sending the response.
-	//
-	// For example, to tell `imageboard` library to look into `x-set-cookie` header
-	// instead of the unreadable `set-cookie` header, one could pass
-	// `setCookieHeaderName: "x-set-cookie"` option.
-	//
-	setCookieHeaderName?: string;
 }
 
 interface LogInResult {

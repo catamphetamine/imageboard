@@ -110,6 +110,12 @@
 			"method": "POST",
 			"requestType": "multipart/form-data",
 			"url": "/user/posting?nc=1",
+			"cookies": [{
+				"name": "passcode_auth",
+				"input": {
+					"name": "accessToken"
+				}
+			}],
 			"parameters": [{
 				"name": "task",
 				"defaultValue": "post"
@@ -232,6 +238,12 @@
 			"method": "POST",
 			"url": "/user/report",
 			"requestType": "multipart/form-data",
+			"cookies": [{
+				"name": "passcode_auth",
+				"input": {
+					"name": "accessToken"
+				}
+			}],
 			"parameters": [{
 				"name": "board",
 				"input": {
