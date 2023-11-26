@@ -9,18 +9,32 @@ const fourChan = imageboard(IMAGEBOARD_ID, {
   request: (method, url, { body, headers }) => {
     // If request "Content-Type" is set to be "multipart/form-data",
     // convert the `body` object to a `FormData` instance.
-    if (headers['Content-Type'] === 'multipart/form-data') {
+    if (headers['content-type'] === 'multipart/form-data') {
       body = createFormData(body)
       // Remove `Content-Type` header so that it autogenerates it from the `FormData`.
       // Example: "multipart/form-data; boundary=----WebKitFormBoundaryZEglkYA7NndbejbB".
-      delete headers['Content-Type']
+      delete headers['content-type']
     }
-    return fetch(url, { method, headers, body }).then((response) => {
-      if (response.ok) {
+    return fetch(url, {
+      method,
+      headers,
+      body,
+      // By default, `fetch()` follows any redirects in the process.
+      // Many imageboards have API endpoints that set cookies and then redirect.
+      // If `fetch()` was to follow those redirects, those `set-cookie` headers
+      // from a `status: 302` response would be ignored, and the `imageboard` library
+      // should be able to inspect those `set-cookie` headers in order to extract
+      // their values. So `fetch()` is specifically configured to not follow redirects.
+      redirect: 'manual'
+    }).then((response) => {
+      if (response.status < 400) {
         return response.text().then((responseText) => ({
+          // If there were any redirects in the proces,
+          // `response.url` is gonna be the final "redirected to" URL.
           url: response.url,
-          responseText,
-          headers: response.headers
+          status: response.status,
+          headers: response.headers,
+          responseText
         }))
       }
       return rejectWithErrorForResponse(response)
@@ -32,6 +46,8 @@ const fourChan = imageboard(IMAGEBOARD_ID, {
 // Returns a `Promise` and rejects it with the error.
 function rejectWithErrorForResponse(response) {
   const error = new Error(response.statusText)
+  // If there were any redirects in the proces,
+  // `response.url` is gonna be the final "redirected to" URL.
   error.url = response.url
   error.status = response.status
   error.headers = response.headers

@@ -11,7 +11,22 @@ import {
 
 export * from './social-components/index.d.js';
 
-export type ImageboardId = '4chan' | '2ch' | '8ch' | 'kohlchan' | 'arisuchan' | 'endchan' | 'lainchan';
+export type ImageboardId =
+	'4chan' |
+	'2ch' |
+	'8ch' |
+	'kohlchan' |
+	'arisuchan' |
+	'endchan' |
+	'lainchan' |
+	'94chan' |
+	'ptchan';
+
+type ImageboardEngine =
+	'4chan' |
+	'makaba' |
+	'lynxchan' |
+	'jschan';
 
 export interface HttpRequestOptions {
 	body?: string;
@@ -61,14 +76,14 @@ interface ImageboardOptionsOverridable {
 	commentLengthLimit?: number;
 }
 
-interface HttpRequestParameters {
+interface HttpRequestOptions {
 	body?: Record<string, any>;
 	headers?: Record<string, string>;
 	cookies?: Record<string, string>;
 }
 
 interface ImageboardOptions extends ImageboardOptionsOverridable {
-	request: (method: HttpRequestMethod, url: string, parameters: HttpRequestParameters) => Promise<HttpRequestResultBasic | HttpRequestResult>;
+	request: (method: HttpRequestMethod, url: string, options: HttpRequestOptions) => Promise<HttpRequestResultBasic | HttpRequestResult>;
 	commentUrl?: string;
 	threadUrl?: string;
 	messages?: Messages;
@@ -91,19 +106,31 @@ export interface Board {
 	notSafeForWork?: boolean;
 	bumpLimit?: number;
 	commentsPerHour?: number;
-	maxCommentLength?: number;
-	maxAttachments?: number;
-	maxAttachmentsInThread?: number;
-	maxAttachmentSize?: number;
-	maxAttachmentsSize?: number;
-	maxVideoAttachmentSize?: number;
-	maxVideoAttachmentDuration?: number;
-	createThreadCooldown?: number;
-	postCommentCooldown?: number;
-	attachFileCooldown?: number;
+	commentContentMinLength?: number;
+	commentContentMaxLength?: number;
+	mainCommentContentMaxLength?: number;
+	mainCommentContentMinLength?: number;
+	threadTitleRequired?: boolean;
+	mainCommentContentRequired?: boolean;
+	mainCommentAttachmentRequired?: boolean;
+	attachmentsMaxCount?: number;
+	threadAttachmentsMaxCount?: number;
+	attachmentMaxSize?: number;
+	attachmentsMaxTotalSize?: number;
+	videoAttachmentMaxSize?: number;
+	videoAttachmentMaxDuration?: number;
+	createThreadMinInterval?: number;
+	createCommentMinInterval?: number;
+	createCommentWithAttachmentMinInterval?: number;
 	features?: {
 		sage?: boolean;
-		name?: boolean;
+		authorName?: boolean;
+		authorEmail?: boolean;
+		threadTitle?: boolean;
+		commentTitle?: boolean;
+		attachments?: boolean;
+		threadTags?: boolean;
+		votes?: boolean;
 	};
 }
 
@@ -136,14 +163,15 @@ export interface Thread {
 	board?: {
 		title?: string;
 		bumpLimit?: number;
-		maxCommentLength?: number;
-		maxAttachmentsSize?: number;
-		maxAttachmentSize?: number;
-		maxAttachments?: number;
+		commentContentMaxLength?: number;
+		attachmentsMaxTotalSize?: number;
+		attachmentMaxSize?: number;
+		attachmentsMaxCount?: number;
 		features?: {
-			subject?: boolean;
+			threadTitle?: boolean;
+			commentTitle?: boolean;
 			attachments?: boolean;
-			tags?: boolean;
+			threadTags?: boolean;
 			votes?: boolean;
 		};
 		badges?: BoardBadge[];
@@ -301,6 +329,16 @@ interface LogInResult {
 	accessToken?: string;
 }
 
+interface CreateBlockBypassOptions {
+	captchaId: string;
+	captchaSolution: string;
+}
+
+interface CreateBlockBypassResult {
+	token: string;
+	expiresAt: Date;
+}
+
 export type Feature = 'getThreads.sortByRating';
 
 export interface Imageboard {
@@ -317,9 +355,10 @@ export interface Imageboard {
 	reportComment: (parameters: ReportCommentOptions) => Promise<void>;
 	createThread: (parameters: CreateThreadOptions) => Promise<{ id: ThreadId }>;
 	createComment: (parameters: CreateCommentOptions) => Promise<{ id: CommentId }>;
-	getCaptcha: (parameters: GetCaptchaOptions) => Promise<GetCaptchaResult>;
 	logIn: (parameters: LogInOptions) => Promise<LogInResult>;
 	logOut: () => Promise<void>;
+	getCaptcha: (parameters: GetCaptchaOptions) => Promise<GetCaptchaResult>;
+	createBlockBypass: (parameters: CreateBlockBypassOptions) => Promise<CreateBlockBypassResult>;
 }
 
 export function getConfig(imageboardId: ImageboardId): ImageboardConfig;

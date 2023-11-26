@@ -1,6 +1,6 @@
 # `lynxchan` API
 
-[`lynxchan`](https://gitgud.io/LynxChan/LynxChan) seems to be the only still-being-maintained imageboard engine left.
+[`lynxchan`](https://gitgud.io/LynxChan/LynxChan) is an alternative engine Node.js/MongoDB whose development started in 2015. Rather than mimicking any existing engine, it set off on its own path and ended up becoming a popular choice (of its time) provided that there's really not much else to choose from. Some choices made by the author are questionable and the overall approach doesn't look professional to me. For example, the engine has a bunch of quite obvious but easily-fixable [issues](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/lynxchan-issues.md) that the author refuses to recognize and has no interest in fixing. The author's demeanor, in general, is somewhat controversial and not to everyone's liking.
 
 The APIs provided by the engine are:
 
@@ -338,25 +338,29 @@ Returns a `Thread` object, with the addition of the following properties:
 
 Some actions like posting new threads, posting new comments, reporting posts, banning users, etc require solving a CAPTCHA in order to prevent spam.
 
-#### Request a CAPTCHA (with cookies)
+#### Get CAPTCHA image
 
-To request a CAPTCHA, send a `GET` request to `/captcha.js`.
+To request a CAPTCHA image, send a `GET` request to `/captcha.js`.
 
 <!-- The response is an HTTP status `302` redirect to a new `Location` URL (a CAPTCHA challege image). Get that URL. -->
 
 <!-- The URL has the format: `/.global/captchas/{captchaId}`, and CAPTCHA challenge ID can be extracted from it. Example of `{captchaId}`: `6091c3b9bce7b946ae3c9539`. -->
 
-It responds with a CAPTCHA challenge image.
+It responds with a `302 Redirect` to the CAPTCHA image URL.
 
-Also sets two cookies:
+Also it sets two cookies:
 
 * `captchaid` — The CAPTCHA challenge ID. Example cookie parameters: `Path: /` and `Max-Age: 300` meaning that the captcha expires in 300 seconds if not solved.
 
 * `captchaexpiration` — The CAPTCHA challenge expiration date. A stringified javascript date (`new Date().toUTCString()`). Example: `"Tue, 04 May 2021 22:16:58 GMT"`. Can be converted back to a `Date` object by passing this string as an argument to the `Date()` constructor.
 
-#### Request a CAPTCHA (no cookies)
+#### Get CAPTCHA
 
 `GET` `/noCookieCaptcha.js?json=1`
+
+Parameters:
+
+* `d` — (optional) The current timestamp. If the user has already requested a captcha with that `d` parameter
 
 URL Parameters:
 
@@ -910,7 +914,7 @@ Allows the user to renew their "block bypass". "Renew" means "receive a new one"
 
 Random note: "Bypasses longer than 372 characters" (presumably, that's the total character count posted using a "bypass") require "validation", see ["Validate Block Bypass"](#validate-block-bypass).
 
-First request a new CAPTCHA using "Get CAPTCHA" API.
+First, request a new CAPTCHA using "Get CAPTCHA" API.
 
 Then `POST` to `/renewBypass.js?json=1`
 

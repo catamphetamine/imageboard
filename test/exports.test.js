@@ -14,6 +14,8 @@ describe('exports', () => {
 		Chan.should.be.a('function')
 		getConfig.should.be.a('function')
 		getConfig('4chan').id.should.equal('4chan')
+		// Tests the merge result of `94chan/index.json` and `jschan/settings.json`.
+		getConfig('94chan').accessTokenCookieName.should.equal('connect.sid')
 		getCommentText.should.be.a('function')
 		sortThreadsWithPinnedOnTop.should.be.a('function')
 		// generateQuotes.should.be.a('function')

@@ -3,34 +3,20 @@
 	"domain": "endchan.net",
 	"engine": "lynxchan",
 	"thumbnailSize": 255,
+	"captchaImageUrl": "/captcha.js?captchaId={id}",
+	"captchaImageType": "image/jpeg",
+	"captchaImageWidth": 300,
+	"captchaImageHeight": 100,
 	"defaultAuthorName": {
 		"*": "Anonymous",
 		"ausneets": "NEET",
 		"kc": "Bernd"
 	},
-	"boardUrl": "/{boardId}",
-	"threadUrl": "/{boardId}/res/{threadId}.html",
-	"commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
 	"api": {
-		"getThread": {
+		"getCaptcha": {
 			"method": "GET",
-			"url": "/{boardId}/res/{threadId}.json",
-			"urlParameters": [{
-				"name": "boardId"
-			}, {
-				"name": "threadId"
-			}]
-		},
-		"getThreads": {
-			"method": "GET",
-			"url": "/{boardId}/catalog.json",
-			"urlParameters": [{
-				"name": "boardId"
-			}]
-		},
-		"getBoards": {
-			"method": "GET",
-			"url": "/index.json"
+			"url": "/noCookieCaptcha.js",
+			"responseType": "text/html"
 		}
 	}
 }

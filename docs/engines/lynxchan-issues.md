@@ -125,6 +125,14 @@ It doesn't provide the "original" file name for an attachment in catalog API res
 ]
 ```
 
+### Doesn't have a version of `/catalog.json` with latest replies
+
+Instead of going `4chan.org`'s route, which returns `latest_replies` for each thread in the `/catalog.json` response, `jschan` provides a separate API for getting a paginated list of threads on a board, and that API responds with latest `replies` for each thread.
+
+The issue with that approach is that on a high-loaded imageboard like `4chan.org`, new threads appear quickly and old threads get bumped-out, so by the time the user requests the second page, all pages have already shifted and the user will no longer see the full list of threads on a board: by the time they scroll to the second page, the ones that have been on the second/third/etc page have already been bumped to the first page so the user won't see them because they won't be re-fetching the prevous pages.
+
+The only simple solution to the issue seems to be the `4chan.org`'s way.
+
 ## Minor Issues
 
 ### No thread thumbnail full size image URL in catalog API response
@@ -141,26 +149,21 @@ In `/catalog.json` response, it only returns a thread thumbnail's URL and doesn'
 
 Without the full-sized image URL, a 3rd-party client won't be able to show the original image when the user clicks on a thread's thumbnail in the list of threads on a board.
 
-### "Get CAPTCHA (no cookies)" API doesn't return expiration time
+<!--
+### "Get CAPTCHA image" API doesn't return content type
 
-The response of "Get CAPTCHA (no cookies)" API doesn't contain CAPTCHA expiration time.
+The response of "Get CAPTCHA image" API doesn't contain a `Content-Type` header in the HTTP response.
 
-`GET` `https://kohlchan.net/noCookieCaptcha.js?json=1`
+`GET` `/captcha.js?json=1`
 
-```js
-{
-  "status": "ok",
-  "data": "653e904efa7412c9ec6189c8"
-}
-```
+A workaround is to assume `image/jpeg`.
+-->
 
-One workaround would be to use "Get CAPTCHA (with cookies)" API and then parse the expiration time from `set-cookie` headers.
+### "Get CAPTCHA" API doesn't return CAPTCHA expiration date
 
-### "Get CAPTCHA (no cookies)" API doesn't return CAPTCHA image size
+The response of "Get CAPTCHA" API doesn't contain CAPTCHA expiration date. It only contains the CAPTCHA ID in the `data` property.
 
-The response of "Get CAPTCHA (no cookies)" API doesn't contain CAPTCHA image size.
-
-`GET` `https://kohlchan.net/noCookieCaptcha.js?json=1`
+`GET` `/noCookieCaptcha.js?json=1`
 
 ```js
 {
@@ -171,7 +174,24 @@ The response of "Get CAPTCHA (no cookies)" API doesn't contain CAPTCHA image siz
 
 [Issue](https://gitgud.io/LynxChan/LynxChan/-/issues/86).
 
-A workaround would be to use "Get CAPTCHA (with cookies)" API and then parse the expiration time from `set-cookie` headers.
+Without the expiration date, the application doesn't know when the CAPTCHA expires:
+* It doesn't know when to auto-refresh it because there's no timer that runs out.
+* The user's solution to the CAPTCHA could be rejected if it expires by the time the user enters their solution, which is clunky User Experience.
+
+A workaround would be to still use this API and then just show a new CAPTCHA if the solution is rejected.
+
+### "Get CAPTCHA" API doesn't return CAPTCHA image size
+
+The response of "Get CAPTCHA" API doesn't contain CAPTCHA image size.
+
+`GET` `/noCookieCaptcha.js?json=1`
+
+```js
+{
+  "status": "ok",
+  "data": "653e904efa7412c9ec6189c8"
+}
+```
 
 ##### `kohlchan.net`
 

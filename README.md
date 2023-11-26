@@ -8,26 +8,31 @@ Originally created as part of the [`anychan`](https://gitlab.com/catamphetamine/
 
 Supported engines:
 
-* [4chan](https://github.com/4chan/4chan-API)
+* [4chan](https://github.com/4chan/4chan-API) — `4chan.org`'s proprietary engine.
 
-  1. [4chan.org](https://www.4chan.org/) — [demo](https://captchan.surge.sh/4chan)
+  1. [4chan.org](https://www.4chan.org/) — [demo](https://anychans.github.io/4chan)
 
-* [vichan](https://github.com/vichan-devel/vichan)
+* [vichan](https://github.com/vichan-devel/vichan) — An open-source `4chan`-compatible engine running on PHP/MySQL whose development started in 2012. The codebase has seen various maintainers take over and then leave off over the years, but as of late 2023, it seems like it's still being maintained and receiving new features.
 
-  1. [lainchan.org](https://lainchan.org/) — [demo](https://captchan.surge.sh/lainchan)
+  1. [lainchan.org](https://lainchan.org/) — [demo](https://anychans.github.io/lainchan)
 
-* [OpenIB](https://github.com/OpenIB/OpenIB/) (formerly [infinity](https://github.com/ctrlcctrlv/infinity))
+* [OpenIB](https://github.com/OpenIB/OpenIB/) (formerly [infinity](https://github.com/ctrlcctrlv/infinity)) — A 2013 fork of `vichan` engine with the goal of supporting an "infinite" amount of user-managed boards as opposed to a finite set of predefined boards. No longer maintained since 2018.
 
-  1. [8ch.net (8kun.top)](https://8kun.top/) — [demo](https://captchan.surge.sh/8ch)
+  1. [8ch.net (8kun.top)](https://8kun.top/) — [demo](https://anychans.github.io/8ch)
 
-* [lynxchan](https://gitgud.io/LynxChan/LynxChan)
+* [lynxchan](https://gitgud.io/LynxChan/LynxChan) — An alternative engine Node.js/MongoDB whose development started in 2015. Rather than mimicking any existing engine, it set off on its own path and ended up becoming a popular choice (of its time) provided that there's really not much else to choose from. Some choices made by the author are questionable and the overall approach doesn't look professional to me. For example, the engine has a bunch of quite obvious but easily-fixable [issues](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/lynxchan-issues.md) that the author refuses to recognize and has no interest in fixing. The author's demeanor, in general, is somewhat controversial and not to everyone's liking.
 
-  1. [kohlchan.net](https://kohlchan.net) — [demo](https://captchan.surge.sh/kohlchan)
-  2. [endchan.net](https://endchan.net) — [demo](https://captchan.surge.sh/endchan)
+  1. [kohlchan.net](https://kohlchan.net) — [demo](https://anychans.github.io/kohlchan)
+  2. [endchan.net](https://endchan.net) — [demo](https://anychans.github.io/endchan)
 
-* [makaba](https://2ch.hk/api/)
+* [jschan](https://gitgud.io/fatchan/jschan/) — An alternative engine written in Node.js/MongoDB whose development started in 2019. Isn't really adopted by anyone, perhaps because there haven't been any new imageboards since its development has started. Compared to `lynxchan`, purely from a technical perspective, it looks much more professional and mature, and the author is a [well-known developer](https://lowendtalk.com/discussion/186679/basedflare-new-cloudflare-like-service).
 
-  1. [2ch.hk](https://2ch.hk/) — [demo](https://captchan.surge.sh/2ch)
+  1. [94chan.org](https://94chan.org/) — [demo](https://anychans.github.io/94chan). The website is behind a CloudFlare-alike DDoS protection and returns `403 Forbidden` for the "demo" CORS proxy, but it is functional when accessed through one's [own CORS proxy](https://gitlab.com/catamphetamine/anychan/-/blob/master/docs/proxy/README.md) running at `localhost`.
+  2. [ptchan.org](https://ptchan.org/) — [demo](https://anychans.github.io/ptchan). The website is behind a CloudFlare-alike DDoS protection and returns [`403 Forbidden`](https://gitgud.io/fatchan/haproxy-protection/-/issues/24) for a CORS proxy.
+
+* [makaba](https://2ch.hk/api/) — `2ch.hk`'s proprietary engine.
+
+  1. [2ch.hk](https://2ch.hk/) — [demo](https://anychans.github.io/2ch)
 
 Features:
 
@@ -35,8 +40,7 @@ Features:
 * (optional) Automatically generate shortened "previews" for long comments.
 * (optional) Automatically insert quoted posts' text when none provided.
 * (optional) Automatically generate thread title when it's missing.
-* Create threads and post comments.
-  * The feature is currently only supported on engines: `makaba`.
+* (not on all imageboards) Create threads and post comments. Report comments.
 
 ## Install
 
@@ -64,43 +68,37 @@ import imageboard from 'imageboard'
 
 const fourChan = imageboard('4chan', {
   // Sends an HTTP request.
-  // Any HTTP request library could be used inside it.
-  //
-  // Arguments:
-  // * `method: string` — HTTP request method.
-  // * `url: string` — HTTP request URL.
-  // * `options?: object`
-  //   * `body?: object` — POST body parameters.
-  //   * `headers?: object` — HTTP request headers.
-  //   * `cookies?: object` — HTTP request cookies.
-  //
-  // Returns a `Promise`:
-  // * When successful, the `Promise` should resolve to an object:
-  //   * `url: string` — HTTP request URL. If there were any redirects in the process, this should be the final URL that it got redrected to.
-  //   * `responseText?: string` — HTTP response text.
-  //   * `headers?: object` — HTTP response headers. An object having a function `.get(headerName: string)`.
-  // * Otherwise, in case of an error, the `Promise` should reject
-  //   with an `Error` instance having optional properties:
-  //   * `url: string` — HTTP request URL. If there were any redirects in the process, this should be the final URL that it got redrected to.
-  //   * `status?: number` — HTTP response status.
-  //   * `responseText?: string` — HTTP response text.
-  //   * `headers?: object` — HTTP response headers. An object having a function `.get(headerName: string)`.
-  //
+  // See the description of `imageboard()` function options for more details.
   request: (method, url, { body, headers, cookies }) => {
     // If request "Content-Type" is set to be "multipart/form-data",
     // convert the `body` object to a `FormData` instance.
-    if (headers['Content-Type'] === 'multipart/form-data') {
+    if (headers['content-type'] === 'multipart/form-data') {
       body = createFormData(body)
       // Remove `Content-Type` header so that it autogenerates it from the `FormData`.
       // Example: "multipart/form-data; boundary=----WebKitFormBoundaryZEglkYA7NndbejbB".
-      delete headers['Content-Type']
+      delete headers['content-type']
     }
-    return fetch(url, { method, headers, body }).then((response) => {
-      if (response.ok) {
+    // Send `cookies` when not running in a web browser.
+    headers['cookie'] = Object.keys(cookies).map(key => `${key}=${cookies[key]}`).join('; ')
+    // Send HTTP request.
+    return fetch(url, {
+      method,
+      headers,
+      body,
+      // By default, `fetch()` follows any redirects in the process.
+      // Many imageboards have API endpoints that set cookies and then redirect.
+      // If `fetch()` was to follow those redirects, those `set-cookie` headers
+      // from a `status: 302` response would be ignored, and the `imageboard` library
+      // should be able to inspect those `set-cookie` headers in order to extract
+      // their values. So `fetch()` is specifically configured to not follow redirects.
+      redirect: 'manual'
+    }).then((response) => {
+      if (response.status < 400) {
         return response.text().then((responseText) => ({
           url: response.url,
-          responseText,
-          headers: response.headers
+          status: response.status,
+          headers: response.headers,
+          responseText
         }))
       }
       return rejectWithErrorForResponse(response)
@@ -317,16 +315,29 @@ See [Imageboard config](#imageboard-config) for the available imageboard `config
 
 Available `options`:
 
-* `request(method: string, url: string, parameters: object?): Promise` — (required) Sends HTTP requests to an imageboard's API. Must return a `Promise`:
-  * When successful, the `Promise` should resolve to an object:
-    * `url: string` — HTTP request URL. If there were any redirects in the process, this should be the final URL that it got redrected to.
-    * `responseText?: string` — HTTP response text.
-    * `headers?: object` — HTTP response headers. An object having a function `.getSetCookie()` that returns a list of `set-cookie` header values. For example, `headers` from a `fetch()` `response`.
-  * Otherwise, in case of an error, the `Promise` should reject with an `Error` instance having optional properties:
-    * `url: string` — HTTP request URL. If there were any redirects in the process, this should be the final URL that it got redrected to.
-    * `status?: number` — HTTP response status.
-    * `responseText?: string` — HTTP response text.
-    * `headers?: object` — HTTP response headers. An object having a function `.getSetCookie()` that returns a list of `set-cookie` header values. For example, `headers` from a `fetch()` `response`.
+* `request(method, url, options): Promise` — (required) Sends HTTP requests to an imageboard's API. Must not follow HTTP redirects.
+  * Arguments:
+    * `method: string` — HTTP request method, in upper case.
+    * `url: string` — HTTP request URL.
+    * `options: object`
+      * `body?: object` — `POST` request body JSON object.
+      * `headers?: object` — HTTP request headers, with header names in lower case.
+      * `cookies?: object` — HTTP request cookies.
+  * Returns a `Promise`:
+    * When successful, the `Promise` should resolve to an object:
+      * `url: string` — HTTP request URL. If there were any redirects in the process, this should be the final URL that it got redrected to.
+      * `status: number` — HTTP response status.
+      * `responseText?: string` — HTTP response text. Can be omitted if there's no response content.
+      * `headers: object` — HTTP response headers. For example, the `headers` property of a `fetch()` `response`. Must be an object having functions:
+        * `.get(headerName: string)` — Returns the value of an HTTP response header.
+        * `.getSetCookie()` — Returns a list of `set-cookie` header values in HTTP response.
+    * Otherwise, in case of an error, the `Promise` should reject with an `Error` instance having optional properties:
+      * `url: string` — HTTP request URL. If there were any redirects in the process, this should be the final URL that it got redrected to.
+      * `status: number` — HTTP response status.
+      * `responseText?: string` — HTTP response text. Can be omitted if there's no response content.
+      * `headers: object` — HTTP response headers. For example, the `headers` property of a `fetch()` `response`. Must be an object having functions:
+        * `.get(headerName: string)` — Returns the value of an HTTP response header.
+        * `.getSetCookie()` — Returns a list of `set-cookie` header values in HTTP response.
 
 ```js
 await request("GET", "https://8kun.top/boards.json") === {
@@ -512,8 +523,6 @@ Parses `comment` content if `parseContent: false` option was used when creating 
 
 Some imageboards (like [`2ch.hk`](https://2ch.hk)) allow upvoting or downvoting threads and comments on certain boards (like [`/po/`litics on `2ch.hk`](https://2ch.hk/po)).
 
-Is implemented for engines: `makaba`.
-
 Parameters:
 
 * `boardId: string` — Board ID.
@@ -529,8 +538,6 @@ Returns:
 ### `createThread()`
 
 Creates a new thread on a board.
-
-Is implemented for engines: `makaba`.
 
 Parameters:
 
@@ -557,8 +564,6 @@ Returns an object:
 
 Creates a new comment in a thread.
 
-Is implemented for engines: `makaba`.
-
 Parameters:
 
 * `boardId: string` — Board ID.
@@ -583,8 +588,6 @@ Returns an object:
 ### `getCaptcha()`
 
 Requests a CAPTCHA,
-
-Is implemented for engines: `makaba`.
 
 Parameters:
 
@@ -611,11 +614,29 @@ Returns an object:
     * `height: number` — image height.
 * `canRequestNewCaptchaAt?: Date` — When the user is allowed to request a new CAPTCHA.
 
+### `createBlockBypass()`
+
+Engines such as `jschan` or `lynxchan` introduce a concept of a "block bypass". A "block bypass" is a token that allows its owner to "bypass" a "block" that the server may have imposed on them. Such a "block" could block the user from posting comments or threads or submitting reports.
+
+In order to prevent spam, users are untrusted by default, and are required to solve a CAPTCHA.
+
+Offtopic: Although in the modern age of AI development automatically solving CAPTCHAs has become an easy task, so I'd personally advise utilizing other means of spam prevention. For example, `kohlchan.net` requires a user to provide a "Proof-of-Work" in a form of a result of a lengthy computation. And popular imageboards like `4chan.org` or `2ch.hk` provide their users an option to bypass CAPTCHA by purchasing a "pass" which could be considered a "Proof-of-Stake".
+
+This `createBlockBypass()` method issues a new "block bypass" token.
+
+Parameters:
+
+* `captchaId: string` — Captcha ID.
+* `captchaSolution: string` — Captcha solution.
+
+Returns an object:
+
+* `token: string` — "Block bypass" token.
+* `expiresAt: date` — The date when the "block bypass" token expires.
+
 ### `logIn()`
 
 Performs a login.
-
-Is implemented for engines: `makaba`.
 
 Parameters:
 
@@ -630,8 +651,6 @@ Returns an object:
 
 Performs a logout.
 
-Is implemented for engines: `makaba`.
-
 No parameters.
 
 Returns `undefined`.
@@ -639,8 +658,6 @@ Returns `undefined`.
 ### `reportComment()`
 
 Reports a comment or a thread.
-
-Is implemented for engines: `makaba`.
 
 Parameters:
 
@@ -766,64 +783,119 @@ This library doesn't parse links to YouTube/Twitter/etc. Instead, this type of f
   bumpLimit: number?,
 
   // "Comments posted per hour" stats for this board.
-  // Is supported by `makaba` and `lynxchan`.
   commentsPerHour: number?,
+
+  // "Comments posted per day" stats for this board.
+  commentsPerDay: number?,
+
+  // "Unique comment posters per day" stats for this board.
+  uniquePostersPerDay: number?,
+
+  // Allowed attachment types.
+  attachmentTypes: string[]?,
 
   // The maximum attachments count in a comment or when posting a new thread.
   // Only present for 4chan.org
-  maxAttachments: number?,
+  attachmentsMaxCount: number?,
 
   // The maximum overall attachments count in a thread.
   // Only present for 4chan.org
-  maxAttachmentsInThread: number?,
+  threadAttachmentsMaxCount: number?,
 
-  // Maximum comment length in a thread on the board (a board-wide setting).
+  // Minimum comment length on the board (a board-wide setting).
+  // Is used in `jschan`.
+  commentContentMinLength: number?,
+
+  // Maximum comment length on the board (a board-wide setting).
   // Only present for `4chan.org`.
   // `2ch.hk` also has it but doesn't return it as part of the `/boards.json` response.
-  maxCommentLength: number?,
+  commentContentMaxLength: number?,
+
+  // Minimum comment length when creating a thread on the board (a board-wide setting).
+  // Is used in `jschan`.
+  mainCommentContentMinLength: number?,
+
+  // Maximum comment length when creating a thread on the board (a board-wide setting).
+  // Is used in `jschan`.
+  mainCommentContentMaxLength: number?,
+
+  // Whether thread title is required when creating it.
+  // Is used in `jschan`.
+  threadTitleRequired: boolean?,
+
+  // Whether comment text is required when creating a thread.
+  // Is used in `jschan`.
+  mainCommentContentRequired: boolean?,
+
+  // Whether comment attachments are required when creating a thread.
+  // Is used in `jschan`.
+  mainCommentAttachmentRequired: boolean?,
 
   // Maximum attachment size in a thread on the board (a board-wide setting).
   // Only present for `4chan.org`.
-  maxAttachmentSize: number?,
+  attachmentMaxSize: number?,
 
   // Maximum total attachments size in a thread on the board (a board-wide setting).
   // Only present for `4chan.org` or `2ch.hk`.
-  maxAttachmentsSize: number?,
+  attachmentsMaxTotalSize: number?,
 
   // Maximum video attachment size in a thread on the board (a board-wide setting).
   // Only present for `4chan.org`.
-  maxVideoAttachmentSize: number?,
+  videoAttachmentMaxSize: number?,
 
   // Maximum video attachment duration (in seconds) in a thread on the board (a board-wide setting).
   // Only present for `4chan.org`.
-  maxVideoAttachmentDuration: number?,
+  videoAttachmentMaxDuration: number?,
 
   // Create new thread cooldown.
   // Only present for `4chan.org`.
-  createThreadCooldown: number?,
+  createThreadMinInterval: number?,
 
   // Post new comment cooldown.
   // Only present for `4chan.org`.
-  postCommentCooldown: number?,
+  createCommentMinInterval: number?,
 
   // Post new comment with an attachment cooldown.
   // Only present for `4chan.org`.
-  attachFileCooldown: number?,
+  createCommentWithAttachmentMinInterval: number?,
+
+  // The language that's used on the board.
+  // For example, `kohlchan.net` has a separate `/ru/` board for Russian-speaking users.
+  language: string?,
 
   // An array of "badges" (like country flags but not country flags)
   // that can be used when posting a new reply or creating a new thread.
   // Each "badge" has an `id` and a `title`.
   badges: object[]?,
 
+  // Default comment author name (when left blank).
+  defaultAuthorName: string?,
+
   // The "features" supported or not supported on this board.
   features: {
     // Whether "sage" is allowed when posting comments on this board.
-    // Only present for `4chan.org`.
+    // Is used in `4chan.org`.
     sage: boolean?,
 
     // Whether to show a "Name" field in a "post new comment" form on this board.
-    // Only present for `2ch.hk`.
-    name: boolean?
+    // Is used in `2ch.hk` and `jschan`.
+    authorName: boolean?,
+
+    // Whether to show an "Email" field in a "post new comment" form on this board.
+    // Is used in `jschan`.
+    authorEmail: boolean?,
+
+    // Whether the board has custom badges.
+    // Is used in `jschan`.
+    badges: boolean?,
+
+    // Whether the board allows specifying a title when creating a thread.
+    // Is used in `jschan`.
+    threadTitle: boolean?,
+
+    // Whether the board allows specifying a title when posting a comment.
+    // Is used in `jschan`.
+    commentTitle: boolean?
   }
 }
 ```
@@ -922,26 +994,27 @@ This library doesn't parse links to YouTube/Twitter/etc. Instead, this type of f
 
     // (both `lynxchan` and `2ch.hk`)
     // Maximum comment length.
-    maxCommentLength: number,
+    commentContentMaxLength: number,
 
     // (`2ch.hk` only)
     // Maximum total attachments size for a post.
-    maxAttachmentsSize: number,
+    attachmentsMaxTotalSize: number,
 
     // (`lynxchan` only)
     // Maximum attachment size for a post.
-    maxAttachmentSize: number,
+    attachmentMaxSize: number,
 
     // (`lynxchan` only)
     // Maximum attachments count for a post.
-    maxAttachments: number,
+    attachmentsMaxCount: number,
 
     // Board "feature" flags.
     features: {
       // (`2ch.hk` only)
       // If this board disallows "Subject" field when posting a new reply
       // or creating a new thread, this flag is gonna be `false`.
-      subject: boolean,
+      threadTitle: boolean,
+      commentTitle: boolean,
 
       // (`2ch.hk` only)
       // Whether this board allows attachments on posts.
@@ -949,7 +1022,7 @@ This library doesn't parse links to YouTube/Twitter/etc. Instead, this type of f
 
       // (`2ch.hk` only)
       // Whether this board allows specifying "tags" when creating a new thread.
-      tags: boolean,
+      threadTags: boolean,
 
       // (`2ch.hk` only)
       // Whether this board allows voting for comments/threads.
@@ -1354,15 +1427,22 @@ Additional fields:
 
 ## Adding a new imageboard
 
-* Create the imageboard's directory in `./src/imageboard/chan`.
-* Create `index.json` and `index.js` files in the imageboard's directory (see other imageboards as an example). See [Imageboard config](#imageboard-config) for the explanation of the `index.json` file format.
-* Add an export for the imageboard in `./src/imageboard/chan/index.js` (same as for the existing imageboards).
+* Create the imageboard's folder in `./chans` directory.
+  * Create `index.json` file in that folder. See other imageboards as an example. See [Imageboard config](#imageboard-config) for the explanation of the `index.json` file format.
+  * An `index.json.js` file will be automatically created from `index.json` file at the "build" step.
+* Create the imageboard's folder in `./lib/chan` directory.
+  * Create `index.js` file in that folder. See other imageboards as an example.
+* Open `./lib/chan/index.js` file and add the new imageboard there.
 
-If the imageboard runs on an already supported engine then it most likely has its own comment HTML syntax which could be different from other imageboards running on the same engine. In such case, go to the engine directory (`./src/imageboard/engine/${engineName}`) and edit `index.js` file to use the ["comment markup syntax"](#comment-markup-syntax) specific to this new imageboard (see other imageboards' comment markup syntax as an example). Otherwise, if it's a new engine:
+If the imageboard runs on an already supported engine then perhaps no additional setup is required.
 
-* Create the engine directory in `./src/imageboard/engine`.
-* Create `index.js` file in the engine directory (same as for the existing engines). The engine class must extend `./src/imageboard/Engine.js` and implement at least four methods (`parseBoards()`, `parseThreads()`, `parseThread()` and `parseComment()`) and also describe [comment markup syntax](#comment-markup-syntax) (see other engines as an example).
-* Add the engine in `./src/imageboard/engine/index.js` file (same as for the existing engines).
+In some rare cases, an imageboard might have its own "custom" comment HTML syntax which could be different from the other imageboards running on the same engine. For example, that's the case with `4chan`-alike imageboards. In such case, go to the engine's directory — `./lib/engine/${engineName}` — and edit `index.js` file of the engine to use the ["comment markup syntax"](#comment-markup-syntax) specific to this new imageboard (see other imageboards' comment markup syntax as an example).
+
+Otherwise, if the new imageboard also runs on a new engine:
+
+* Create the engine's folder in `./lib/engine` directory.
+* Create an `index.js` file in the engine's folder. That file must export a class that extends `./lib/Engine.js` class, which must also implement at least four methods — `parseBoards()`, `parseThreads()`, `parseThread()` and `parseComment()` — and it must also describe the [comment markup syntax](#comment-markup-syntax) specific to that engine. See other engines as an example.
+* Add the new engine to the `./lib/engine/index.js` file.
 
 ## Comment markup syntax
 
@@ -1521,6 +1601,8 @@ Chans running on `lynxchan`:
 
 There're some limitations for imageboards running on `lynxchan` engine (for example, `kohlchan.net`) due to the [lack of support for several features](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/lynxchan-issues.md) in that engine.
 
+There're [some smaller limitations](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/jschan-issues.md) for `jschan` engine.
+
 There're some very minor limitations for `8ch.net (8kun.top)` caused by its `OpenIB` engine due to the [lack of support for several very minor features](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/OpenIB-issues.md) in that engine.
 
 There're [some very minor bugs](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/makaba-issues.md) for `2ch.hk` caused by its `makaba` engine.
@@ -1530,6 +1612,7 @@ There're [some very minor bugs](https://gitlab.com/catamphetamine/imageboard/blo
 Unit tests:
 
 ```
+npm run build
 npm test
 ```
 

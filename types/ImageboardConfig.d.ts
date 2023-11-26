@@ -1,6 +1,6 @@
 import { HttpRequestMethod } from './HttpRequestMethod.d.js';
 
-type ImageboardEngine = '4chan' | 'vichan' | 'OpenIB' | 'lynxchan' | 'makaba';
+type ImageboardEngine = '4chan' | 'vichan' | 'OpenIB' | 'lynxchan' | 'makaba' | 'jschan';
 
 type ImageboardConfigFeature =
 	'Threads.rating' |
@@ -49,7 +49,7 @@ interface ImageboardConfigApiMethodParameter {
 		// type: 'string' | 'number' | 'boolean';
 
 		// Input property trasnformation.
-		transform?: 'zero-or-one' | 'one-or-absent';
+		transform?: 'zero-or-one' | 'one-or-absent' | 'to-array';
 
 		// The mapping of the function parameter value into the URL parameter value.
 		// Examples:

@@ -792,13 +792,25 @@ Users can bypass solving a CAPTCHA when posting comments or threads by purchasin
 
 After purchasing a "pass", the user can [log in](https://sys.4chan.org/auth) with that "pass" (a string) and a "PIN" code (password) for it.
 
-After logging the user in, the server sets two cookies:
-* `pass_id` — Some kind of a string. Maybe the "pass" itself. Didn't check.
-* `pass_enabled` — `1`, indicating that the user is authenticated.
+A "pass" has a length of 10 characters and a numeric PIN for it is 6 characters long.
 
-The server then checks the `pass_id` cookie value when posting a comment or a thread, or when submitting a report.
+A "pass" allows to bypass ISP, IP range, and country blocks. For example, a certain IP subnet might be banned due to being known to be used by spammers, and a "pass" is supposed to allow posting from such IP subnet. Although a "pass" won't bypass an individual IP ban, that is a ban for a certain IP address rather than for an IP subnet.
 
-To log in with a "pass", send a `POST` request of type `multipart/form-data` to `https://sys.4chan.org/auth` (or `https://sys.4channel.org/auth`) with parameters:
+A "pass" will be permanently suspended for posting spam messages, advertising of any kind, or posting content that violates United States law.
+
+Once logged in with a "pass", the user must maintain their IP address, or they will have to re-log-in with the "pass". The user could be logged in with a "pass" simultaneously on multiple devices only if all those devices share the same IP address.
+
+In a given 30-minute interval, the user could log in with a "pass" multiple times but only from a single IP address. Attempts to log in from another IP address before the 30-minute cooldown has passed will be rejected.
+
+A pass could only be purchased for a year period, not less.
+
+All those restrictions are to prevent spammers from using a "pass" to bypass anti-spam protection.
+
+### Log In
+
+Send a `POST` request of type `multipart/form-data` to `https://sys.4chan.org/auth` (or `https://sys.4channel.org/auth`).
+
+Parameters:
 
 * `xhr` — (optional?) Set to `1` to instruct the server to send the response in `application/json` format. By default, when omitted (?), it would send the response in `text/html` format.
 * `id` — The "pass".
@@ -814,12 +826,12 @@ Response example:
 }
 ```
 
-After a successful login, the server sets a couple of cookies:
+Response cookies:
 
-* `pass_id` — Some kind of value. An old code dump somewhere on the internet says that the value of the cookie can be `"0"`, in which case it should be ignored. Maybe that's no longer the case.
+* `pass_id` — "Pass ID" cookie. An old code dump somewhere on the internet says that the value of the cookie can be `"0"`, in which case it should be ignored, but maybe that's no longer the case. In future, the server will check this `pass_id` cookie value when posting a comment or a thread, or when submitting a report.
 * `pass_enabled` — `1`. Supposedly, this somehow tells the website or the server that the user is logged in.
 
-In case of an error, it still returns an HTTP status 200 response.
+In case of an error, it still returns an HTTP status 200 response, but with a different response JSON object.
 
 Response examples in case of an error:
 
@@ -856,7 +868,13 @@ Some other error message regexp, in case of an HTML response:
 
 They also [say](https://github.com/4chan/4chan-API/issues/91#issuecomment-889684456) that `4chan` restricts the ability to share a "pass" by restricting a "pass" to be used only from a single IP address in a given timeframe. Didn't check.
 
-To log out, one could supposedly send the same `POST` request but without any parameters. Didn't check.
+### Log Out
+
+Send a `POST` request to `https://sys.4chan.org/auth` (or `https://sys.4channel.org/auth`).
+
+It will clear `pass_id` and `pass_enabled` cookies.
+
+Didn't check.
 
 ### Roles
 
