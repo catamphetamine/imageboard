@@ -15,3 +15,11 @@ The only simple solution to the issue seems to be the `4chan.org`'s way.
 ### Doesn't output total page count in paginated threads response
 
 When requesting a page of threads on a board using URL like `/{boardId}/{page}.json`, it doesn't tell the total number of pages available, so the application doesn't know how much `{page}`s can it fetch from the server and at which `{page}` should it stop.
+
+### Doesn't return "block bypass" expiration date
+
+When creating a "block bypass", it sets a cookie called `bypass` with some expiration date. But there's no way for a web-browser application to read that expiration date because it can only read the cookie's value from `document.cookie` and that's it. So the backend should also set some kind of a `bypassExpiresAt` cookie. Or, better, it should return a proper JSON response containing both the bypass token and its expiration date.
+
+### Doesn't return CAPTCHA expiration date
+
+When requesting a CAPTCHA, it sets a cookie called `captchaid` with some expiration date. But there's no way for a web-browser application to read that expiration date because it can only read the cookie's value from `document.cookie` and that's it. So the backend should also set some kind of a `captchaExpiresAt` cookie. Or, better, it should return a proper JSON response containing both CAPTCHA ID and CAPTCHA expiration date.
