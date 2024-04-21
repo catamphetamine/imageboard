@@ -7,9 +7,9 @@ export { HttpRequestMethod } from './HttpRequestMethod.d.js';
 import {
 	ContentBlock,
 	Attachment
-} from './social-components/index.d.js';
+} from 'social-components';
 
-export * from './social-components/index.d.js';
+export * from 'social-components';
 
 export type ImageboardId =
 	'4chan' |
@@ -33,7 +33,7 @@ export interface HttpRequestOptions {
 	headers?: Record<string, string>;
 }
 
-interface HttpResponseHeaders {
+export interface HttpResponseHeaders {
 	getSetCookie: () => string[];
 }
 
@@ -43,6 +43,13 @@ export interface HttpRequestResult {
 	url: string;
 	responseText?: string;
 	headers?: HttpResponseHeaders;
+}
+
+export interface HttpRequestError extends Error {
+	url: string;
+	status: number;
+	headers: HttpResponseHeaders;
+	responseText?: string;
 }
 
 interface Messages {
@@ -74,6 +81,11 @@ interface ImageboardOptionsOverridable {
 	parseContent?: boolean;
 	addParseContent?: boolean;
 	commentLengthLimit?: number;
+	generatedQuoteMaxLength?: number;
+	generatedQuoteMinFitFactor?: number;
+	generatedQuoteMaxFitFactor?: number;
+	generatedQuoteGetCharactersCountPenaltyForLineBreak?: number;
+	minimizeGeneratedPostLinkBlockQuotes?: boolean;
 }
 
 interface HttpRequestOptions {
@@ -222,6 +234,7 @@ export interface Comment {
 	attachments?: Attachment[];
 
 	parseContent?: (options?: { getCommentById: GetCommentById }) => void;
+	createContentPreview?: (options?: { maxLength?: number }) => void;
 	hasContentBeenParsed?: () => boolean;
 	onContentChange?: (options?: { getCommentById: GetCommentById }) => void;
 }

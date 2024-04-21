@@ -14,6 +14,8 @@ const fourChan = imageboard(IMAGEBOARD_ID, {
       // Remove `Content-Type` header so that it autogenerates it from the `FormData`.
       // Example: "multipart/form-data; boundary=----WebKitFormBoundaryZEglkYA7NndbejbB".
       delete headers['content-type']
+    } else {
+      body = JSON.stringify(body)
     }
     return fetch(url, {
       method,
@@ -64,6 +66,8 @@ function rejectWithErrorForResponse(response) {
 
 // Converts an object to a `FormData` instance.
 function createFormData(body) {
+  // * For 'multipart/form-data', use `FormData` class.
+  // * For 'application/x-www-form-urlencoded', use `URLSearchParams` class.
   const formData = new FormData()
   if (body) {
     for (const key of Object.keys(body)) {
