@@ -28,11 +28,6 @@ type ImageboardEngine =
 	'lynxchan' |
 	'jschan';
 
-export interface HttpRequestOptions {
-	body?: string;
-	headers?: Record<string, string>;
-}
-
 export interface HttpResponseHeaders {
 	getSetCookie: () => string[];
 }
@@ -88,7 +83,7 @@ interface ImageboardOptionsOverridable {
 	minimizeGeneratedPostLinkBlockQuotes?: boolean;
 }
 
-interface HttpRequestOptions {
+export interface HttpRequestOptions {
 	body?: Record<string, any>;
 	headers?: Record<string, string>;
 	cookies?: Record<string, string>;
@@ -102,7 +97,7 @@ interface ImageboardOptions extends ImageboardOptionsOverridable {
 	useRelativeUrls?: boolean;
 	expandReplies?: boolean;
 	getPostLinkProperties?: (comment?: Comment) => object;
-	getPostLinkText?: (postLink: object) => string?;
+	getPostLinkText?: (postLink: object) => string | undefined;
 	getSetCookieHeaders?: (parameters: { headers?: HttpResponseHeaders }) => string[];
 }
 
@@ -384,6 +379,6 @@ export function getCommentText(comment: Comment, options?: {
 
 export function sortThreadsWithPinnedOnTop(threads: Thread[]): Thread[];
 
-function Imageboard(imageboardIdOrConfig: ImageboardId | ImageboardConfig, options: ImageboardOptions): Imageboard;
+declare function Imageboard(imageboardIdOrConfig: ImageboardId | ImageboardConfig, options: ImageboardOptions): Imageboard;
 
 export default Imageboard;
