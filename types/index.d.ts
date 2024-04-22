@@ -79,7 +79,7 @@ interface ImageboardOptionsOverridable {
 	generatedQuoteMaxLength?: number;
 	generatedQuoteMinFitFactor?: number;
 	generatedQuoteMaxFitFactor?: number;
-	generatedQuoteGetCharactersCountPenaltyForLineBreak?: number;
+	generatedQuoteGetCharactersCountPenaltyForLineBreak?: ({ textBefore: string }) => number;
 	minimizeGeneratedPostLinkBlockQuotes?: boolean;
 }
 

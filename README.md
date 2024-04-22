@@ -434,6 +434,13 @@ getPostLinkProperties(comment) {
 
 * `getSetCookieHeaders?: ({ headers }) => string[]` — Returns a list of `Set-Cookie` header values for an HTTP response. The default implementation just returns `headers.getSetCookie()`, but a developer could supply their own implementation, for example, to work around web browsers' limitations as they [don't expose](https://developer.mozilla.org/en-US/docs/Web/API/Headers/getSetCookie) `set-cookie` response header.
 
+* When parsing comments, it automatically generates quotes when a comment references another comment in the same thread. The options for generating such quotes are:
+  * `generatedQuoteMaxLength?: number` — The maximum length of an auto-generated quote. This is an approximate value.
+  * `generatedQuoteMinFitFactor: number?` — Sets the minimum preferrable length of an auto-generated quote at `generatedQuoteMinFitFactor * generatedQuoteMaxLength`.
+  * `generatedQuoteMaxFitFactor: number?` — Sets the maximum preferrable length of an auto-generated quote at `generatedQuoteMaxFitFactor * generatedQuoteMaxLength`.
+  * `generatedQuoteGetCharactersCountPenaltyForLineBreak?: ({ textBefore: string }) => number` — Returns the character count equivalent for a "line break" (`\n`) character. The idea is to "tax" multi-line texts when trimming by max length. By default, having `\n` characters in text is not penalized in any way and those characters aren't counted.
+  * `minimizeGeneratedPostLinkBlockQuotes?: boolean` — One can pass `true` to indicate that auto-generated quotes are minimized by default until the user expands them manually. This would mean that auto-generated quotes shouldn't be accounted for when calculating the total length of a comment when creating a shorter "preview" for it in case it exceeds the maxum preferred length.
+
 ## `imageboard` methods
 
 ### `getBoards()`
