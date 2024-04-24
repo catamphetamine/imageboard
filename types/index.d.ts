@@ -29,6 +29,7 @@ type ImageboardEngine =
 	'jschan';
 
 export interface HttpResponseHeaders {
+	get: (name: string) => string | null;
 	getSetCookie: () => string[];
 }
 
@@ -85,7 +86,7 @@ interface ImageboardOptionsOverridable {
 
 export interface HttpRequestOptions {
 	body?: Record<string, any>;
-	headers?: Record<string, string>;
+	headers: Record<string, string>;
 	cookies?: Record<string, string>;
 }
 
@@ -98,7 +99,7 @@ interface ImageboardOptions extends ImageboardOptionsOverridable {
 	expandReplies?: boolean;
 	getPostLinkProperties?: (comment?: Comment) => object;
 	getPostLinkText?: (postLink: object) => string | undefined;
-	getSetCookieHeaders?: (parameters: { headers?: HttpResponseHeaders }) => string[];
+	getSetCookieHeaders?: (parameters: { headers: HttpResponseHeaders }) => string[];
 }
 
 export type BoardId = string;
