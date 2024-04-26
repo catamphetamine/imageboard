@@ -1,6 +1,12 @@
 import { HttpRequestMethod } from './HttpRequestMethod.d.js';
 
-type ImageboardEngine = '4chan' | 'vichan' | 'OpenIB' | 'lynxchan' | 'makaba' | 'jschan';
+type ImageboardEngine =
+	'4chan' |
+	'vichan' |
+	'OpenIB' |
+	'lynxchan' |
+	'makaba' |
+	'jschan';
 
 type ImageboardConfigFeature =
 	'Threads.rating' |
