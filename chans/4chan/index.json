@@ -24,6 +24,7 @@
 	"authorBadgeUrl": "https://s.4cdn.org/image/flags/{boardId}/{flagId}.gif",
 	"authResetUrl": "/pass?reset",
 	"bannedUrl": "/banned",
+	"captchaFrameUrl": "/captcha?board={boardId}&thread_id={threadId}&framed=1",
 	"accessTokenCookieName": "pass_id",
 	"authenticatedCookieName": "pass_enabled",
 	"authenticatedCookieValue": "1",

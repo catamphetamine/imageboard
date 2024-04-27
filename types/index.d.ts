@@ -71,8 +71,10 @@ export interface HttpRequestOptions {
 	cookies?: Record<string, string>;
 }
 
+export type HttpRequestFunction = (method: HttpRequestMethod, url: string, options: HttpRequestOptions) => Promise<HttpRequestResultBasic | HttpRequestResult>;
+
 export interface ImageboardOptions extends ImageboardOptionsOverridable {
-	request: (method: HttpRequestMethod, url: string, options: HttpRequestOptions) => Promise<HttpRequestResultBasic | HttpRequestResult>;
+	request: HttpRequestFunction;
 	commentUrl?: string;
 	threadUrl?: string;
 	messages?: Messages;
@@ -335,11 +337,11 @@ export interface CreateBlockBypassResult {
 	expiresAt: Date;
 }
 
-export type Feature = 'getThreads.sortByRating';
+export type ImageboardFeature = 'getThreads.sortByRating';
 
 export interface Imageboard {
 	// This method is not currently public.
-	supportsFeature: (feature: Feature) => boolean;
+	supportsFeature: (feature: string) => boolean;
 	getBoards: () => Promise<Board[]>;
 	getAllBoards: () => Promise<Board[]>;
 	hasMoreBoards: () => boolean;

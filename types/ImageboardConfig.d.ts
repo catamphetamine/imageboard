@@ -102,6 +102,12 @@ interface ImageboardConfigApi {
 	// "Find boards by a query" API URL.
 	findBoards?: ImageboardConfigApiMethod;
 
+	// "Create new board" API.
+	createBoard?: ImageboardConfigApiMethod;
+
+	// "Delete board" API.
+	deleteBoard?: ImageboardConfigApiMethod;
+
 	// "Get threads list" API URL template.
 	getThreads: ImageboardConfigApiMethod;
 
@@ -129,21 +135,51 @@ interface ImageboardConfigApi {
 
 	// Vote API.
 	vote?: ImageboardConfigApiMethod;
+
+	// Post API.
+	post?: ImageboardConfigApiMethod;
+
+	// "Update comment" API.
+	updateComment?: ImageboardConfigApiMethod;
+
+	// Log In API.
+	logIn?: ImageboardConfigApiMethod;
+
+	// Log Out API.
+	logOut?: ImageboardConfigApiMethod;
+
+	// CAPTCHA API.
+	getCaptcha?: ImageboardConfigApiMethod;
+	solveCaptcha?: ImageboardConfigApiMethod;
+
+	// Report API.
+	report?: ImageboardConfigApiMethod;
+
+	// Block bypass API.
+	getBlockBypass?: ImageboardConfigApiMethod;
+	createBlockBypass?: ImageboardConfigApiMethod;
+	validateBlockBypass?: ImageboardConfigApiMethod;
+
+	// "Has this file been already uploaded in some past?" API.
+	hasFileBeenUploaded?: ImageboardConfigApiMethod;
 }
 
 export interface ImageboardConfig {
 	id: string;
 	domain: string;
+	domainByBoard?: Record<string, string>;
 	engine: ImageboardEngine;
 	boards?: ImageboardConfigBoard[];
 	features?: ImageboardConfigFeature[];
 	api: ImageboardConfigApi;
+
 	// A template for a board URL.
 	boardUrl: string;
 	// A template for a thread URL.
 	threadUrl: string;
 	// A template for a comment URL.
 	commentUrl: string;
+
 	// Attachment URL template.
 	attachmentUrl?: string;
 	// Attachment thumbnail URL pattern.
@@ -154,7 +190,38 @@ export interface ImageboardConfig {
 	attachmentUrlFpath?: string;
 	// (required by `8ch` engine (8kun.top)`)
 	attachmentThumbnailUrlFpath?: string;
-	defaultAuthorName?: string | Record<string, string>;
 	// (required by `lynxchan` engine)
 	thumbnailSize?: number;
+
+	// A template to get a "badge" icon of a comment's author.
+	authorBadgeUrl?: string;
+
+	// A URL to send a POST request to in order to log out.
+	authResetUrl?: string;
+
+	// A URL to redirect the user to in case they're banned.
+	bannedUrl?: string;
+
+	// A URL to display a CAPTCHA in an `<iframe/>`.
+	captchaFrameUrl?: string;
+
+	// Default comment/thread author name. Example: "Anonymous".
+	defaultAuthorName?: string | Record<string, string>;
+
+	// The name of a cookie that stores the access token value after a login.
+	accessTokenCookieName?: string;
+
+	// The name of a cookie that stores the authentication status, in case the user is authenticated.
+	authenticatedCookieName?: string;
+	// The value of a cookie that stores the authentication status, in case the user is authenticated.
+	authenticatedCookieValue?: string;
+
+	// The minimum count of comments in a thread starting from which the thread supports
+	// "get incremental update of the list of comments" API.
+	incrementalThreadUpdateStartsAtCommentsCount?: number;
+
+	// Possible report reasons.
+	reportReasons?: { id: string, description: string }[];
+	// Report reason for "Legal Violation".
+	reportReasonLegalViolation: { id: string, description: string };
 }
