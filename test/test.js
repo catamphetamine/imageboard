@@ -1,9 +1,13 @@
 import fetch, { FormData } from 'node-fetch'
-import imageboard, { getCommentText } from 'imageboard'
+import Imageboard, { getCommentText } from 'imageboard'
 
-const IMAGEBOARD_ID = '4chan'
+// Usage examples:
+// * `npm run test-chan` — uses `4chan`
+// * `npm run test-chan kohlchan` — uses `kohlchan`
+// * etc
+const IMAGEBOARD_ID = process.argv[2] || '4chan'
 
-const fourChan = imageboard(IMAGEBOARD_ID, {
+const imageboard = Imageboard(IMAGEBOARD_ID, {
   // Sends an HTTP request.
   // Any HTTP request library can be used here.
   request: (method, url, { body, headers }) => {
@@ -86,7 +90,7 @@ function createFormData(body) {
 }
 
 // // Test `2ch.hk` really old archived thread.
-// return fourChan.getThread({
+// return imageboard.getThread({
 //   boardId: 'b',
 //   threadId: 119034529
 // }).then((thread) => {
@@ -94,14 +98,14 @@ function createFormData(body) {
 // });
 
 // Prints the first 10 boards.
-fourChan.getBoards().then((boards) => {
+imageboard.getBoards().then(({ boards }) => {
   const boardsList = boards.slice(0, 10).map(({
     id,
     title,
     category,
     description
   }) => {
-    return `* [${category}] /${id}/ — ${title} — ${description}`
+    return `* ${category ? '[' + category + '] ' : ''}/${id}/ — ${title}${description ? ' — ' + description : ''}`
   })
   console.log(boardsList.join('\n'))
 
@@ -112,9 +116,9 @@ fourChan.getBoards().then((boards) => {
   console.log()
 
   // Prints the first five threads on `/a/` board.
-  return fourChan.getThreads({
+  return imageboard.getThreads({
     boardId: boards[0].id
-  }).then((threads) => {
+  }).then(({ threads }) => {
     const threadsList = threads.slice(0, 5).map(({
       id,
       title,
@@ -140,10 +144,10 @@ fourChan.getBoards().then((boards) => {
     console.log()
 
     // Prints the first five comments of thread #193605320 on `/a/` board.
-    return fourChan.getThread({
+    return imageboard.getThread({
       boardId: boards[0].id,
       threadId: threads[0].id
-    }).then((thread) => {
+    }).then(({ thread }) => {
       const commentsList = thread.comments.slice(0, 5).map((comment) => {
         const {
           id,

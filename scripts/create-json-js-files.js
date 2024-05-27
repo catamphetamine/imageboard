@@ -4,12 +4,14 @@
 
 import fs from 'fs'
 
+const SETTINGS_JSON_JS_PREAMBLE = '// This file was automatically generated from the corresponding JSON file in the same folder.' + '\n' + '\n'
+
 // Create `./chans/{chanId}/index.json` files.
 for (const child of fs.readdirSync('./chans', { withFileTypes: true })) {
 	if (!child.isFile()) {
 		const chanId = child.name
 		const json = fs.readFileSync(`./chans/${chanId}/index.json`, 'utf8')
-		fs.writeFileSync(`./chans/${chanId}/index.json.js`, 'export default ' + json, 'utf8')
+		fs.writeFileSync(`./chans/${chanId}/index.json.js`, SETTINGS_JSON_JS_PREAMBLE + 'export default ' + json, 'utf8')
 	}
 }
 
@@ -19,7 +21,7 @@ for (const child of fs.readdirSync('./lib/engine', { withFileTypes: true })) {
 		const engineId = child.name
 		if (engineId !== 'utility') {
 			const json = fs.readFileSync(`./lib/engine/${engineId}/settings.json`, 'utf8')
-			fs.writeFileSync(`./lib/engine/${engineId}/settings.json.js`, 'export default ' + json, 'utf8')
+			fs.writeFileSync(`./lib/engine/${engineId}/settings.json.js`, SETTINGS_JSON_JS_PREAMBLE + 'export default ' + json, 'utf8')
 		}
 	}
 }

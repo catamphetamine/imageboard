@@ -1,0 +1,13 @@
+{
+	"id": "alogs.space",
+	"domain": "alogs.space",
+	"engine": "lynxchan",
+	"defaultAuthorName": {
+		"*": "Anonymous"
+	},
+	"thumbnailSize": 256,
+	"captchaImageUrl": "/.global/captchas/{id}",
+	"captchaImageType": "image/jpeg",
+	"captchaImageWidth": 300,
+	"captchaImageHeight": 100
+}

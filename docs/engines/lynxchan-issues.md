@@ -55,6 +55,8 @@ There's no info about board category on boards in the list of boards in `/boards
 
 `kohlchan` works around that limitation by hacking category info in tags. For example, `tags: ["menu-4/n/sonstiges-2"]` on a board means that the board belongs to the fourth menu section where it should be on the second position in the "Sonstiges" category.
 
+### No `omitted`
+
 ## Medium Issues
 
 ### Only the first picture in a thread is available in catalog API response

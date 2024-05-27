@@ -72,97 +72,163 @@ interface ImageboardConfigApiMethodParameter {
 	}
 }
 
-interface ImageboardConfigApiMethod {
+interface ImageboardConfigApiMethod<Features> {
 	// HTTP request method.
-	method: HttpRequestMethod,
+	method: HttpRequestMethod;
 
 	// URL template with optional parameters as `{parameterName}` tokens.
-	url: string,
+	url: string;
 
 	// Any `{parameterName}` parameters in the `url` template.
-	urlParameters?: ImageboardConfigApiMethodParameter[],
+	urlParameters?: ImageboardConfigApiMethodParameter[];
 
 	// Any parameters in the "body" of a POST HTTP request or in the "query" of a GET HTTP request.
-	parameters?: ImageboardConfigApiMethodParameter[]
+	parameters?: ImageboardConfigApiMethodParameter[];
+
+	// Any `{parameterName}` parameters in the cookies of the HTTP request.
+	cookies?: ImageboardConfigApiMethodParameter[];
+
+	// HTTP request content type.
+	// Default is `application/json`.
+	requestType?: 'application/json' | 'multipart/form-data';
+
+	// HTTP response content type.
+	// Default is `application/json`.
+	responseType?: 'application/json' | 'text/html';
+
+	// Any additional info on the features of this API.
+	features?: Features;
 }
 
 interface ImageboardConfigApi {
 	// "Get boards list" API URL.
 	// `api.getBoards` is required if there's no `boards` parameter.
-	getBoards?: ImageboardConfigApiMethod;
+	getBoards?: ImageboardConfigApiMethod<GetBoardsFeatures>;
 
 	// "Get boards list page" API URL.
 	// Is used when the API to get the list of boards uses pagination.
-	getBoardsPage?: ImageboardConfigApiMethod;
+	getBoardsPage?: ImageboardConfigApiMethod<GetBoardsPageFeatures>;
 
-	// "Get all boards list" API URL.
-	// Can be used when `getBoards` doesn't return the full list of boards, like it does on `8ch`.
-	getAllBoards?: ImageboardConfigApiMethod;
+	// "Get top boards list" API URL.
+	// Can be used when `getBoards` returns a list of boards that is too big, like it does on `8ch.net`.
+	getTopBoards?: ImageboardConfigApiMethod<GetTopBoardsFeatures>;
 
 	// "Find boards by a query" API URL.
-	findBoards?: ImageboardConfigApiMethod;
+	findBoards?: ImageboardConfigApiMethod<FindBoardsFeatures>;
 
 	// "Create new board" API.
-	createBoard?: ImageboardConfigApiMethod;
+	createBoard?: ImageboardConfigApiMethod<CreateBoardsFeatures>;
 
 	// "Delete board" API.
-	deleteBoard?: ImageboardConfigApiMethod;
+	deleteBoard?: ImageboardConfigApiMethod<DeleteBoardsFeatures>;
 
 	// "Get threads list" API URL template.
-	getThreads: ImageboardConfigApiMethod;
+	getThreads: ImageboardConfigApiMethod<GetThreadsFeatures>;
 
 	// "Get threads list including their latest comments" API URL template.
-	getThreadsWithLatestComments?: ImageboardConfigApiMethod;
+	getThreadsWithLatestComments?: ImageboardConfigApiMethod<GetThreadsWithLatestCommentsFeatures>;
 
 	// "Get threads list (first page) including their latest comments" API URL template.
-	getThreadsWithLatestCommentsFirstPage?: ImageboardConfigApiMethod;
+	getThreadsWithLatestCommentsFirstPage?: ImageboardConfigApiMethod<GetThreadsWithLatestCommentsFirstPageFeatures>;
 
 	// "Get threads list (N-th page) including their latest comments" API URL template.
-	getThreadsWithLatestCommentsPage?: ImageboardConfigApiMethod;
+	getThreadsWithLatestCommentsPage?: ImageboardConfigApiMethod<GetThreadsWithLatestCommentsPageFeatures>;
 
 	// "Get threads stats" API URL template.
 	// "Stats" might include the "ratings" of threads.
-	getThreadsStats?: ImageboardConfigApiMethod;
+	getThreadsStats?: ImageboardConfigApiMethod<GetThreadsStatsFeatures>;
 
 	// "Get thread" API URL template.
-	getThread: ImageboardConfigApiMethod;
+	getThread: ImageboardConfigApiMethod<GetThreadFeatures>;
 
 	// "Get thread with comments after ..." API URL template.
-	getThreadIncremental?: ImageboardConfigApiMethod;
+	getThreadIncremental?: ImageboardConfigApiMethod<GetThreadIncrementalFeatures>;
 
 	// "Get archived thread" API URL template.
-	getArchivedThread?: ImageboardConfigApiMethod;
+	getArchivedThread?: ImageboardConfigApiMethod<GetArchivedThreadFeatures>;
 
 	// Vote API.
-	vote?: ImageboardConfigApiMethod;
+	vote?: ImageboardConfigApiMethod<VoteFeatures>;
 
 	// Post API.
-	post?: ImageboardConfigApiMethod;
+	post?: ImageboardConfigApiMethod<PostFeatures>;
 
 	// "Update comment" API.
-	updateComment?: ImageboardConfigApiMethod;
+	updateComment?: ImageboardConfigApiMethod<UpdateCommentFeatures>;
 
 	// Log In API.
-	logIn?: ImageboardConfigApiMethod;
+	logIn?: ImageboardConfigApiMethod<LogInFeatures>;
 
 	// Log Out API.
-	logOut?: ImageboardConfigApiMethod;
+	logOut?: ImageboardConfigApiMethod<LogOutFeatures>;
 
 	// CAPTCHA API.
-	getCaptcha?: ImageboardConfigApiMethod;
-	solveCaptcha?: ImageboardConfigApiMethod;
+	getCaptcha?: ImageboardConfigApiMethod<GetCaptchaFeatures>;
+	solveCaptcha?: ImageboardConfigApiMethod<SolveCaptchaFeatures>;
 
 	// Report API.
-	report?: ImageboardConfigApiMethod;
+	report?: ImageboardConfigApiMethod<ReportFeatures>;
 
 	// Block bypass API.
-	getBlockBypass?: ImageboardConfigApiMethod;
-	createBlockBypass?: ImageboardConfigApiMethod;
-	validateBlockBypass?: ImageboardConfigApiMethod;
+	getBlockBypass?: ImageboardConfigApiMethod<GetBlockBypassFeatures>;
+	createBlockBypass?: ImageboardConfigApiMethod<CreateBlockBypassFeatures>;
+	validateBlockBypass?: ImageboardConfigApiMethod<ValidateBlockBypassFeatures>;
 
 	// "Has this file been already uploaded in some past?" API.
-	hasFileBeenUploaded?: ImageboardConfigApiMethod;
+	hasFileBeenUploaded?: ImageboardConfigApiMethod<HasFileBeenUploadedFeatures>;
 }
+
+interface GetBoardsFeatures {}
+
+interface GetBoardsPageFeatures {}
+
+interface GetTopBoardsFeatures {}
+
+interface FindBoardsFeatures {}
+
+interface CreateBoardsFeatures {}
+
+interface DeleteBoardsFeatures {}
+
+interface GetThreadsFeatures {}
+
+interface GetThreadsWithLatestCommentsFeatures {}
+
+interface GetThreadsWithLatestCommentsFirstPageFeatures {}
+
+interface GetThreadsWithLatestCommentsPageFeatures {}
+
+interface GetThreadsStatsFeatures {
+	rating?: boolean;
+	views?: boolean;
+}
+
+interface GetThreadFeatures {}
+
+interface GetThreadIncrementalFeatures {}
+
+interface GetArchivedThreadFeatures {}
+
+interface VoteFeatures {}
+
+interface PostFeatures {}
+
+interface UpdateCommentFeatures {}
+
+interface LogInFeatures {}
+
+interface LogOutFeatures {}
+
+interface GetCaptchaFeatures {}
+interface SolveCaptchaFeatures {}
+
+interface ReportFeatures {}
+
+interface GetBlockBypassFeatures {}
+interface CreateBlockBypassFeatures {}
+interface ValidateBlockBypassFeatures {}
+
+interface HasFileBeenUploadedFeatures {}
 
 export interface ImageboardConfig {
 	id: string;
@@ -202,8 +268,16 @@ export interface ImageboardConfig {
 	// A URL to redirect the user to in case they're banned.
 	bannedUrl?: string;
 
+	// CAPTCHA rules.
+	// For example, CAPTCHA might always be required for anonymous users.
+	captchaRules?: CaptchaRule[];
+
 	// A URL to display a CAPTCHA in an `<iframe/>`.
 	captchaFrameUrl?: string;
+
+	// `true` means that `captchaFrameUrl` has a `Content-Security-Policy` HTTP header
+	// that prevents it from being embedded on 3rd-party websites.
+	captchaFrameUrlHasContentSecurityPolicy?: boolean;
 
 	// Default comment/thread author name. Example: "Anonymous".
 	defaultAuthorName?: string | Record<string, string>;
@@ -220,8 +294,39 @@ export interface ImageboardConfig {
 	// "get incremental update of the list of comments" API.
 	incrementalThreadUpdateStartsAtCommentsCount?: number;
 
+	// A list of "capcodes" available on the imageboard.
+	capcodes?: Record<string, UserRoleDescription | UserRole>;
+
+	// A list of custom "capcodes" that're available on the imageboard
+	// in addition to the default ones that're supported by the engine.
+	customCapcodes?: Record<string, UserRoleDescription | UserRole>;
+
 	// Possible report reasons.
-	reportReasons?: { id: string, description: string }[];
-	// Report reason for "Legal Violation".
-	reportReasonLegalViolation: { id: string, description: string };
+	reportReasons?: {
+		id: number | string,
+		description: string,
+		boards?: string[]
+	}[];
+
+	// Report reason ID for "Legal Violation".
+	reportReasonIdForLegalViolation?: string;
+
+	// Rules page URL.
+	rulesUrl?: string;
+
+	// A template for board rules page URL.
+	boardRulesUrl?: string;
+}
+
+export type UserRole = 'moderator' | 'administrator';
+export type UserRoleScope = 'board';
+
+export type CaptchaRule =
+	'anonymous:create-comment:required' |
+	'anonymous:create-thread:required' |
+	'anonymous:report-comment:required';
+
+export interface UserRoleDescription {
+	role: UserRole;
+	scope?: UserRoleScope;
 }

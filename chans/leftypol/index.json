@@ -1,0 +1,66 @@
+{
+	"id": "leftypol",
+	"domain": "leftypol.org",
+	"engine": "vichan",
+	"boards": [
+		{
+			"id": "leftypol",
+			"title": "Leftist Politically Incorrect",
+			"description": "The anons of the past have only shitposted on the Internet about the world, in various ways. The point, however, is to change it."
+		},
+		{
+			"id": "siberia",
+			"title": "Off-topic",
+			"description": "No chin, no right to speak."
+		},
+		{
+			"id": "edu",
+			"title": "Education",
+			"description": "\"The weapon of criticism cannot, of course, replace criticism of the weapon, material force must be overthrown by material force; but theory also becomes a material force as soon as it has gripped the masses.\" - Karl Marx"
+		},
+		{
+			"id": "hobby",
+			"title": "Hobby",
+			"description": "Our hands pass down the skills of the last generation to the next"
+		},
+		{
+			"id": "tech",
+			"title": "Technology",
+			"description": "\"Technology reveals the active relation of man to nature\" - Karl Marx"
+		},
+		{
+			"id": "games",
+			"title": "Games"
+		},
+		{
+			"id": "anime",
+			"title": "Anime",
+			"description": "Graphical arts and related topics"
+		},
+		{
+			"id": "music",
+			"title": "Music",
+			"description": "You may say I'm a larper but I'm not the only one. I hope some day you'll join us and the proletariat will be as one"
+		},
+		{
+			"id": "draw",
+			"title": "Original Art",
+			"description": "\"The strength of art is greater than that of a nuclear bomb\" - Kim Jong-Un"
+		},
+		{
+			"id": "AKM",
+			"title": "Guns, weapons and the art of war",
+			"description": "\"War can only be abolished through war, and in order to get rid of the gun it is necessary to take up the gun.\" - Chairman Mao"
+		},
+		{
+			"id": "meta",
+			"title": "Ruthless criticism of all that exists (in leftypol.org)",
+			"description": "Discussions, querries, feedback and complaints about the site and its administration."
+		},
+		{
+			"id": "roulette",
+			"title": "Board of the Month",
+			"description": "Welcome to /roulette/, leftypol's roulette board! This board will be used for testing out new board ideas."
+		}
+	]
+}

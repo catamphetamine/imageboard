@@ -18,26 +18,6 @@
 		"doomer": "Doomer",
 		"agatha2": "Orbiter"
 	},
-	"capcode": {
-		"Admin": {
-			"role": "administrator"
-		},
-		"Board Owner": {
-			"role": "administrator",
-			"scope": "board"
-		},
-		"Board Moderator": {
-			"role": "moderator",
-			"scope": "board"
-		},
-		"Board Volunteer": {
-			"role": "moderator",
-			"scope": "board"
-		},
-		"Global Volunteer": {
-			"role": "moderator"
-		}
-	},
 	"attachmentUrlFpath": "https://media.128ducks.com/file_store/{name}{ext}",
 	"attachmentThumbnailUrlFpath": "https://media.128ducks.com/file_store/thumb/{name}{ext}",
 	"attachmentUrl": "https://media.128ducks.com/{boardId}/src/{name}{ext}",
@@ -45,6 +25,7 @@
 	"boardUrl": "/{boardId}",
 	"threadUrl": "/{boardId}/res/{threadId}.html",
 	"commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
+	"rulesUrl": "/guidance.html",
 	"api": {
 		"getThread": {
 			"method": "GET",
@@ -71,13 +52,88 @@
 				"name": "pageIndex"
 			}]
 		},
-		"getBoards": {
+		"getTopBoards": {
 			"method": "GET",
 			"url": "/boards-top20.json"
 		},
-		"getAllBoards": {
+		"getBoards": {
 			"method": "GET",
 			"url": "/boards.json"
+		},
+		"post": {
+			"method": "POST",
+			"url": "https://sys.8kun.top/post.php",
+			"requestType": "multipart/form-data",
+			"parameters": [{
+				"name": "board",
+				"input": {
+					"name": "boardId"
+				}
+			}, {
+				"name": "thread",
+				"input": {
+					"name": "threadId"
+				}
+			}, {
+				"name": "name",
+				"input": {
+					"name": "authorName"
+				}
+			}, {
+				"name": "email",
+				"input": {
+					"name": "authorEmail"
+				}
+			}, {
+				"name": "subject",
+				"input": {
+					"name": "title"
+				}
+			}, {
+				"name": "body",
+				"input": {
+					"name": "content"
+				}
+			}, {
+				"name": "password",
+				"description": "An optional password for own post/attachment deletion",
+				"input": {
+					"name": "password"
+				}
+			}, {
+				"name": "json_response",
+				"defaultValue": 1
+			}, {
+
+
+
+
+				"name": "upfile",
+				"input": {
+					"name": "attachments",
+					"index": 0
+				}
+			}, {
+				"name": "spoiler",
+				"input": {
+					"name": "attachmentSpoiler"
+				}
+			}, {
+				"name": "filetag",
+				"input": {
+					"name": "attachmentFileTag"
+				}
+			}, {
+				"name": "textonly",
+				"input": {
+					"name": "textOnly"
+				}
+			}, {
+				"name": "g-recaptcha-response",
+				"input": {
+					"name": "captchaSolution"
+				}
+			}]
 		}
 	}
 }

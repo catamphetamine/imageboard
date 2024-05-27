@@ -10,11 +10,17 @@
 	"threadUrl": "/{boardId}/res/{threadId}.html",
 	"commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
 	"authResetUrl": "/makaba/makaba.fcgi?task=restore",
+	"captchaRules": [
+		"anonymous:create-comment:required",
+		"anonymous:create-thread:required"
+	],
 	"captchaExpiresIn": 300,
 	"captchaImageUrl": "/api/captcha/2chcaptcha/show?id={id}",
 	"captchaImageType": "image/png",
 	"captchaImageWidth": 270,
 	"captchaImageHeight": 120,
+	"rulesUrl": "/static/rules.html",
+	"boardRulesUrl": "/static/rules.html#{boardId}",
 	"accessTokenCookieName": "passcode_auth",
 	"api": {
 		"getThread": {
@@ -59,7 +65,10 @@
 			"urlParameters": [{
 				"name": "boardId"
 			}],
-			"features": ["rating", "views"]
+			"features": {
+				"rating": true,
+				"views": true
+			}
 		},
 		"getThreadsWithLatestCommentsFirstPage": {
 			"method": "GET",
@@ -225,7 +234,8 @@
 				"name": "board",
 				"input": {
 					"name": "boardId"
-				}
+				},
+				"defaultValue": ""
 			}, {
 				"name": "thread",
 				"input": {

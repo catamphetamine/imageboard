@@ -1,7 +1,7 @@
 {
 	"id": "lainchan",
 	"domain": "lainchan.org",
-	"capcode": {
+	"capcodes": {
 		"Admin": "administrator",
 		"Mod": "moderator"
 	},

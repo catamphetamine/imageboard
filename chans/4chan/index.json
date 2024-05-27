@@ -7,7 +7,7 @@
 		"notSafeForWork": "boards.4chan.org"
 	},
 	"defaultAuthorName": "Anonymous",
-	"capcode": {
+	"capcodes": {
 		"admin": "administrator",
 		"admin_highlight": "administrator",
 		"founder": "administrator",
@@ -24,42 +24,371 @@
 	"authorBadgeUrl": "https://s.4cdn.org/image/flags/{boardId}/{flagId}.gif",
 	"authResetUrl": "/pass?reset",
 	"bannedUrl": "/banned",
-	"captchaFrameUrl": "/captcha?board={boardId}&thread_id={threadId}&framed=1",
+	"captchaFrameUrl": "https://sys.4chan.org/captcha?board={boardId}&thread_id={threadId}&framed=1",
+	"captchaFrameUrlHasContentSecurityPolicy": true,
 	"accessTokenCookieName": "pass_id",
 	"authenticatedCookieName": "pass_enabled",
 	"authenticatedCookieValue": "1",
 	"incrementalThreadUpdateStartsAtCommentsCount": 101,
-	"reportReasonLegalViolation": {
+	"rulesUrl": "/rules",
+	"boardRulesUrl": "/rules#{boardId}",
+	"reportReasonIdForLegalViolation": 31,
+	"reportReasons": [{
+		"id": 1,
+		"description": "This post contains intentional spoilers",
+		"boards": ["a"]
+	}, {
+		"id": 2,
+		"description": "This image is bestiality/guro/scat/furry",
+		"boards": ["aco"]
+	}, {
+		"id": 3,
+		"description": "Lolikon and/or shota",
+		"boards": ["aco"]
+	}, {
+		"id": 4,
+		"description": "Low quality image/doodle",
+		"boards": ["aco"]
+	}, {
+		"id": 6,
+		"description": "Camwhoring or \"hook-up\" post",
+		"boards": ["adv"]
+	}, {
+		"id": 8,
+		"description": "This user is dumping porn",
+		"boards": ["bant"]
+	}, {
+		"id": 10,
+		"description": "This post is begging for or offering free money",
+		"boards": ["biz"]
+	}, {
+		"id": 11,
+		"description": "This image is ecchi/\"lewd\"",
+		"boards": ["c"]
+	}, {
+		"id": 12,
+		"description": "Real image/not 2D",
+		"boards": ["c"]
+	}, {
+		"id": 13,
+		"description": "This image is of a male (not in a couple)",
+		"boards": ["c"]
+	}, {
+		"id": 14,
+		"description": "Drama/community vendetta",
+		"boards": ["cgl"]
+	}, {
+		"id": 15,
+		"description": "This image is yaoi",
+		"boards": ["cm"]
+	}, {
+		"id": 16,
+		"description": "Images of couples belong on /c/",
+		"boards": ["cm"]
+	}, {
+		"id": 17,
+		"description": "Real image/not 2D",
+		"boards": ["cm"]
+	}, {
+		"id": 18,
+		"description": "This post contains intentional spoilers",
+		"boards": ["co"]
+	}, {
+		"id": 19,
+		"description": "This image is bestiality/guro/scat/furry",
+		"boards": ["d"]
+	}, {
+		"id": 20,
+		"description": "Western artwork",
+		"boards": ["d"]
+	}, {
+		"id": 21,
+		"description": "Lolikon and/or shota",
+		"boards": ["d"]
+	}, {
+		"id": 22,
+		"description": "Weapon or destructive device instructions",
+		"boards": ["diy"]
+	}, {
+		"id": 23,
+		"description": "This image is not softcore",
+		"boards": ["e"]
+	}, {
+		"id": 25,
+		"description": "Relationship or mental health thread",
+		"boards": ["fit"]
+	}, {
+		"id": 26,
+		"description": "Tech support thread",
+		"boards": ["g"]
+	}, {
+		"id": 27,
+		"description": "Abusing [code] tags",
+		"boards": ["g"]
+	}, {
+		"id": 28,
+		"description": "Request for free work",
+		"boards": ["gd"]
+	}, {
+		"id": 29,
+		"description": "GIF not animated",
+		"boards": ["gif"]
+	}, {
+		"id": 30,
+		"description": "This post is off-topic"
+	}, {
 		"id": 31,
 		"description": "This post violates United States law"
-	},
-	"reportReasons": [{
-		"id": "32",
+	}, {
+		"id": 32,
 		"description": "This user is underage"
 	}, {
-		"id": "37",
+		"id": 33,
+		"description": "Trolling outside of /b/"
+	}, {
+		"id": 34,
+		"description": "Racism outside of /b/"
+	}, {
+		"id": 35,
+		"description": "Furry/guro/lolikon/shota porn outside of /b/"
+	}, {
+		"id": 36,
+		"description": "Posting dubs/post number GET"
+	}, {
+		"id": 37,
 		"description": "This post contains personal information (\"dox\")"
 	}, {
-		"id": "38",
+		"id": 38,
 		"description": "This post contains a call to invasion (\"raid\")"
 	}, {
-		"id": "42",
+		"id": 39,
+		"description": "Not work safe image on work safe board"
+	}, {
+		"id": 40,
+		"description": "This post is extremely low quality"
+	}, {
+		"id": 41,
+		"description": "Spamming/flooding"
+	}, {
+		"id": 42,
 		"description": "Intentionally evading spam/post filters"
 	}, {
-		"id": "43",
+		"id": 43,
 		"description": "This post appears to be an automated spambot"
 	}, {
-		"id": "44",
+		"id": 44,
 		"description": "This post is advertising or begging"
 	}, {
-		"id": "45",
+		"id": 45,
 		"description": "User impersonating 4chan Staff"
 	}, {
-		"id": "46",
+		"id": 46,
 		"description": "Avatar or signature use"
 	}, {
-		"id": "47",
+		"id": 47,
 		"description": "Pony content outside /mlp/"
+	}, {
+		"id": 48,
+		"description": "Request thread ('source', 'SAUCE', 'moar', etc)"
+	}, {
+		"id": 49,
+		"description": "Lolikon and/or shota",
+		"boards": ["h"]
+	}, {
+		"id": 50,
+		"description": "Western artwork",
+		"boards": ["h"]
+	}, {
+		"id": 52,
+		"description": "Gay or trans content",
+		"boards": ["hс"]
+	}, {
+		"id": 53,
+		"description": "Fake/\"morph\"/photo manipulation",
+		"boards": ["hс"]
+	}, {
+		"id": 54,
+		"description": "Current event or this post belongs on /pol/",
+		"boards": ["his"]
+	}, {
+		"id": 55,
+		"description": "No images depicting abuse",
+		"boards": ["hm"]
+	}, {
+		"id": 56,
+		"description": "Trap or trans content",
+		"boards": ["hm"]
+	}, {
+		"id": 57,
+		"description": "Self pic or \"rate me\" post",
+		"boards": ["hm"]
+	}, {
+		"id": 58,
+		"description": "Fake/\"morph\"/photo manipulation",
+		"boards": ["hm"]
+	}, {
+		"id": 59,
+		"description": "Low resolution or low quality image",
+		"boards": ["hr"]
+	}, {
+		"id": 60,
+		"description": "Tasteless or disgusting image",
+		"boards": ["hr"]
+	}, {
+		"id": 61,
+		"description": "Not poster's own artwork",
+		"boards": ["ic"]
+	}, {
+		"id": 62,
+		"description": "Rude or offensive comment",
+		"boards": ["ic"]
+	}, {
+		"id": 63,
+		"description": "Request for free work",
+		"boards": ["ic"]
+	}, {
+		"id": 64,
+		"description": "Drama/community vendetta",
+		"boards": ["ic"]
+	}, {
+		"id": 65,
+		"description": "This post is disrespectful of other cultures",
+		"boards": ["int"]
+	}, {
+		"id": 67,
+		"description": "Disrespectful or hateful comment",
+		"boards": ["lgbt"]
+	}, {
+		"id": 68,
+		"description": "Camwhoring or \"hook-up\" post",
+		"boards": ["lgbt"]
+	}, {
+		"id": 70,
+		"description": "Anthro",
+		"boards": ["mlp"]
+	}, {
+		"id": 77,
+		"description": "Rude or offensive comment",
+		"boards": ["p"]
+	}, {
+		"id": 80,
+		"description": "Complaining about quest progression",
+		"boards": ["qst"]
+	}, {
+		"id": 81,
+		"description": "Erotic roleplay",
+		"boards": ["qst"]
+	}, {
+		"id": 82,
+		"description": "Camwhoring or \"hook-up\" post",
+		"boards": ["r9k"]
+	}, {
+		"id": 84,
+		"description": "ROBOT9000 filter evasion",
+		"boards": ["r9k"]
+	}, {
+		"id": 85,
+		"description": "Image contains hardcore or male(s)",
+		"boards": ["s"]
+	}, {
+		"id": 86,
+		"description": "Fake/\"morph\"/photo manipulation",
+		"boards": ["s"]
+	}, {
+		"id": 93,
+		"description": "This user is stalking or harassing other users",
+		"boards": ["soc"]
+	}, {
+		"id": 94,
+		"description": "Unsolicited contact info in camming thread",
+		"boards": ["soc"]
+	}, {
+		"id": 95,
+		"description": "Unsolicited sign request",
+		"boards": ["soc"]
+	}, {
+		"id": 98,
+		"description": "eSports",
+		"boards": ["sp"]
+	}, {
+		"id": 99,
+		"description": "Link to \"warez\" or US licensed content",
+		"boards": ["t"]
+	}, {
+		"id": 100,
+		"description": "Japanese figurines belong in /jp/",
+		"boards": ["toy"]
+	}, {
+		"id": 102,
+		"description": "Actor/actress discussion irrelevant to roles",
+		"boards": ["tv"]
+	}, {
+		"id": 104,
+		"description": "This post contains intentional spoilers",
+		"boards": ["tv"]
+	}, {
+		"id": 105,
+		"description": "Image contains a male",
+		"boards": ["u"]
+	}, {
+		"id": 107,
+		"description": "Participating in or instigating a flamewar",
+		"boards": ["v"]
+	}, {
+		"id": 108,
+		"description": "This post contains intentional spoilers",
+		"boards": ["v"]
+	}, {
+		"id": 109,
+		"description": "This post contains intentional spoilers",
+		"boards": ["vg"]
+	}, {
+		"id": 111,
+		"description": "Participating in or instigating a flamewar",
+		"boards": ["vp"]
+	}, {
+		"id": 112,
+		"description": "This post contains intentional spoilers",
+		"boards": ["vp"]
+	}, {
+		"id": 113,
+		"description": "Not Japanese content",
+		"boards": ["w"]
+	}, {
+		"id": 114,
+		"description": "Hardcore or tasteless nude content",
+		"boards": ["wg"]
+	}, {
+		"id": 115,
+		"description": "GIF not animated",
+		"boards": ["wsg"]
+	}, {
+		"id": 120,
+		"description": "Announcing a report or 'sage'"
+	}, {
+		"id": 121,
+		"description": "This post contains intentional spoilers",
+		"boards": ["vrpg"]
+	}, {
+		"id": 122,
+		"description": "This post contains intentional spoilers",
+		"boards": ["vst"]
+	}, {
+		"id": 123,
+		"description": "This post contains intentional spoilers",
+		"boards": ["vmg"]
+	}, {
+		"id": 124,
+		"description": "Participating in or instigating a flamewar",
+		"boards": ["g"]
+	}, {
+		"id": 125,
+		"description": "Image contains embedded file or data",
+		"boards": ["g"]
+	}, {
+		"id": 126,
+		"description": "Prostitution/sex tourism discussion",
+		"boards": ["trv"]
 	}],
 	"api": {
 		"getThread": {
@@ -112,7 +441,6 @@
 				"name": "boardId"
 			}],
 			"requestType": "multipart/form-data",
-			"responseType": "text/html",
 			"cookies": [{
 				"name": "pass_id",
 				"input": {
@@ -189,7 +517,7 @@
 				"name": "commentId"
 			}],
 			"requestType": "multipart/form-data",
-			"responseType": "text/html",
+			"responseType": "application/json",
 			"cookies": [{
 				"name": "pass_id",
 				"input": {
@@ -230,11 +558,16 @@
 		},
 		"getCaptcha": {
 			"method": "GET",
-			"url": "https://sys.4chan.org/captcha?board={boardId}&thread_id={threadId}",
+			"url": "https://sys.4chan.org/captcha?board={boardId}&thread_id={threadId}&ticket={ticket}",
 			"urlParameters": [{
-				"name": "boardId"
+				"name": "boardId",
+				"defaultValue": ""
 			}, {
-				"name": "threadId"
+				"name": "threadId",
+				"defaultValue": ""
+			}, {
+				"name": "ticket",
+				"defaultValue": ""
 			}]
 		},
 		"logIn": {

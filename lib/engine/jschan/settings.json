@@ -13,25 +13,37 @@
 	"captchaImageHeight": 80,
 	"accessTokenCookieName": "connect.sid",
 	"defaultAuthorName": "Anonymous",
+	"rulesUrl": "/rules.html",
 	"api": {
 		"getBoardsPage": {
 			"method": "GET",
 			"url": "/boards.json",
 			"parameters": [{
 				"name": "search",
+				"description": "A string to search by board name and tags, including prefix matches",
 				"input": {
 					"name": "search"
 				}
 			}, {
 				"name": "sort",
+				"description": "`popularity` sorts by a compound of (`ips`, `pph`, `sequence_value`), `activity` sorts by `lastPostTimestamp`",
 				"input": {
 					"name": "sortBy"
 				}
 			}, {
 				"name": "direction",
+				"description": "`desc` or `asc` for descending or ascending sort order respectively",
 				"input": {
 					"name": "sortDirection"
 				}
+			}, {
+				"name": "local_first",
+				"description": "If `true`, put local sites grouped before webring sites. Sort and direction for local and webring sites will be independent.",
+				"supported": false
+			}, {
+				"name": "sites",
+				"description": "Sites to include by `siteName`, can be repeated to include multiple sites. Blank includes all sites.",
+				"supported": false
 			}, {
 				"name": "page",
 				"input": {

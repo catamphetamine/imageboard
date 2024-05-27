@@ -1,5 +1,6 @@
 {
 	"id": "94chan",
 	"engine": "jschan",
-	"domain": "94chan.org"
+	"domain": "94chan.org",
+	"rulesUrl": "/rules.html"
 }

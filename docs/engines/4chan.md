@@ -608,11 +608,57 @@ Previously, `4chan` was using Google ReCaptcha.
 
 Now it seems to be using its homemade captcha. Perhaps because Google started charging for ReCaptcha, or perhaps to make it more "challenged".
 
+"Get CAPTCHA" API has a rate limit per user. For example, if one tries to send an HTTP request to "get CAPTCHA" API two times in rapid succession, the first one will return a normal response while the second one will return a "posting cooldown" error response. This seems to be some kind of an anti-spam / anti-wipe protection when a given IP address can only post something at most, say, once in a minute.
+
 To get a captcha "challenge", one could `GET` `https://sys.4chan.org/captcha?board=<board-id>&thread_id=<thread-id>`.
 
-The `thread_id` parameter is gonna be absent when creating a new thread.
+The `thread_id` parameter is should be absent when requesting a CAPTCHA to create a new thread.
 
-Returns:
+The response is gonna be in JSON format and will contain a `ticket` property:
+
+```js
+{
+	// `ticket` property is only present when no `ticket` URL query parameter was passed.
+	// The app is meant to attach this `ticket` parameter when sending any subsequent "get CAPTCHA" request.
+	"ticket": "1716709153.76712fdcbfd848eca37095cb24282a878e51d217566da89d8b3161cde473c648",
+
+	// The rest of the properties have the same values every time,
+	// so just ignore them.
+
+	// "Posting cooldown" time, in seconds.
+	"pcd": 60,
+	// "Posting cooldown" error message.
+	"pcd_msg": "Please wait a while before making a post"
+}
+```
+
+The application should wait for the amount of seconds specified in the `pcd` response parameter and then re-send the request to "get CAPTCHA" API with the provided `ticket` parameter:
+
+`GET` `https://sys.4chan.org/captcha?board=<board-id>&thread_id=<thread-id>&ticket=<ticket>`.
+
+(`4chan.org` website seems to obtain a `ticket` the same way and then stores it in "local storage" under `4chan-tc-ticket` key)
+
+If the application doesn't wait for the amount of seconds specified by the `pcd` parameter before sending a new request to "get CAPTCHA" API, the response will be:
+
+```js
+{
+	// "Posting cooldown" time, in seconds.
+	"pcd": 59,
+	// "Posting cooldown" error message.
+	"pcd_msg": "Please wait a while before making a post"
+}
+```
+
+If the application re-requests a new CAPTCHA too often, the response will be:
+
+```js
+{
+  "error": "You have to wait a while before doing this again",
+  "cd": 27 // Time to wait, in seconds
+}
+```
+
+Response (no error):
 
 ```js
 {
@@ -620,22 +666,24 @@ Returns:
   "ttl": 120, // Captcha challenge lifetime, in seconds.
   "cd": 45, // Some kind of a "cooldown"? Perhaps in seconds. Perhaps a time to pass before the user could request another captcha challenge.
   "img": "<base64-encoded captcha foreground image>",
-  "img_width": 270, // captcha foreground image width.
+  "img_width": 277, // captcha foreground image width.
   "img_height": 80, // captcha foreground image height.
   "bg": "<base64-encoded captcha background image>",
-  "bg_width": 319 // captcha background image width.
+  "bg_width": 326 // captcha background image width.
 }
 ```
 
-The captcha is comprised of two images that're supposed to be superimposed on each other. The horizontal shift for superimposing the images is supposed to be found interactively by the user. After the correct horizontal shift is found, the user can attempt to guess the characters depicted on the superimposed image.
+The CAPTCHA is comprised of two images that're supposed to be superimposed on each other. The horizontal shift for superimposing the images is supposed to be found interactively by the user. After the correct horizontal shift is found, the user can attempt to guess the characters depicted on the superimposed image.
 
-`GET`-ting the "get captcha" URL described above is only available from `sys.4chan.org` domain itself (CORS policy).
+`GET`-ting the "get CAPTCHA" URL described above is only available from `sys.4chan.org` domain itself (CORS policy).
 
-Even when using certain tools to bypass CORS restrictions, when attempting to `GET` a CAPTCHA using the "get captcha" URL, it sometimes returns a standard CloudFlare anti-spam HTML verification page: `Checking your browser before accessing "sys.4chan.org". This process is automatic. Your browser will redirect to your requested content shortly. Please allow up to 5 seconds...`, which means that it would be cumbersome to use for 3rd-party applications, and won't work at all for 3rd-party websites.
+If one attempts on using certain tools to bypass CORS restrictions, like a CORS proxy, then it still wouldn't work that well: when attempting to `GET` a CAPTCHA using the "get CAPTCHA" URL, it still returns a standard CloudFlare anti-spam HTML verification page: `Checking your browser before accessing "sys.4chan.org". This process is automatic. Your browser will redirect to your requested content shortly. Please allow up to 5 seconds...`, which means that it would be cumbersome to use for 3rd-party applications, and won't work at all for 3rd-party websites.
 
 To work around those issues, 3rd-party websites could use a slightly different technique for getting CAPTCHA info: by embedding an `<iframe/>` on a page and then setting the `src` URL of that `<iframe/>` to be the same "get captcha" URL but with an additional query parameter — `&framed=1` — which makes it return a HTML page instead of a JSON.
 
-But when attempted to do so, it throws an error: `Refused to display 'sys.4chan.com' in a frame because an ancestor violates the following Content Security Policy directive: "frame-ancestors https://*.4chan.org"`. The reason is [`Content-Security-Policy`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors) HTTP response header having value `frame-ancestors https://*.4chan.org;`. The fix would be either not specifying that HTTP response header at all, or maybe specifying it to be `frame ancestors *;`. So seems like currently the "framed" method [doesn't work](https://github.com/4chan/4chan-API/issues/100) either for 3rd-party websites.
+But when attempted to `<iframe/>` it on a 3rd-party website, it throws an error: `Refused to display 'sys.4chan.com' in a frame because an ancestor violates the following Content Security Policy directive: "frame-ancestors https://*.4chan.org"`. The reason is [`Content-Security-Policy`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors) HTTP response header having value `frame-ancestors https://*.4chan.org;`. The fix would be either not specifying that HTTP response header at all, or maybe specifying it to be `frame ancestors *;`. So seems like currently the "framed" method [doesn't work](https://github.com/4chan/4chan-API/issues/100) either for 3rd-party websites.
+
+I did attempt to proxy the CAPTCHA frame URL to manually strip `Content-Security-Policy` header from it but the HTTP response was `403 Forbidden` with text "Please turn JavaScript on and reload the page", so I dunno.
 
 ```html
 <!DOCTYPE html>
@@ -704,15 +752,15 @@ Unknown parameters:
 
 * `awt: 1` — ??? Ignore and don't include this one.
 
-The response is in HTML format.
+The response is in HTML format by default and in JSON format if the HTTP request specifies an `Accept: application/json` header.
 
-"Success" response example:
+"Success" response example (HTML):
 
 ```html
 <!DOCTYPE html><head><meta http-equiv="refresh" content="1;URL=http://boards.4chan.org/bant/thread/7466194#p7466464"><link rel="shortcut icon" href="//s.4cdn.org/image/favicon.ico"><title>Post successful!</title><link rel="stylesheet" title="switch" href="//s.4cdn.org/css/yotsubanew.685.css"></head><body style="margin-top: 20%; text-align: center;"><h1 style="font-size:36pt;">Post successful!</h1><!-- thread:7466194,no:7466464 --></body></html>
 ```
 
-Error response example:
+Error response example (HTML):
 
 ```html
 ...
@@ -720,8 +768,7 @@ Error response example:
 ...
 ```
 
-Incorrect CAPTCHA solution response example (this also seems to be the case when the "pass" cookie value is not a valid "pass"):
-
+Incorrect CAPTCHA solution response example (HTML) (this also seems to be the case when the "pass" cookie value is not a valid "pass"):
 
 ```html
 ...
@@ -729,23 +776,51 @@ Incorrect CAPTCHA solution response example (this also seems to be the case when
 ...
 ```
 
+"Success" response example (JSON):
+
+```js
+{
+	// Thread ID, in which the new comment has been added.
+	"tid": 918926345,
+
+	// The ID of the new comment.
+	"pid": 918928299
+}
+```
+
+Incorrect CAPTCHA solution response example (JSON) (this also seems to be the case when the "pass" cookie value is not a valid "pass"):
+
+```js
+{
+	"error": "Error: You seem to have mistyped the CAPTCHA. Please try again.<br><br>4chan Pass users can bypass this CAPTCHA. [<a href=\"https://www.4chan.org/pass\" target=\"_blank\">Learn More</a>]"
+}
+```
+
 Known error messages:
 
-* `"Specified thread does not exist."` (?)
-* `"Our system thinks your post is spam. Please reformat and try again."` (?)
-* `"You seem to have mistyped the CAPTCHA. Please try again."` (?)
-* Cases when the user is banned
-* Cases when the thread is closed
+* `"Error: Specified thread does not exist."` (didn't check)
+* `"Error: Our system thinks your post is spam. Please reformat and try again."` (didn't check)
+* `"Error: You seem to have mistyped the CAPTCHA. Please try again.<br><br>4chan Pass users can bypass this CAPTCHA. [<a href=\"https://www.4chan.org/pass\" target=\"_blank\">Learn More</a>]"`
+* Cases when the user is banned (didn't check)
+* Cases when the thread is closed (didn't check)
 * ...
 
 Side effect: When posting a comment or a thread (?), `4chan` seems to set a legacy cookie called [`4chan_pass`](https://github.com/4chan/4chan-API/issues/91#issuecomment-874370066) which has a random-generated "password" that could be used to delete the comment. Since then, they say that `4chan` has tightened their restrictions on comment deletion, so the cookie doesn't seem to be used for that stuff. They also say that `4chan` has found an unrelated use case for that cookie: they say that `4chan` uses it to detect "ban evaders" — people that switch their IP address to an unbanned one to get around their ban. They say `4chan` automatically bans people posting from a different IP address buth with the same `4chan_pass` cookie.
 
 ### Post a thread
 
-Same as posting a comment, but without `resto` and with:
+Same as posting a comment, but without specifying a `resto` parameter and with additional parameters:
 
 * `sub` — Thread title.
 * `textonly` — Set to true when posting  (optional).
+
+"Success" response example (HTML):
+
+(same as in "Post a comment" but with `thread` being `0` and `no` being the new thread ID)
+
+"Success" response example (JSON):
+
+(unknown) (supposedly, somehow similar to one in "Post a comment")
 
 ### Report a post
 
@@ -760,7 +835,9 @@ Parameters:
 * `recaptcha_response_field` — (Alternative?) CAPTCHA "challenge" solution.
 * `g-recaptcha-response` — Google ReCaptcha solution.
 
-"Success" response example:
+The response is in HTML format by default and in JSON format if the HTTP request specifies an `Accept: application/json` header.
+
+"Success" response example (HTML):
 
 ```html
 ...
@@ -768,7 +845,7 @@ Parameters:
 ...
 ```
 
-Error response example:
+Error response example (HTML):
 
 ```html
 ...
@@ -776,15 +853,31 @@ Error response example:
 ...
 ```
 
+(the HTML markup of "report" API error response is different from the markup of "post" API error response)
+
+"Success" response example (JSON):
+
+(unknown)
+
+Error response example (JSON):
+
+```js
+{
+  "error": "Error: You seem to have mistyped the CAPTCHA. Please try again.<br><br>4chan Pass users can bypass this CAPTCHA. [<a href=\"https:\/\/www.4chan.org\/pass\" target=\"_blank\">Learn More<\/a>]"
+}
+```
+
 Known error messages:
 
-* `"Our system thinks your post is spam."` (?)
-* `"You seem to have mistyped the CAPTCHA. Please try again."` (?)
-* Cases when comment ID wasn't found
-* Cases when the user is banned
+* `"Error: Our system thinks your post is spam."` (didn't check)
+* `"Error: You seem to have mistyped the CAPTCHA. Please try again.<br><br>4chan Pass users can bypass this CAPTCHA. [<a href=\"https:\/\/www.4chan.org\/pass\" target=\"_blank\">Learn More<\/a>]"`
+* Cases when comment ID wasn't found (didn't check)
+* Cases when the user is banned (didn't check)
 * ...
 
-Since there seems to be no API for getting a list of valid report categories for a board, it's not clear how to report posts on 4chan in a mobile app. There is a workaround though — opening a new window with a dedicated report page on `4chan.org`. The URL of the page is the same as the one of the POST API, with the same `mode` and `no` parameters: `https://sys.4chan.org/{boardId}/imgboard.php?mode=report&no=12345678`.
+Since there seems to be no API for getting a list of valid report categories for a specific board those have been hardcoded in `reportReasons` property in `4chan/index.json` file: when a report reason object has a `boards` property then it's only applicable to that board; otherwise, it's available for use on any board.
+
+Another approach would be opening a new browser window with `4chan.org` report page URL. The URL of the page is the same as the one of the POST API, with the same `mode` and `no` parameters: `https://sys.4chan.org/{boardId}/imgboard.php?mode=report&no=12345678`.
 
 ### Pass
 

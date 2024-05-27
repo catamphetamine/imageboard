@@ -1,3 +1,25 @@
+0.9.0 / 27.04.2024
+==================
+
+* Changed the return type of `getAllBoards()` / `getBoards()` / `getThreads()` / `getThread()` APIs: now they return an object. In that object, `getThreads()` / `getThread()` APIs now return an optional `board` info sub-object.
+
+* Renamed `all: true/false` parameter of `getBoards()` function to `limit: false/true`.
+
+* Split `comment.inReplyTo` property into two:
+  * `comment.inReplyToIds?: CommentId[]`
+  * `comment.inReplyToIdsRemoved?: CommentId[]`
+  * `comment.inReplyTo?: Comment[]`
+
+* Split `comment.replies` property into two:
+  * `comment.replyIds?: CommentId[]`
+  * `comment.replies?: Comment[]`
+
+* Renamed some functions:
+  * `getAllBoards()` → `getBoards()`
+  * `getBoards({ all: false })` → `getTopBoards()`
+  * `hasMoreBoards()` → `supportsFeature('getTopBoards')`
+  * `findBoards()` → `supportsFeature('findBoards')`
+
 0.6.32 / 31.05.2023
 ==================
 

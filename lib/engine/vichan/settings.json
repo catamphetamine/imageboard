@@ -1,0 +1,36 @@
+{
+	"attachmentUrl": "/{boardId}/src/{name}{ext}",
+	"attachmentThumbnailUrl": "/{boardId}/thumb/{name}{ext}",
+	"boardUrl": "/{boardId}",
+  "threadUrl": "/{boardId}/res/{threadId}.html",
+  "commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
+  "rulesUrl": "/rules.html",
+	"defaultAuthorName": "Anonymous",
+	"api": {
+		"getThread": {
+			"method": "GET",
+			"url": "/{boardId}/res/{threadId}.json",
+			"urlParameters": [{
+				"name": "boardId"
+			}, {
+				"name": "threadId"
+			}]
+		},
+		"getThreads": {
+			"method": "GET",
+			"url": "/{boardId}/catalog.json",
+			"urlParameters": [{
+				"name": "boardId"
+			}]
+		},
+		"getThreadsWithLatestCommentsPage": {
+			"method": "GET",
+			"url": "/{boardId}/{pageIndex}.json",
+			"urlParameters": [{
+				"name": "boardId"
+			}, {
+				"name": "pageIndex"
+			}]
+		}
+	}
+}

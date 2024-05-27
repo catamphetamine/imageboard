@@ -1,0 +1,41 @@
+{
+	"rulesUrl": null,
+	"captchaImageWidth": 200,
+	"captchaImageHeight": 80,
+	"capcodes": {
+		"Admin": {
+			"role": "administrator"
+		},
+		"Board Owner": {
+			"role": "administrator",
+			"scope": "board"
+		},
+		"Board Moderator": {
+			"role": "moderator",
+			"scope": "board"
+		},
+		"Board Volunteer": {
+			"role": "moderator",
+			"scope": "board"
+		},
+		"Global Volunteer": {
+			"role": "moderator"
+		}
+	},
+	"api": {
+		"getCaptcha": {
+			"method": "GET",
+			"url": "/8chan-captcha/entrypoint.php",
+			"parameters": [{
+				"name": "mode",
+				"defaultValue": "get"
+			}, {
+				"name": "extra",
+				"input": {
+					"name": "characterSet"
+				},
+				"defaultValue": "abcdefghijklmnopqrstuvwxyz"
+			}]
+		}
+	}
+}

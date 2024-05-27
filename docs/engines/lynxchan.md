@@ -261,8 +261,10 @@ Response:
 {
   pageCount: 20,
 
+  // Board name.
   boardName: "KAHANECHECK",
 
+  // Board description.
   boardDescription: ".",
 
   // Board settings.

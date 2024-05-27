@@ -6,11 +6,8 @@
 	"captchaExpiresAtCookieName": "captchaexpiration",
 	"captchaExpiresAtCookieFormat": "UTC-string",
 	"captchaIdCookieName": "captchaid",
+	"rulesUrl": "/.static/pages/globalRules.html",
   "api": {
-		"getBoards": {
-			"method": "GET",
-			"url": "/index.json"
-		},
 		"getBoardsPage": {
 			"method": "GET",
 			"url": "/boards.js?json=1&page={page}",

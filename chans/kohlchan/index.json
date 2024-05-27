@@ -3,11 +3,12 @@
 	"domain": "kohlchan.net",
 	"engine": "lynxchan",
 	"thumbnailSize": 200,
+	"rulesUrl": "/globalRules.html",
 	"defaultAuthorName": {
 		"*": "Bernd",
 		"ru": "Бернд"
 	},
-  "capcode": {
+  "capcodes": {
     "Administrator": {
     	"role": "administrator"
     },
@@ -29,8 +30,5 @@
 		"weltweit": "Weltweit",
 		"sonstiges": "Sonstiges",
 		"*": "Andere"
-	},
-	"api": {
-		"getBoards": null
 	}
 }

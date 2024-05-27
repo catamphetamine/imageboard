@@ -4,6 +4,8 @@ An easy uniform wrapper over the popular [imageboards](https://tvtropes.org/pmwi
 
 [More on each engine's API](#imageboards-api)
 
+[Thoughts](https://gitlab.com/catamphetamine/imageboard/-/blob/master/docs/thoughts.md)
+
 Originally created as part of the [`anychan`](https://gitlab.com/catamphetamine/anychan) imageboard GUI.
 
 Supported engines:
@@ -15,20 +17,43 @@ Supported engines:
 * [vichan](https://github.com/vichan-devel/vichan) — An open-source `4chan`-compatible engine running on PHP/MySQL whose development started in 2012. The codebase has seen various maintainers take over and then leave off over the years, but as of late 2023, it seems like it's still being maintained and receiving new features.
 
   1. [lainchan.org](https://lainchan.org/) — [demo](https://anychans.github.io/lainchan)
+  2. [tvch.moe](https://tvch.moe/) — [demo](https://anychans.github.io/tvchan)
+  3. [soyjak.party](https://soyjak.party/)
+  4. [vichan.pl](https://vichan.pl/)
+  5. [leftypol.org](https://leftypol.org/)
+  6. [wizchan.org](https://wizchan.org/)
 
 * [OpenIB](https://github.com/OpenIB/OpenIB/) (formerly [infinity](https://github.com/ctrlcctrlv/infinity)) — A 2013 fork of `vichan` engine with the goal of supporting an "infinite" amount of user-managed boards as opposed to a finite set of predefined boards. No longer maintained since 2018.
 
-  1. [8ch.net (8kun.top)](https://8kun.top/) — [demo](https://anychans.github.io/8ch)
+  1. [8kun.top](https://8kun.top/) (formerly `8ch.net`) — [demo](https://anychans.github.io/8ch)
+  2. [smuglo.li](https://smuglo.li/) — [demo](https://anychans.github.io/smugloli)
 
 * [lynxchan](https://gitgud.io/LynxChan/LynxChan) — An alternative engine Node.js/MongoDB whose development started in 2015. Rather than mimicking any existing engine, it set off on its own path and ended up becoming a popular choice (of its time) provided that there's really not much else to choose from. Some choices made by the author are questionable and the overall approach doesn't look professional to me. For example, the engine has a bunch of quite obvious but easily-fixable [issues](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/lynxchan-issues.md) that the author refuses to recognize and has no interest in fixing. The author's demeanor, in general, is somewhat controversial and not to everyone's liking.
 
   1. [kohlchan.net](https://kohlchan.net) — [demo](https://anychans.github.io/kohlchan)
   2. [endchan.net](https://endchan.net) — [demo](https://anychans.github.io/endchan)
+  3. [alogs.space](https://alogs.space) — [demo](https://anychans.github.io/alogsspace)
+  4. [bandada](https://bandada.club) — [demo](https://anychans.github.io/bandada)
 
 * [jschan](https://gitgud.io/fatchan/jschan/) — An alternative engine written in Node.js/MongoDB whose development started in 2019. Isn't really adopted by anyone, perhaps because there haven't been any new imageboards since its development has started. Compared to `lynxchan`, purely from a technical perspective, it looks much more professional and mature, and the author is a [well-known developer](https://lowendtalk.com/discussion/186679/basedflare-new-cloudflare-like-service).
 
-  1. [94chan.org](https://94chan.org/) — [demo](https://anychans.github.io/94chan). The website is behind a CloudFlare-alike DDoS protection and returns `403 Forbidden` for the "demo" CORS proxy, but it is functional when accessed through one's [own CORS proxy](https://gitlab.com/catamphetamine/anychan/-/blob/master/docs/proxy/README.md) running at `localhost`.
-  2. [ptchan.org](https://ptchan.org/) — [demo](https://anychans.github.io/ptchan). The website is behind a CloudFlare-alike DDoS protection and returns [`403 Forbidden`](https://gitgud.io/fatchan/haproxy-protection/-/issues/24) for a CORS proxy.
+ <!-- P.S. The [demo](https://anychans.github.io/) website doesn't seem to work with any known `jschan` imageboard because all of them use CloudFlare anti-DDoS protection that doesn't allow through the [CORS proxy](https://gitlab.com/catamphetamine/anychan/-/tree/master/docs/proxy/README.md). -->
+
+  1. [junkuchan.org](https://junkuchan.org) — [demo](https://anychans.github.io/junkuchan)
+  2. [jakparty.soy](https://jakparty.soy) — [demo](https://anychans.github.io/jakpartysoy)
+
+  <!--
+  1. [zzzchan.xyz](https://zzzchan.xyz) (CloudFlare blocks the access)
+  2. [niuchan.org](https://niuchan.org/) (CloudFlare blocks the access)
+  3. [27chan.org](https://27chan.org/) (CloudFlare blocks the access)
+  4. [trashchan.xyz](https://trashchan.xyz/) (CloudFlare blocks the access)
+  5. [94chan.org](https://94chan.org/) (CloudFlare blocks the access)
+  6. [ptchan.org](https://ptchan.org/) (CloudFlare blocks the access)
+  -->
+
+  <!-- 2. [94chan.org](https://94chan.org/) — [demo](https://anychans.github.io/94chan). The website is behind a CloudFlare-alike DDoS protection and returns `403 Forbidden` for the "demo" CORS proxy, but it is functional when accessed through one's [own CORS proxy](https://gitlab.com/catamphetamine/anychan/-/blob/master/docs/proxy/README.md) running at `localhost`. -->
+
+  <!-- 3. [ptchan.org](https://ptchan.org/) — [demo](https://anychans.github.io/ptchan). The website is behind a CloudFlare-alike DDoS protection and returns [`403 Forbidden`](https://gitgud.io/fatchan/haproxy-protection/-/issues/24) for a CORS proxy. -->
 
 * [makaba](https://2ch.hk/api/) — `2ch.hk`'s proprietary engine.
 
@@ -156,7 +181,7 @@ Next, create an `index.js` file and paste the following code into it. The code p
 import fourChan from './fourChan.js'
 
 // Prints the first 10 boards.
-fourChan.getBoards().then((boards) => {
+fourChan.getBoards().then(({ boards }) => {
   const boardsList = boards.slice(0, 10).map(({
     id,
     title,
@@ -186,7 +211,7 @@ import { getCommentText } from 'imageboard'
 // Prints the first five threads on `/a/` board.
 fourChan.getThreads({
   boardId: 'a'
-}).then((threads) => {
+}).then(({ threads, board }) => {
   const threadsList = threads.slice(0, 5).map(({
     id,
     title,
@@ -234,7 +259,7 @@ import { getCommentText } from 'imageboard'
 fourChan.getThread({
   boardId: 'a',
   threadId: 193605320
-}).then((thread) => {
+}).then(({ thread, board }) => {
   const commentsList = thread.comments.slice(0, 5).map((comment) => {
     const {
       id,
@@ -405,7 +430,7 @@ Advanced `options`:
 
       * `getCommentById(id): comment?` — Returns a `comment` by an `id`. This parameter should only be passed if some of the `comment` objects of a `thread` might have been replaced by the application (for whatever reason) since the time of receiving the original `thread` object. See the notes on `.parseContent()`'s `getCommentById` parameter for an example on why might an application choose to replace some of the `comment` objects in some scenarios.
 
-* `expandReplies?: boolean` — Set to `true` to expand the optional `comment.replies[]` and `comment.inReplyTo[]` arrays from lists of comment ids to lists of the actual comment objects. Is `false` by default to prevent JSON circular structure: this way a whole thread could be serialized into a `*.json` file.
+* `expandReplies?: boolean` — Every `comment` has optional properties: `comment.replyIds[]` and `comment.inReplyToIds[]`. If `expandReplies: true` parameter is passed, it will add additional optional properties on every `comment`: `comment.replies[]` and `comment.inReplyTo[]` that're arrays of `Comment`s rather than arrays of just `Comment.id`s. By default, `expandReplies: false` is used to prevent JSON circular structure: this way a whole thread could be serialized into a `*.json` file.
 
 * `getPostLinkProperties?: (comment?: Comment) => object` — Returns an object all properties of which will be added to the `post-link` object. The `comment` argument will be `undefined` if the comment was removed.
 
@@ -443,46 +468,52 @@ getPostLinkProperties(comment) {
 
 ## `imageboard` methods
 
-### `getBoards()`
+### `supportsFeature(feature: string)`
 
-Fetches a list of boards on an imageboard. For some imageboards this isn't gonna be a full list of boards because, for example, `8ch.net (8kun.top)` has about `20,000` boards so `getBoards()` returns just the "top 20 boards" list.
-
-Returns: a list of [Boards](#board).
-
-### `hasMoreBoards()`
+Tells whether the imageboard supports a certain feature.
 
 Returns:
 
-* `true` if the "get boards" API doesn't return the full list of boards.
-  * For example, `8ch.net (8kun.top)` has about `20,000` boards, so `getBoards()` returns just the "top 20 boards", and to indicate that, `hasMoreBoards()` returns `true`.
+* `true` if the feature is supported by the imageboard.
 * `false` otherwise.
 
-### `getAllBoards()`
+### `getBoards()`
 
-Fetches a list of all boards on an imageboard. For example, `8ch.net (8kun.top)` has about `20,000` boards, so `getBoards()` returns just the "top 20 boards", while `getAllBoards()` returns all `20,000` boards.
+Fetches a list of boards on an imageboard.
 
-Returns: a list of [Boards](#board).
+Returns an object with properties:
+
+* `boards` — a list of [Boards](#board)
+
+For some imageboards, the list could be huge. For example, `8ch.net (8kun.top)` has about `20,000` boards, and to get just the "top 20 boards" one could use `getTopBoards()` function instead.
+
+### `getTopBoards()`
+
+Fetches a list of "top" boards on an imageboard.
+
+Returns an object with properties:
+
+* `boards` — a list of [Boards](#board)
+
+For example, `8ch.net (8kun.top)` has about `20,000` boards, so `getTopBoards()` returns just the "top 20 boards" while `getBoards()` returns all `20,000` boards.
+
+This function is only supported if `supportsFeature('getTopBoards')` returns `true`.
+
+For example, `8ch.net (8kun.top)` has about `20,000` boards, so `supportsFeature('getTopBoards')` returns `true` for that specific imageboard and `getTopBoards()` returns just the "top 20 boards".
 
 ### `findBoards()`
 
 Searches for a (non-full) list of boards matching a search `query`. For example, if an imageboard supports creating "user boards", and there're a lot of them, then `getBoards()` should return just the most popular ones, and to discover all other boards, searching by a query should be used.
 
-This method isn't currently implemented in any of the supported imageboard engines.
-
 Parameters:
 
 * `query: string` — Search query.
 
-Returns: a list of [Boards](#board)
+Returns an object with properties:
 
-### `canSearchForBoards()`
+* `boards` — a list of [Boards](#board)
 
-Tells whether `findBoards()` method is supported by the imageboard engine.
-
-Returns:
-
-* `true` if the imageboard supports searching for boards by a query.
-* `false` otherwise.
+This function isn't currently implemented in any of the supported imageboard engines. To see if a given imageboard supports this function, use `supportsFeature('findBoards')` function.
 
 ### `getThreads()`
 
@@ -502,7 +533,10 @@ Parameters:
 
   * `sortByRating: boolean` — Set to `true` to sort threads by "rating", if it's available.
 
-Returns: a list of [Threads](#thread).
+Returns an object with properties:
+
+* `threads` — a list of [Threads](#thread)
+* `boards` — (optional) [Board](#board)
 
 ### `getThread()`
 
@@ -522,7 +556,11 @@ Parameters:
 
   * `afterCommentsCount: number` — (optional) (experimental) Could be used to only fetch comments after a certain comments count (counting from the first comment in the thread).
 
-Returns: a [Thread](#thread).
+
+Returns an object with properties:
+
+* `thread` — [Thread](#thread)
+* `board` — (optional) [Board](#board)
 
 <!--
 ### `parseCommentContent(comment: Comment, { boardId: string, threadId: number })`
@@ -602,7 +640,7 @@ Requests a CAPTCHA,
 
 Parameters:
 
-* `boardId: string` — Board ID.
+* `boardId?: string` — Board ID.
 * `threadId?: number` — Thread ID, if posting a comment in a thread.
 
 Returns an object:
@@ -676,7 +714,7 @@ Parameters:
 * `threadId: number` — Thread ID.
 * `commentId: number` — Comment ID.
 * `content?: string` — Report content. Is used in `makaba` engine.
-* `reasonId?: number` — Report reason ID. Is used in `4chan` engine.
+* `reasonId?: number | string` — Report reason ID. Is used in `4chan` engine.
 * `legalViolationReasonId?: number` — Report reason ID (`31`) in case of a violation of United States law. No `reasonId` should be passed. Is only used in `4chan` engine.
 * `captchaId?: string` — CAPTCHA ID. Is used in `4chan` engine.
 * `captchaSolution?: string` — CAPTCHA solution. Is used in `4chan` engine.
@@ -1191,21 +1229,25 @@ This library doesn't parse links to YouTube/Twitter/etc. Instead, this type of f
   // Comment attachments.
   attachments: Attachment[]?,
 
-  // The IDs of the comments to which this comment replies.
-  // (excluding deleted comments).
-  // If `expandReplies: true` option was passed
-  // then `inReplyTo` is a list of `Comment`s.
-  inReplyTo: (number[]|Comment[])?,
+  // The IDs of the comments to which this `comment` replies.
+  // If some of the replies have been deleted, their IDs will not be present in this list.
+  inReplyToIds: number[]?,
 
-  // If the comment replies to some comments that have been deleted,
+  // If this `comment` replies to some other comments that have been deleted,
   // then this is gonna be the list of IDs of such deleted comments.
-  inReplyToRemoved: number[]?,
+  inReplyToIdsRemoved: number[]?,
 
-  // The IDs of the comments which are replies to this comment.
-  // (excluding deleted comments).
   // If `expandReplies: true` option was passed
-  // then `replies` is a list of `Comment`s.
-  replies: (number[]|Comment[])?
+  // then `inReplyTo` property will be a list of `Comment`s.
+  // (excluding deleted comments).
+  inReplyTo: Comment[]?,
+
+  // The IDs of the comments that are replies to this `comment`.
+  replyIds: number[]?,
+
+  // If `expandReplies: true` option was passed
+  // then `replies` will be a list of `Comment`s that reply to this `comment`.
+  replies: Comment[]?
 }
 ```
 
@@ -1448,20 +1490,76 @@ Additional fields:
 
 * Create the imageboard's folder in `./chans` directory.
   * Create `index.json` file in that folder. See other imageboards as an example. See [Imageboard config](#imageboard-config) for the explanation of the `index.json` file format.
-  * An `index.json.js` file will be automatically created from `index.json` file at the "build" step.
+  * An `index.json.js` file will be automatically created from `index.json` file at the "build" step, so there's no need to created it by hand.
 * Create the imageboard's folder in `./lib/chan` directory.
   * Create `index.js` file in that folder. See other imageboards as an example.
-* Open `./lib/chan/index.js` file and add the new imageboard there.
+* Open `./lib/chan/getConfig.js` file and add the new imageboard to the list.
+* Open `./lib/chan/index.js` file and add the new imageboard to the list.
 
-If the imageboard runs on an already supported engine then perhaps no additional setup is required.
+The next steps depend on whether the imageboard uses an already supported engine or a new one.
 
-In some rare cases, an imageboard might have its own "custom" comment HTML syntax which could be different from the other imageboards running on the same engine. For example, that's the case with `4chan`-alike imageboards. In such case, go to the engine's directory — `./lib/engine/${engineName}` — and edit `index.js` file of the engine to use the ["comment markup syntax"](#comment-markup-syntax) specific to this new imageboard (see other imageboards' comment markup syntax as an example).
+#### Existing engine
 
-Otherwise, if the new imageboard also runs on a new engine:
+If the imageboard runs on an already supported engine, then most likely no additional setup is required.
 
-* Create the engine's folder in `./lib/engine` directory.
-* Create an `index.js` file in the engine's folder. That file must export a class that extends `./lib/Engine.js` class, which must also implement at least four methods — `parseBoards()`, `parseThreads()`, `parseThread()` and `parseComment()` — and it must also describe the [comment markup syntax](#comment-markup-syntax) specific to that engine. See other engines as an example.
-* Add the new engine to the `./lib/engine/index.js` file.
+In some rare cases, an imageboard might have its own "custom" comment HTML syntax which could be different from the other imageboards running on the same engine. For example, that's the case with `4chan`-alike imageboards. In such case, go to the engine's directory — `./lib/engine/<engine.id>` — and edit `index.js` file of the engine to instruct it to use a different set of [comment markup syntax](#comment-markup-syntax) plugins specific to the new imageboard when passing a `parseCommentContentPlugins` parameter to the `super()` constructor. To differentiate between different imageboards that use the same engine, one could use the `imageboardConfig.id` parameter that is available in the `constructor()` of the class. For an example, see how it's done in `./lib/engine/4chan/index.js`.
+
+#### New engine
+
+If the new imageboard runs on a new engine that isn't supported out-of-the-box:
+
+* In case of any questions, see other engines as an example.
+* Create the new engine's folder in `./lib/engine` directory: `./lib/engine/<engine.id>`.
+* Create an `index.js` file in the `./lib/engine/<engine.id>` folder. The file should export an [engine implementation](#engine-implementation) class. That would also involve creating a file with the "settings" for the engine at `./lib/engine/<engine.id>/settings.json` path.
+* Open `./lib/engine/index.js` file and add the new engine to the list.
+* Open `./lib/engine/getConfig.js` file and add the new engine to the list.
+
+#####
+
+#### Testing
+
+Test the new imageboard:
+
+```
+npm run build
+npm run test-chan <imageboard-id>
+```
+
+## Engine implementation
+
+An "engine implementation" is a javascript class that extends `./lib/Engine.js` base class and sits at `./lib/engine/<engine.id>/index.js` path.
+
+The implementation class must implement a pre-defined set of functions for interfacing with the engine's API. Each such function receives two arguments — `response` data and `options` object — and is expected to return a result in a certain format. Basically, an "engine implementation" class acts as a translator from the engine's API output format to the `imageboard` package output format.
+
+The functions are:
+
+* `parseBoards()` or `parseBoardsPage()`, depending on whether the engine returns the list of boards all at once or paginated — Returns a list of `Board` objects.
+* `parseThreads()` — Returns a list of `Thread` objects.
+* `parseThread()` — Returns a `Thread` object.
+* `parseComment()` — Returns a `Comment` object.
+* Other functions are optional. See existing engines as an example.
+
+In order to parse `Comment` objects from the API output, it must describe the [comment markup syntax](#comment-markup-syntax) specific to the engine. For example, if the engine uses HTML for comments content, the code must pass a list of [comment markup syntax](#comment-markup-syntax) definitions in the form of a `parseCommentContentPlugins` parameter to the `super()` constructor inside the class `constructor()`.
+
+That was for the output of the API, but what about the input of the API? The input part is configured in a separate "engine settings" file at `./lib/engine/<engine-id>/settings.json` path. That file defines any default "settings" for the engine that the `imageboard` package could use, such as `attachmentUrl`, `attachmentThumbnailUrl`, etc. A given imageboard can replace any of those settings in its own `settings.json` file, if required.
+
+In addition to defining the default parameters for the engine, the "engine settings" file describes the input of the engine's API under the `api` key: there, it describes how `imageboard` package input format should be translated into the engine's API input format.
+
+The keys of an `api` definition object should be pre-defined API method names such as `getBoards` or `getBoardsPage`, `getThreads`, `getThread`, etc. See the `settings.json` files of the existing engines as an example, or refer to the `index.json` files of specific imageboards in the `./chans` folder. In general, each value of the `api` definition object should be an object with properties:
+
+* `method` — The method of the HTTP request: `"GET"`, `"POST"`, etc.
+* `url` — The URL of the HTTP request. Can contain "parameters" in curly braces.
+* `urlParameters?: object[]` — If the `url` contains any "parameters", this should be a list of objects defining those "parameters":
+  * `name: string` — The parameter name.
+  * `input?: object` — Describes where to get the parameter value from.
+  * `defaultValue?: string` — An optional default value for the parameter.
+  * For the complete set of properties, see `ImageboardConfigApiMethod` type in `./types/ImageboardConfig.d.ts` file.
+* `cookies?: object[]` — An optional array of cookie values to send as part of the HTTP request.
+  * The structure is the same as for `urlParameters`.
+* `parameters?: object[]` — For `GET` HTTP requests, these're URL query parameters. For `POST` HTTP requests, these're body parameters.
+  * The structure is the same as for `urlParameters`.
+* `requestType?: string` — HTTP request type. Default is `application/json`.
+* `responseType?: string` — HTTP response type. Default is `application/json`.
 
 ## Comment markup syntax
 
@@ -1568,7 +1666,7 @@ Messages used when generating `content` text (autogenerated quotes, autogenerate
 }
 ```
 
-## Imageboards' API
+## Imageboards API
 
 ### 4chan
 
@@ -1578,22 +1676,28 @@ Messages used when generating `content` text (autogenerated quotes, autogenerate
 
 ### vichan
 
-[`vichan`](https://github.com/vichan-devel/vichan) engine was originally a fork of [`Tinyboard`](https://github.com/savetheinternet/Tinyboard) engine having more features. As of November 2017, `vichan` engine is no longer being maintained.
+[`vichan`](https://github.com/vichan-devel/vichan) engine was originally a fork of [`Tinyboard`](https://github.com/savetheinternet/Tinyboard) engine having more features. In November 2017, `vichan` engine was put in "no longer being maintained" state, although later, around 2022, a group of volunteers seems to have picked up the development from the former maintainer.
 
 * Brief notes on [`vichan` API](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/vichan.md).
 
-Chans running on their own `vichan` forks:
+Chans running on `vichan`:
 
-* [`lainchan.org`](https://github.com/lainchan/lainchan)
-* [`arisuchan.jp`](https://github.com/arisu-dev/arisuchan)
+* [`lainchan.org`](https://github.com/lainchan/lainchan) — Runs on a custom fork of `vichan`
+<!-- * [`arisuchan.jp`](https://github.com/arisu-dev/arisuchan) -->
+* [`soyjak.party`](https://soyjak.party/)
+* [`vichan.pl`](https://vichan.pl/)
 
 ### infinity
 
 [infinity](https://github.com/ctrlcctrlv/infinity) is a `vichan` fork permitting users to create their own boards (hence the name). As of April 2017, `infinity` engine is no longer being maintained. [OpenIB](https://github.com/OpenIB/OpenIB/) is a security-focused fork of the `infinity` engine which is no longer being maintained too.
 
-The only imageboard running on `infinity` engine is currently [`8ch.net (8kun.top)`](https://8kun.top).
+* [`infinity` API](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/infinity.md).
+* [`OpenIB` API](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/OpenIB.md).
 
-* [`8ch.net (8kun.top)` API](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/OpenIB.md).
+Chans running on `infinity`:
+
+* [`8kun.top`](https://8kun.top) (formerly `8ch.net`)
+* [`smuglo.li`](https://smuglo.li/)
 
 ### makaba
 
@@ -1611,6 +1715,9 @@ The only imageboard running on `makaba` engine is currently [`2ch.hk`](https://2
 Chans running on `lynxchan`:
 
 * [`kohlchan.net`](http://kohlchan.net).
+* [`endchan.net`](https://endchan.net)
+* [`alogs.space`](https://alogs.space)
+* [`bandada`](https://bandada.club)
 
 <!--
 * [Old API (with examples)](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/kohlchan.net.old.md) (the old `vichan` API is no longer relevant: since May 28th, 2019 `kohlchan.net` [has been migrated](https://kohlchan.net/kohl/res/13096.html) from `vichan` to `lynxchan`)
@@ -1622,7 +1729,7 @@ There're some limitations for imageboards running on `lynxchan` engine (for exam
 
 There're [some smaller limitations](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/jschan-issues.md) for `jschan` engine.
 
-There're some very minor limitations for `8ch.net (8kun.top)` caused by its `OpenIB` engine due to the [lack of support for several very minor features](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/OpenIB-issues.md) in that engine.
+There're some very minor limitations for the `infinity`/`OpenIB` engine due to the [lack of support for several very minor features](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/infinity-issues.md) in that engine.
 
 There're [some very minor bugs](https://gitlab.com/catamphetamine/imageboard/blob/master/docs/engines/makaba-issues.md) for `2ch.hk` caused by its `makaba` engine.
 
@@ -1639,7 +1746,7 @@ Real-world tests:
 
 ```
 npm run build
-node test/test
+npm run test-chan [chan-id]
 ```
 
 ## GitHub

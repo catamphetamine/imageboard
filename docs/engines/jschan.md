@@ -162,6 +162,33 @@ Has properties:
 * `nomarkup` — Non-HTML variant of the comment's text.
 * `edited` — If this comment was edited, it's gonna be an object of shape `{ username, date }`. Example: `{ username: "admin", date: "2021-11-03T00:36:36.620Z" }`.
 
+### Get the list of boards (paginated)
+
+`GET` `/boards.json`
+
+Returns an object:
+
+* `boards: Board[]` — A list of boards on the current page.
+* `page: number` — The current page, starting from `1`.
+* `maxPage: number` — Total pages count.
+
+Each `Board` object has properties:
+
+* `webring: boolean` — Whether this board is the imageboard's own (`webring: false`) or is from some other imageboard in the "webring" (`webring: true`).
+* `_id: string` — Board ID.
+	* For `webring: false` boards, it's gonna be the board's URL ID. Example: `b`.
+	* For `webring: true` boards, it's gonna be a globally-unique (to what extent?) hexademical ID. Example: `664782be8ea6e830494bd8cc`.
+* `uri?: string` — Board URL ID when the board is a `webring: true` one. Example: `b`.
+* `pph: number` — Posts made in the last hour.
+* `ppd: number` — Posts made in the last day.
+* `ips: number` — The count of unique users that've posted on the board in some time span.
+* `tags?: string[]` — A list of tags that're available to be used when creating threads on this board.
+* `settings: object`:
+  * `name: string` — Board title. Example: `Random`.
+  * `description: string` — Board description. If there's no description, will be an empty string.
+  * `sfw: boolean` — Whether the board is "safe for work".
+  * `unlistedLocal?: boolean` — Dunno. Seems to only be present for `webring: false` boards.
+
 ### Get thread with all comments
 
 `GET` `/{boardId}/thread/{threadId}.json`

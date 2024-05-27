@@ -1,6 +1,8 @@
 import { ImageboardConfig } from './ImageboardConfig.d.js';
 export { ImageboardConfig } from './ImageboardConfig.d.js';
 
+export { UserRole, UserRoleScope, CaptchaRule } from './ImageboardConfig.d.js';
+
 import { HttpRequestMethod } from './HttpRequestMethod.d.js';
 export { HttpRequestMethod } from './HttpRequestMethod.d.js';
 
@@ -17,6 +19,7 @@ export type ImageboardId =
 	'2ch' |
 	'8ch' |
 	'kohlchan' |
+	'alogs.space' |
 	'arisuchan' |
 	'endchan' |
 	'lainchan' |
@@ -95,24 +98,24 @@ export interface Board {
 	category?: string;
 	description?: string;
 	notSafeForWork?: boolean;
-	bumpLimit?: number;
 	commentsPerHour?: number;
 	commentContentMinLength?: number;
-	commentContentMaxLength?: number;
 	mainCommentContentMaxLength?: number;
 	mainCommentContentMinLength?: number;
 	threadTitleRequired?: boolean;
 	mainCommentContentRequired?: boolean;
 	mainCommentAttachmentRequired?: boolean;
-	attachmentsMaxCount?: number;
 	threadAttachmentsMaxCount?: number;
-	attachmentMaxSize?: number;
-	attachmentsMaxTotalSize?: number;
 	videoAttachmentMaxSize?: number;
 	videoAttachmentMaxDuration?: number;
 	createThreadMinInterval?: number;
 	createCommentMinInterval?: number;
 	createCommentWithAttachmentMinInterval?: number;
+	bumpLimit?: number;
+	commentContentMaxLength?: number;
+	attachmentsMaxTotalSize?: number;
+	attachmentMaxSize?: number;
+	attachmentsMaxCount?: number;
 	features?: {
 		sage?: boolean;
 		authorName?: boolean;
@@ -123,6 +126,7 @@ export interface Board {
 		threadTags?: boolean;
 		votes?: boolean;
 	};
+	badges?: BoardBadge[];
 }
 
 export interface BoardBadge {
@@ -153,22 +157,6 @@ export interface Thread {
 	bumpLimitReached?: boolean;
 	attachmentLimitReached?: boolean;
 	customSpoilerId?: number;
-	board?: {
-		title?: string;
-		bumpLimit?: number;
-		commentContentMaxLength?: number;
-		attachmentsMaxTotalSize?: number;
-		attachmentMaxSize?: number;
-		attachmentsMaxCount?: number;
-		features?: {
-			threadTitle?: boolean;
-			commentTitle?: boolean;
-			attachments?: boolean;
-			threadTags?: boolean;
-			votes?: boolean;
-		};
-		badges?: BoardBadge[];
-	}
 }
 
 export type GetCommentById = (id: CommentId) => Comment | undefined;
@@ -213,15 +201,17 @@ export interface Comment {
 	downvotes?: number;
 	content?: RawCommentContent | ParsedCommentContent;
 	contentPreview?: ParsedCommentContent;
-	inReplyTo?: number[] | Comment[];
-	inReplyToRemoved?: number[];
-	replies?: number[] | Comment[];
+	inReplyToIds?: Comment['id'][];
+	inReplyToIdsRemoved?: Comment['id'][];
+	inReplyTo?: Comment[];
+	replyIds?: Comment['id'][];
+	replies?: Comment[];
 	attachments?: Attachment[];
 
 	parseContent?: (options?: { getCommentById?: GetCommentById }) => void;
 	createContentPreview?: (options?: { maxLength?: number }) => void;
 	hasContentBeenParsed?: () => boolean;
-	onContentChange?: (options?: { getCommentById: GetCommentById }) => void;
+	onContentChange?: (options?: { getCommentById: GetCommentById }) => CommentId[];
 }
 
 export interface GetThreadsParameters extends ImageboardOptionsOverridable {
@@ -237,7 +227,7 @@ export interface GetThreadParameters extends ImageboardOptionsOverridable {
 	afterCommentsCount?: number;
 }
 
-type PostFormAttachmentFile = File | Blob;
+export type PostFormAttachment = File | Blob;
 
 export interface VoteForCommentParameters {
 	boardId: BoardId;
@@ -251,14 +241,14 @@ export interface ReportCommentParameters {
 	threadId: ThreadId;
 	commentId: CommentId;
 	content?: string;
-	reasonId?: number;
+	reasonId?: number | string;
 	legalViolationReasonId?: number;
 	captchaId?: string;
 	captchaSolution?: string;
 }
 
 export interface GetCaptchaParameters {
-	boardId: BoardId;
+	boardId?: BoardId;
 	threadId?: ThreadId;
 }
 
@@ -300,7 +290,7 @@ export interface CreateThreadParameters {
 	accessToken?: string;
 	authorEmail?: string;
 	authorName?: string;
-	attachments?: PostFormAttachmentFile[];
+	attachments?: PostFormAttachment[];
 	title?: string;
 	content?: string;
 
@@ -337,18 +327,16 @@ export interface CreateBlockBypassResult {
 	expiresAt: Date;
 }
 
-export type ImageboardFeature = 'getThreads.sortByRating';
+export type ImageboardFeature = 'getThreads.sortByRating' | 'getTopBoards' | 'findBoards';
 
 export interface Imageboard {
 	// This method is not currently public.
-	supportsFeature: (feature: string) => boolean;
-	getBoards: () => Promise<Board[]>;
-	getAllBoards: () => Promise<Board[]>;
-	hasMoreBoards: () => boolean;
-	findBoards: (query: string) => Promise<Board[]>;
-	canSearchForBoards: () => boolean;
-	getThreads: (parameters: { boardId: BoardId }, options?: GetThreadsParameters) => Promise<Thread[]>;
-	getThread: (parameters: { boardId: BoardId, threadId: ThreadId }, options?: GetThreadParameters) => Promise<Thread>;
+	supportsFeature: (feature: ImageboardFeature) => boolean;
+	getBoards: () => Promise<{ boards: Board[] }>;
+	getTopBoards: () => Promise<{ boards: Board[] }>;
+	findBoards: (query: string) => Promise<{ boards: Board[] }>;
+	getThreads: (parameters: { boardId: BoardId }, options?: GetThreadsParameters) => Promise<{ threads: Thread[], board?: Board }>;
+	getThread: (parameters: { boardId: BoardId, threadId: ThreadId }, options?: GetThreadParameters) => Promise<{ thread: Thread, board?: Board }>;
 	voteForComment: (parameters: VoteForCommentParameters) => Promise<boolean>;
 	reportComment: (parameters: ReportCommentParameters) => Promise<void>;
 	createThread: (parameters: CreateThreadParameters) => Promise<{ id: ThreadId }>;
@@ -367,7 +355,7 @@ export function getCommentText(comment: Comment, options?: {
 	skipGeneratedPostQuoteBlocks?: boolean;
 }): string | undefined;
 
-export function sortThreadsWithPinnedOnTop(threads: Thread[]): Thread[];
+export function sortThreadsWithPinnedOnTop<T extends Pick<Thread, 'pinned' | 'pinnedOrder'>>(threads: T[]): T[];
 
 declare function Imageboard(imageboardIdOrConfig: ImageboardId | ImageboardConfig, options: ImageboardOptions): Imageboard;
 

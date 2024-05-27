@@ -1,7 +1,7 @@
 {
 	"id": "arisuchan",
 	"domain": "arisuchan.jp",
-  "capcode": {
+  "capcodes": {
     "*": "administrator",
     "mod": "moderator"
   },

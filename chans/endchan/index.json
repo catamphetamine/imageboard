@@ -10,9 +10,15 @@
 	"defaultAuthorName": {
 		"*": "Anonymous",
 		"ausneets": "NEET",
-		"kc": "Bernd"
+		"kc": "Bernd",
+		"dota": "Тредовец",
+		"genshin": "Товарищ"
 	},
 	"api": {
+		"getBoards": {
+			"method": "GET",
+			"url": "/index.json"
+		},
 		"getCaptcha": {
 			"method": "GET",
 			"url": "/noCookieCaptcha.js",

@@ -1,0 +1,30 @@
+{
+	"id": "bandada",
+	"domain": "bandada.club",
+	"engine": "lynxchan",
+	"defaultAuthorName": {
+		"*": "Choroy",
+		"int": "Choroyiski",
+		"blog": "Choroy Bloguero",
+		"nc": "Nuevo Chileno",
+		"m": "Merluzo",
+		"de": "Bandanon Delirante",
+		"ra": "Bandanon Rabioso",
+		"twi": "Bandanon X",
+		"a": "Choroy-sama",
+		"x": "Hijo del Trauco",
+		"retro": "Choroy Nostalgico",
+		"s": "El Barto",
+		"vi": "Choroytuber",
+		"ci": "Cientifico",
+		"meta": "Choroy meta"
+	},
+	"thumbnailSize": 190,
+	"captchaImageUrl": "/.global/captchas/{id}",
+	"captchaImageType": "image/jpeg",
+	"captchaImageWidth": 300,
+	"captchaImageHeight": 100,
+	"api": {
+		"getBoards": null
+	}
+}
