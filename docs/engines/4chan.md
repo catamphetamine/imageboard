@@ -820,7 +820,17 @@ Same as posting a comment, but without specifying a `resto` parameter and with a
 
 "Success" response example (JSON):
 
-(unknown) (supposedly, somehow similar to one in "Post a comment")
+(same as in "Post a comment" but with `tid` being `0` and `pid` being the new thread ID)
+
+```js
+{
+	// This value is a constant one.
+	"tid": 0,
+
+	// The ID of the new thread.
+	"pid": 918928299
+}
+```
 
 ### Report a post
 
