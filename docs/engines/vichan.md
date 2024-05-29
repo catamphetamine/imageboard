@@ -12,7 +12,7 @@ In November 2017, `vichan` engine was put in "no longer being maintained" state,
 
 * Threads have `cyclical` property that can be `"0"` or `"1"`. For some weird reason, it's not a number but rather a string.
 
-* Weirdly, `tim` is a string rather than a number.
+* Weirdly, `tim` is a string rather than a number. Hence, it's no longer guaranteed to be a timestamp in milliseconds, and could be any type of string. For example, on `vecchiochan.com`, it looks like: `tim: "external/b/src/1716996104057-1"`
 
 * "Get threads page" API URLs include page index rather than page number. In other words, pages start with `0.json` rather than `1.json`.
 
@@ -36,14 +36,14 @@ Parameters:
 * `email` — Author's email (optional). Set to `"sage"` to prevent "bumping" the thread with this comment.
 * `subject` — Comment title.
 * `body` — Comment text.
-* `password` — An optional password for own post/attachment deletion.
+* `password` — An optional password for own post/attachment deletion in the future.
 * `embed` — Allows specifying a link to "embedded" content such as a YouTube video. Replaces any attachments.
-* `page` — Unknown. Seems to be `1` when creating a new thread being at the first page of a board.
+* `page` — Unknown. Seems to only be present when creating a new thread after navigating to a certain page of the board. Perhaps this is something like "redirect back to this page number of the list of threads on the board after the form is submitted". I'd assume that this parameter could be omitted.
 * `json_response` — Set to `1` to receive the HTTP response in `application/json` format.
 * `post` — (seen at `soyjak.party`) Unknown. Has value `"New Reply"`. I'd assume that this parameter could be omitted.
 * `file` — Attachment.
-* `spoiler` — Set to `"on"` to mark the attachment with a "spoiler" label.
-* `no-bump` — Set to `"on"` to emulate "sage" behavior. In other words, posting a comment in a thread while having this flag `"on"` will not bump that thread.
+* `spoiler` — Set to `"on"` to mark the attachment with a "spoiler" label. I'd assume that this parameter could be any on-empty one and not just `"on"` but I didn't check.
+* `no-bump` — Set to `"on"` to emulate "sage" behavior. In other words, posting a comment in a thread while having this flag `"on"` will not bump that thread. I'd assume that this parameter could be any on-empty one and not just `"on"` but I didn't check.
 
 <!-- Also, posting a comment or a thread might require supplying a [CAPTCHA solution](#get-a-captcha). -->
 
@@ -64,12 +64,7 @@ Parameters:
   "noko": true,
 
   // Comment ID or thread ID.
-  "id": "108897",
-
-  // Dunno what `post_type` property is.
-  // * `post_type: false` is returned on `8kun.top`.
-  // * `post_type` is not returned in `vichan` engine.
-  "post_type": false
+  "id": "108897"
 }
 ```
 
@@ -80,3 +75,14 @@ Supposedly, same as posting a comment, but without specifying the `thread` param
 * `show_ids` — (seen at `soyjak.party`) Enables showing comment author IP address hashes in the new thread.
 * `images_only` — (seen at `soyjak.party`) Only allows posting comments with image attachments in the new thread.
 * `post` — (seen at `soyjak.party`) Unknown. Has value `"New Topic"`. I'd assume that this parameter could be omitted.
+
+### Report a post
+
+`POST` to `/post.php`
+
+Parameters:
+
+* `board` — Board ID.
+* `delete_<post-id>` — Has value `1`. Looks like the engine uses the name of this parameter to get the post ID from, which is a very lame API input design.
+* `reason` — Report text.
+* `report` — Unknown. Has value `"Submit"`. I'd assume that this parameter could be omitted.

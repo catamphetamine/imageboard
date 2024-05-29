@@ -26,114 +26,12 @@
 	"threadUrl": "/{boardId}/res/{threadId}.html",
 	"commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
 	"rulesUrl": "/guidance.html",
-	"api": {
-		"getThread": {
-			"method": "GET",
-			"url": "/{boardId}/res/{threadId}.json",
-			"urlParameters": [{
-				"name": "boardId"
-			}, {
-				"name": "threadId"
-			}]
-		},
-		"getThreads": {
-			"method": "GET",
-			"url": "/{boardId}/catalog.json",
-			"urlParameters": [{
-				"name": "boardId"
-			}]
-		},
-		"getThreadsWithLatestCommentsPage": {
-			"method": "GET",
-			"url": "/{boardId}/{pageIndex}.json",
-			"urlParameters": [{
-				"name": "boardId"
-			}, {
-				"name": "pageIndex"
-			}]
-		},
-		"getTopBoards": {
-			"method": "GET",
-			"url": "/boards-top20.json"
-		},
-		"getBoards": {
-			"method": "GET",
-			"url": "/boards.json"
-		},
+	"apiOverrides": {
 		"post": {
-			"method": "POST",
-			"url": "https://sys.8kun.top/post.php",
-			"requestType": "multipart/form-data",
-			"parameters": [{
-				"name": "board",
-				"input": {
-					"name": "boardId"
-				}
-			}, {
-				"name": "thread",
-				"input": {
-					"name": "threadId"
-				}
-			}, {
-				"name": "name",
-				"input": {
-					"name": "authorName"
-				}
-			}, {
-				"name": "email",
-				"input": {
-					"name": "authorEmail"
-				}
-			}, {
-				"name": "subject",
-				"input": {
-					"name": "title"
-				}
-			}, {
-				"name": "body",
-				"input": {
-					"name": "content"
-				}
-			}, {
-				"name": "password",
-				"description": "An optional password for own post/attachment deletion",
-				"input": {
-					"name": "password"
-				}
-			}, {
-				"name": "json_response",
-				"defaultValue": 1
-			}, {
-
-
-
-
-				"name": "upfile",
-				"input": {
-					"name": "attachments",
-					"index": 0
-				}
-			}, {
-				"name": "spoiler",
-				"input": {
-					"name": "attachmentSpoiler"
-				}
-			}, {
-				"name": "filetag",
-				"input": {
-					"name": "attachmentFileTag"
-				}
-			}, {
-				"name": "textonly",
-				"input": {
-					"name": "textOnly"
-				}
-			}, {
-				"name": "g-recaptcha-response",
-				"input": {
-					"name": "captchaSolution"
-				}
-			}]
+			"url": "https://sys.8kun.top/post.php"
+		},
+		"report": {
+			"url": "https://sys.8kun.top/report.php"
 		}
 	}
 }

@@ -3,9 +3,11 @@ import { HttpRequestMethod } from './HttpRequestMethod.d.js';
 type ImageboardEngine =
 	'4chan' |
 	'vichan' |
+	'lainchan' |
+	'infinity' |
 	'OpenIB' |
-	'lynxchan' |
 	'makaba' |
+	'lynxchan' |
 	'jschan';
 
 type ImageboardConfigFeature =
@@ -299,7 +301,7 @@ export interface ImageboardConfig {
 
 	// A list of custom "capcodes" that're available on the imageboard
 	// in addition to the default ones that're supported by the engine.
-	customCapcodes?: Record<string, UserRoleDescription | UserRole>;
+	capcodesCustom?: Record<string, UserRoleDescription | UserRole>;
 
 	// Possible report reasons.
 	reportReasons?: {

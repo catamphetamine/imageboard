@@ -10,7 +10,7 @@
 	"commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
 	"captchaImageWidth": 200,
 	"captchaImageHeight": 80,
-	"customCapcodes": {
+	"capcodesCustom": {
 		"Meido": {
 			"role": "moderator",
 			"scope": "board"

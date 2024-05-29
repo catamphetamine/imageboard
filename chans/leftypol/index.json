@@ -1,7 +1,7 @@
 {
 	"id": "leftypol",
 	"domain": "leftypol.org",
-	"engine": "vichan",
+	"engine": "lainchan",
 	"boards": [
 		{
 			"id": "leftypol",

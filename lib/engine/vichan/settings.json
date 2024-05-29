@@ -6,6 +6,10 @@
   "commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
   "rulesUrl": "/rules.html",
 	"defaultAuthorName": "Anonymous",
+	"capcodes": {
+		"Admin": "administrator",
+		"Mod": "moderator"
+	},
 	"api": {
 		"getThread": {
 			"method": "GET",
@@ -30,6 +34,87 @@
 				"name": "boardId"
 			}, {
 				"name": "pageIndex"
+			}]
+		},
+		"post": {
+			"method": "POST",
+			"url": "/post.php",
+			"requestType": "multipart/form-data",
+			"parameters": [{
+				"name": "json_response",
+				"defaultValue": 1
+			}, {
+				"name": "thread",
+				"input": {
+					"name": "threadId"
+				}
+			}, {
+				"name": "board",
+				"input": {
+					"name": "boardId"
+				}
+			}, {
+				"name": "name",
+				"input": {
+					"name": "authorName"
+				}
+			}, {
+				"name": "email",
+				"input": {
+					"name": "authorEmail"
+				}
+			}, {
+				"name": "password",
+				"input": {
+					"name": "deletionPassword"
+				}
+			}, {
+				"name": "subject",
+				"input": {
+					"name": "title"
+				}
+			}, {
+				"name": "body",
+				"input": {
+					"name": "content"
+				}
+			}, {
+				"name": "embed",
+				"input": {
+					"name": "attachmentUrls",
+					"index": 0
+				}
+			}, {
+				"name": "file",
+				"input": {
+					"name": "attachments",
+					"index": 0
+				}
+			}, {
+				"name": "spoiler",
+				"input": {
+					"name": "attachmentSpoilers",
+					"index": 0
+				}
+			}]
+		},
+		"report": {
+			"method": "POST",
+			"url": "/post.php",
+			"requestType": "multipart/form-data",
+			"parameters": [{
+				"name": "board",
+				"input": {
+					"name": "boardId"
+				}
+			}, {
+				"name": "delete_{commentId}",
+				"defaultValue": 1
+			}, {
+				"name": "reason",
+				"input": {
+					"name": "content"
+				}
 			}]
 		}
 	}

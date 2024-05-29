@@ -255,7 +255,7 @@
 			}, {
 				"name": "fileSha256",
 				"input": {
-					"name": "attachmentsSha256Hashes"
+					"name": "attachmentSha256Hashes"
 				}
 			}, {
 				"name": "fileMime",

@@ -390,6 +390,23 @@
 		"description": "Prostitution/sex tourism discussion",
 		"boards": ["trv"]
 	}],
+	"apiOverrides": {
+		"post": {
+			"url": "https://sys.4chan.org/{boardId}/post",
+		},
+		"report": {
+			"url": "https://sys.4chan.org/{boardId}/imgboard.php?mode=report&no={commentId}"
+		},
+		"getCaptcha": {
+			"url": "https://sys.4chan.org/captcha?board={boardId}&thread_id={threadId}&ticket={ticket}"
+		},
+		"logIn": {
+			"url": "https://sys.4chan.org/auth"
+		},
+		"logOut": {
+			"url": "https://sys.4chan.org/auth"
+		}
+	},
 	"api": {
 		"getThread": {
 			"method": "GET",
@@ -436,7 +453,7 @@
 		},
 		"post": {
 			"method": "POST",
-			"url": "https://sys.4chan.org/{boardId}/post",
+			"url": "/{boardId}/post",
 			"urlParameters": [{
 				"name": "boardId"
 			}],
@@ -489,12 +506,14 @@
 			}, {
 				"name": "spoiler",
 				"input": {
-					"name": "attachmentSpoiler"
+					"name": "attachmentSpoilers",
+					"index": 0
 				}
 			}, {
 				"name": "filetag",
 				"input": {
-					"name": "attachmentFileTag"
+					"name": "attachmentFileTags",
+					"index": 0
 				}
 			}, {
 				"name": "textonly",
@@ -510,7 +529,7 @@
 		},
 		"report": {
 			"method": "POST",
-			"url": "https://sys.4chan.org/{boardId}/imgboard.php?mode=report&no={commentId}",
+			"url": "/{boardId}/imgboard.php?mode=report&no={commentId}",
 			"urlParameters": [{
 				"name": "boardId"
 			}, {
@@ -558,7 +577,7 @@
 		},
 		"getCaptcha": {
 			"method": "GET",
-			"url": "https://sys.4chan.org/captcha?board={boardId}&thread_id={threadId}&ticket={ticket}",
+			"url": "/captcha?board={boardId}&thread_id={threadId}&ticket={ticket}",
 			"urlParameters": [{
 				"name": "boardId",
 				"defaultValue": ""
@@ -572,7 +591,7 @@
 		},
 		"logIn": {
 			"method": "POST",
-			"url": "https://sys.4chan.org/auth",
+			"url": "/auth",
 			"requestType": "multipart/form-data",
 			"parameters": [{
 				"name": "xhr",
@@ -598,7 +617,7 @@
 		},
 		"logOut": {
 			"method": "POST",
-			"url": "https://sys.4chan.org/auth",
+			"url": "/auth",
 			"requestType": "multipart/form-data",
 			"responseType": "text/html"
 		}

@@ -15,10 +15,12 @@
 		"genshin": "Товарищ"
 	},
 	"api": {
-		"getBoards": {
+		"getTopBoards": {
 			"method": "GET",
 			"url": "/index.json"
 		},
+		"getBoards": null,
+		"getBoardsPage": null,
 		"getCaptcha": {
 			"method": "GET",
 			"url": "/noCookieCaptcha.js",

@@ -354,7 +354,7 @@ Parameters:
 * `email` — Author's email (optional).
 * `subject` — Comment title.
 * `body` — Comment text.
-* `password` — An optional password for own post/attachment deletion.
+* `password` — An optional password for own post/attachment deletion in the future.
 * `embed` — Allows specifying a link to "embedded" content such as a YouTube video. Replaces any attachments.
 * `page` — Unknown. Seems to be `1` when creating a new thread being at the first page of a board.
 * `dx` — "Dices" `dice` value. Supposedly, it throws a "dice" and posts the result in the comment.
@@ -369,7 +369,11 @@ Parameters:
 * `file3` — The third attachment.
 * `file4` — The fourth attachment.
 * `file5` — The fifth attachment.
-* `set_images_spoiler[0]` — Set to `"on"` to mark the first attachment (index: `0`) with a "spoiler" label.
+* `set_images_spoiler[0]` — Set to `"on"` to mark `file` attachment with a "spoiler" label.
+* `set_images_spoiler[1]` — Set to `"on"` to mark `file2` attachment with a "spoiler" label.
+* `set_images_spoiler[2]` — Set to `"on"` to mark `file3` attachment with a "spoiler" label.
+* `set_images_spoiler[3]` — Set to `"on"` to mark `file4` attachment with a "spoiler" label.
+* `set_images_spoiler[4]` — Set to `"on"` to mark `file5` attachment with a "spoiler" label.
 * `archive_message` — Set to `"on"` to archive the post you're creating. I suppose, this means that the post won't be wiped from existence when it gets pushed off the list of threads on the board. When using this parameter, the maximum length for the comment is 500 characters.
 * `no-bump` — Set to `"on"` to emulate "sage" behavior. In other words, posting a comment in a thread while having this flag `"on"` will not bump that thread.
 
@@ -449,7 +453,7 @@ Send a `POST` request of type `application/x-www-form-urlencoded` to a correspon
 Parameters:
 
 * `board` — Board ID. Example: `board: "b"`.
-* `delete_<post-id>` — Post ID as a key and `1` as a value. Example: `delete_1207093: 1` when reporting a post with ID `1207093`.
+* `delete_<post-id>` — Post ID as a key and `1` as a value. Example: `delete_1207093: 1` when reporting a post with ID `1207093`. This is a very lame way to pass the post ID to the API but that's `vichan` legacy.
 * `reason` — Report reason text.
 * `report: "Submit"` — Dunno. Perhaps could be omitted.
 

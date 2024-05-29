@@ -15,16 +15,30 @@ import {
 export * from 'social-components';
 
 export type ImageboardId =
-	'4chan' |
 	'2ch' |
+	'27chan' |
+	'4chan' |
 	'8ch' |
-	'kohlchan' |
+	'94chan' |
 	'alogs.space' |
 	'arisuchan' |
+	'bandada' |
+	'diochan' |
 	'endchan' |
+	'heolcafe' |
+	'jakparty.soy' |
+	'junkuchan' |
+	'kohlchan' |
 	'lainchan' |
-	'94chan' |
-	'ptchan';
+	'leftypol' |
+	'niuchan' |
+	'ptchan' |
+	'smugloli' |
+	'tahtach' |
+	'tvchan' |
+	'vecchiochan' |
+	'wizardchan' |
+	'zzzchan';
 
 export interface HttpResponseHeaders {
 	get: (name: string) => string | null;

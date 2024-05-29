@@ -1,16 +1,13 @@
 {
 	"id": "lainchan",
 	"domain": "lainchan.org",
-	"capcodes": {
-		"Admin": "administrator",
-		"Mod": "moderator"
-	},
-	"engine": "vichan",
+	"engine": "lainchan",
 	"attachmentUrl": "/{boardId}/src/{name}{ext}",
 	"attachmentThumbnailUrl": "/{boardId}/thumb/{name}{ext}",
 	"boardUrl": "/{boardId}",
   "threadUrl": "/{boardId}/res/{threadId}.html",
   "commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
+  "rulesUrl": "/rules.html",
 	"api": {
 		"getThread": {
 			"method": "GET",
