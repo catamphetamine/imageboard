@@ -932,6 +932,8 @@ Result:
 
 Sets a `bypass` cookie holding the new "block bypass" ID.
 
+On `kohlchan.net`, it responds with `{ data: null, status: "hashcash" }` JSON which tells that an additional step is required in order to be able to post on the imageboard: it requires "activating" a bypass by performing a ["proof of work"](https://kohlchan.net/addon.js/hashcash/?action=get) calculation.
+
 ### Validate Block Bypass
 
 Validates a "block bypass" by performing a Proof-of-Work procedure.
