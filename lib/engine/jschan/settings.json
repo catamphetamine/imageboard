@@ -1,0 +1,270 @@
+{
+	"boardUrl": "/{boardId}/index.html",
+	"threadUrl": "/{boardId}/thread/{threadId}.html",
+	"commentUrl": "/{boardId}/thread/{threadId}.html#{commentId}",
+	"attachmentUrl": "/file/{name}{ext}",
+	"attachmentThumbnailUrl": "/file/thumb/{name}{ext}",
+	"authorBadgeUrl": "/flag/{boardId}/{filename}",
+  "blockBypassIdCookieName": "bypassid",
+	"captchaIdCookieName": "captchaid",
+	"captchaImageUrl": "/captcha/{id}.jpg",
+	"captchaImageType": "image/jpeg",
+	"captchaImageWidth": 210,
+	"captchaImageHeight": 80,
+	"accessTokenCookieName": "connect.sid",
+	"defaultAuthorName": "Anonymous",
+	"rulesUrl": "/rules.html",
+	"api": {
+		"getBoardsPage": {
+			"method": "GET",
+			"url": "/boards.json",
+			"parameters": [{
+				"name": "search",
+				"description": "A string to search by board name and tags, including prefix matches",
+				"input": {
+					"name": "search"
+				}
+			}, {
+				"name": "sort",
+				"description": "`popularity` sorts by a compound of (`ips`, `pph`, `sequence_value`), `activity` sorts by `lastPostTimestamp`",
+				"input": {
+					"name": "sortBy"
+				}
+			}, {
+				"name": "direction",
+				"description": "`desc` or `asc` for descending or ascending sort order respectively",
+				"input": {
+					"name": "sortDirection"
+				}
+			}, {
+				"name": "local_first",
+				"description": "If `true`, put local sites grouped before webring sites. Sort and direction for local and webring sites will be independent.",
+				"supported": false
+			}, {
+				"name": "sites",
+				"description": "Sites to include by `siteName`, can be repeated to include multiple sites. Blank includes all sites.",
+				"supported": false
+			}, {
+				"name": "page",
+				"input": {
+					"name": "page"
+				}
+			}]
+		},
+		"getBoard": {
+			"method": "GET",
+			"url": "/{boardId}/settings.json",
+			"urlParameters": [{
+				"name": "boardId"
+			}]
+		},
+		"getThreads": {
+			"method": "GET",
+			"url": "/{boardId}/catalog.json",
+			"urlParameters": [{
+				"name": "boardId"
+			}]
+		},
+		"getThreadsWithLatestCommentsFirstPage": {
+			"method": "GET",
+			"url": "/{boardId}/index.json",
+			"urlParameters": [{
+				"name": "boardId"
+			}]
+		},
+		"getThreadsWithLatestCommentsPage": {
+			"method": "GET",
+			"url": "/{boardId}/{page}.json",
+			"urlParameters": [{
+				"name": "boardId"
+			}, {
+				"name": "page"
+			}]
+		},
+		"getThread": {
+			"method": "GET",
+			"url": "/{boardId}/thread/{threadId}.json",
+			"urlParameters": [{
+				"name": "boardId"
+			}, {
+				"name": "threadId"
+			}]
+		},
+		"getCaptcha": {
+			"method": "GET",
+			"url": "/captcha"
+		},
+		"signUp": {
+			"method": "POST",
+			"url": "/forms/register",
+			"requestType": "multipart/form-data",
+			"parameters": [{
+				"name": "username",
+				"input": {
+					"name": "username"
+				}
+			}, {
+				"name": "password",
+				"input": {
+					"name": "password"
+				}
+			}, {
+				"name": "passwordconfirm",
+				"input": {
+					"name": "password"
+				}
+			}, {
+				"name": "captcha",
+				"input": {
+					"name": "captchaSolution"
+				}
+			}]
+		},
+		"post": {
+			"method": "POST",
+			"url": "/forms/{boardId}/post",
+			"requestType": "multipart/form-data",
+			"urlParameters": [{
+				"name": "boardId"
+			}],
+			"parameters": [{
+				"name": "thread",
+				"input": {
+					"name": "threadId"
+				}
+			}, {
+				"name": "email",
+				"input": {
+					"name": "authorEmail"
+				}
+			}, {
+				"name": "name",
+				"input": {
+					"name": "authorName"
+				}
+			}, {
+				"name": "subject",
+				"input": {
+					"name": "title"
+				}
+			}, {
+				"name": "message",
+				"input": {
+					"name": "content"
+				}
+			}, {
+				"name": "file",
+				"input": {
+					"name": "attachments"
+				}
+			}, {
+				"name": "spoiler",
+				"input": {
+					"name": "spoilerAttachmentsSha256Hashes"
+				}
+			}, {
+				"name": "customflag",
+				"input": {
+					"name": "authorBadgeId"
+				}
+			}, {
+				"name": "captcha",
+				"input": {
+					"name": "captchaSolution"
+				}
+			}, {
+				"name": "postpassword",
+				"input": {
+					"name": "secret"
+				}
+			}]
+		},
+		"report": {
+			"method": "POST",
+			"url": "/forms/board/{boardId}/actions",
+			"requestType": "multipart/form-data",
+			"urlParameters": [{
+				"name": "boardId"
+			}],
+			"parameters": [{
+				"name": "checkedposts",
+				"input": {
+					"name": "commentId",
+					"transform": "to-array"
+				}
+			}, {
+				"name": "report",
+				"defaultValue": "true"
+			}, {
+				"name": "report_reason",
+				"input": {
+					"name": "reason"
+				}
+			}, {
+				"name": "captcha",
+				"input": {
+					"name": "captchaSolution"
+				}
+			}]
+		},
+		"createBlockBypass": {
+			"method": "POST",
+			"url": "/forms/blockbypass",
+			"requestType": "multipart/form-data",
+			"parameters": [{
+				"name": "captcha",
+				"input": {
+					"name": "captchaSolution"
+				}
+			}],
+			"cookies": [{
+				"name": "captchaid",
+				"input": {
+					"name": "captchaId"
+				}
+			}]
+		},
+		"logIn": {
+			"method": "POST",
+			"url": "/forms/login",
+			"requestType": "multipart/form-data",
+			"parameters": [{
+				"name": "username",
+				"input": {
+					"name": "username"
+				}
+			}, {
+				"name": "password",
+				"input": {
+					"name": "password"
+				}
+			}]
+		},
+		"logOut": {
+			"method": "POST",
+			"url": "/forms/login",
+			"requestType": "multipart/form-data",
+			"parameters": [{
+				"name": "username",
+				"input": {
+					"name": "username"
+				}
+			}, {
+				"name": "password",
+				"input": {
+					"name": "password"
+				}
+			}],
+			"cookies": {
+				"name": "connect.sid",
+				"input": {
+					"name": "accessToken"
+				}
+			}
+		},
+		"getCSRFToken": {
+			"method": "GET",
+			"url": "/csrf.json"
+		}
+	}
+}

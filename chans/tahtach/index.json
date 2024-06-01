@@ -1,0 +1,25 @@
+{
+	"id": "tahtach",
+	"domain": "tahta.ch",
+	"engine": "vichan",
+	"rulesUrl": "/kurallar.html",
+	"defaultAuthorName": "Anon",
+	"boards": [
+		{
+			"id": "b",
+			"title": "Rastgele"
+		},
+		{
+			"id": "g",
+			"title": "Teknoloji"
+		},
+		{
+			"id": "s",
+			"title": "Ciplaklik"
+		},
+		{
+			"id": "v",
+			"title": "Oyun"
+		}
+	]
+}

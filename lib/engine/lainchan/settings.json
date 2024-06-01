@@ -1,0 +1,114 @@
+{
+	"api": {
+		"post": {
+			"method": "POST",
+			"url": "/post.php",
+			"requestType": "multipart/form-data",
+			"parameters": [{
+				"name": "json_response",
+				"defaultValue": 1
+			}, {
+				"name": "thread",
+				"input": {
+					"name": "threadId"
+				}
+			}, {
+				"name": "board",
+				"input": {
+					"name": "boardId"
+				}
+			}, {
+				"name": "name",
+				"input": {
+					"name": "authorName"
+				}
+			}, {
+				"name": "email",
+				"input": {
+					"name": "authorEmail"
+				}
+			}, {
+				"name": "password",
+				"input": {
+					"name": "deletionPassword"
+				}
+			}, {
+				"name": "subject",
+				"input": {
+					"name": "title"
+				}
+			}, {
+				"name": "body",
+				"input": {
+					"name": "content"
+				}
+			}, {
+				"name": "file_url1",
+				"input": {
+					"name": "attachmentUrls",
+					"index": 0
+				}
+			}, {
+				"name": "file_url2",
+				"input": {
+					"name": "attachmentUrls",
+					"index": 1
+				}
+			}, {
+				"name": "file_url3",
+				"input": {
+					"name": "attachmentUrls",
+					"index": 2
+				}
+			}, {
+				"name": "file1",
+				"input": {
+					"name": "attachments",
+					"index": 0
+				}
+			}, {
+				"name": "file2",
+				"input": {
+					"name": "attachments",
+					"index": 1
+				}
+			}, {
+				"name": "file3",
+				"input": {
+					"name": "attachments",
+					"index": 2
+				}
+			}, {
+				"name": "spoiler",
+				"input": {
+					"name": "attachmentSpoilers",
+					"index": 0
+				}
+			}]
+		},
+		"report": {
+			"method": "POST",
+			"url": "/post.php",
+			"requestType": "multipart/form-data",
+			"parameters": [{
+				"name": "board",
+				"input": {
+					"name": "boardId"
+				}
+			}, {
+				"name": "delete_{commentId}",
+				"defaultValue": ""
+			}, {
+				"name": "password",
+				"input": {
+					"name": "deletionPassword"
+				}
+			}, {
+				"name": "reason",
+				"input": {
+					"name": "content"
+				}
+			}]
+		}
+	}
+}

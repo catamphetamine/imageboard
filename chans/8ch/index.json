@@ -1,0 +1,37 @@
+{
+	"id": "8ch",
+	"aliases": ["8kun"],
+	"domain": "8kun.top",
+	"engine": "OpenIB",
+	"defaultAuthorName": {
+		"*": "Anonymous",
+		"sudo": "/bin/sh",
+		"cafechan": "Аноним",
+		"r9k": "Robot",
+		"choroy": "Choroy",
+		"ausneets": "NEET",
+		"christan": "Christanon",
+		"k": "Strelok",
+		"argentina": "Barón",
+		"monster": "Violated Hero",
+		"animu": "名無し",
+		"doomer": "Doomer",
+		"agatha2": "Orbiter"
+	},
+	"attachmentUrlFpath": "https://media.128ducks.com/file_store/{name}{ext}",
+	"attachmentThumbnailUrlFpath": "https://media.128ducks.com/file_store/thumb/{name}{ext}",
+	"attachmentUrl": "https://media.128ducks.com/{boardId}/src/{name}{ext}",
+	"attachmentThumbnailUrl": "https://media.128ducks.com/{boardId}/thumb/{name}{ext}",
+	"boardUrl": "/{boardId}",
+	"threadUrl": "/{boardId}/res/{threadId}.html",
+	"commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
+	"rulesUrl": "/guidance.html",
+	"apiOverride": {
+		"post": {
+			"url": "https://sys.8kun.top/post.php"
+		},
+		"report": {
+			"url": "https://sys.8kun.top/report.php"
+		}
+	}
+}

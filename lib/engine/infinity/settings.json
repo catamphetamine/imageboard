@@ -1,0 +1,219 @@
+{
+	"rulesUrl": null,
+	"captchaImageWidth": 200,
+	"captchaImageHeight": 80,
+	"capcodes": {
+		"Admin": {
+			"role": "administrator"
+		},
+		"Board Owner": {
+			"role": "administrator",
+			"scope": "board"
+		},
+		"Board Moderator": {
+			"role": "moderator",
+			"scope": "board"
+		},
+		"Board Volunteer": {
+			"role": "moderator",
+			"scope": "board"
+		},
+		"Global Volunteer": {
+			"role": "moderator"
+		}
+	},
+	"api": {
+		"getThread": {
+			"method": "GET",
+			"url": "/{boardId}/res/{threadId}.json",
+			"urlParameters": [{
+				"name": "boardId"
+			}, {
+				"name": "threadId"
+			}]
+		},
+		"getThreads": {
+			"method": "GET",
+			"url": "/{boardId}/catalog.json",
+			"urlParameters": [{
+				"name": "boardId"
+			}]
+		},
+		"getThreadsWithLatestCommentsPage": {
+			"method": "GET",
+			"url": "/{boardId}/{pageIndex}.json",
+			"urlParameters": [{
+				"name": "boardId"
+			}, {
+				"name": "pageIndex"
+			}]
+		},
+		"getTopBoards": {
+			"method": "GET",
+			"url": "/boards-top20.json"
+		},
+		"getBoards": {
+			"method": "GET",
+			"url": "/boards.json"
+		},
+		"getCaptcha": {
+			"method": "GET",
+			"url": "/8chan-captcha/entrypoint.php",
+			"parameters": [{
+				"name": "mode",
+				"defaultValue": "get"
+			}, {
+				"name": "extra",
+				"input": {
+					"name": "characterSet"
+				},
+				"defaultValue": "abcdefghijklmnopqrstuvwxyz"
+			}]
+		},
+		"post": {
+			"method": "POST",
+			"url": "/post.php",
+			"requestType": "multipart/form-data",
+			"parameters": [{
+				"name": "board",
+				"input": {
+					"name": "boardId"
+				}
+			}, {
+				"name": "thread",
+				"input": {
+					"name": "threadId"
+				}
+			}, {
+				"name": "name",
+				"input": {
+					"name": "authorName"
+				}
+			}, {
+				"name": "email",
+				"input": {
+					"name": "authorEmail"
+				}
+			}, {
+				"name": "subject",
+				"input": {
+					"name": "title"
+				}
+			}, {
+				"name": "body",
+				"input": {
+					"name": "content"
+				}
+			}, {
+				"name": "password",
+				"description": "An optional password for own post/attachment deletion",
+				"input": {
+					"name": "deletionPassword"
+				}
+			}, {
+				"name": "json_response",
+				"defaultValue": 1
+			}, {
+				"name": "file",
+				"input": {
+					"name": "attachments",
+					"index": 0
+				}
+			}, {
+				"name": "file2",
+				"input": {
+					"name": "attachments",
+					"index": 1
+				}
+			}, {
+				"name": "file3",
+				"input": {
+					"name": "attachments",
+					"index": 2
+				}
+			}, {
+				"name": "file4",
+				"input": {
+					"name": "attachments",
+					"index": 3
+				}
+			}, {
+				"name": "file5",
+				"input": {
+					"name": "attachments",
+					"index": 4
+				}
+			}, {
+				"name": "set_images_spoiler[0]",
+				"input": {
+					"name": "attachmentSpoilers",
+					"index": 0
+				}
+			}, {
+				"name": "set_images_spoiler[1]",
+				"input": {
+					"name": "attachmentSpoilers",
+					"index": 1
+				}
+			}, {
+				"name": "set_images_spoiler[2]",
+				"input": {
+					"name": "attachmentSpoilers",
+					"index": 2
+				}
+			}, {
+				"name": "set_images_spoiler[3]",
+				"input": {
+					"name": "attachmentSpoilers",
+					"index": 3
+				}
+			}, {
+				"name": "set_images_spoiler[4]",
+				"input": {
+					"name": "attachmentSpoilers",
+					"index": 4
+				}
+			}, {
+				"name": "captcha_cookie",
+				"input": {
+					"name": "captchaId"
+				}
+			}, {
+				"name": "captcha_text",
+				"input": {
+					"name": "captchaSolution"
+				}
+			}]
+		},
+		"report": {
+			"method": "POST",
+			"url": "/post.php",
+			"requestType": "multipart/form-data",
+			"responseType": "text/html",
+			"parameters": [{
+				"name": "board",
+				"input": {
+					"name": "boardId"
+				}
+			}, {
+				"name": "delete_{commentId}",
+				"defaultValue": 1
+			}, {
+				"name": "reason",
+				"input": {
+					"name": "content"
+				}
+			}, {
+				"name": "captcha_cookie",
+				"input": {
+					"name": "captchaId"
+				}
+			}, {
+				"name": "captcha_text",
+				"input": {
+					"name": "captchaSolution"
+				}
+			}]
+		}
+	}
+}

@@ -1,0 +1,103 @@
+{
+	"id": "smugloli",
+	"domain": "smuglo.li",
+	"engine": "OpenIB",
+	"defaultAuthorName": "Anonymous",
+	"attachmentUrl": "/{boardId}/src/{name}{ext}",
+	"attachmentThumbnailUrl": "/{boardId}/thumb/{name}{ext}",
+	"boardUrl": "/{boardId}",
+	"threadUrl": "/{boardId}/res/{threadId}.html",
+	"commentUrl": "/{boardId}/res/{threadId}.html#{commentId}",
+	"captchaImageWidth": 200,
+	"captchaImageHeight": 80,
+	"capcodesCustom": {
+		"Meido": {
+			"role": "moderator",
+			"scope": "board"
+		},
+		"Head Meido": {
+			"role": "moderator"
+		}
+	},
+	"boards": [
+		{
+			"id": "a",
+			"title": "Anime & Manga"
+		},
+		{
+			"id": "kohi",
+			"title": "Kohi"
+		},
+		{
+			"id": "yuri",
+			"title": "Yuri"
+		},
+		{
+			"id": "monster",
+			"title": "Monster Girls"
+		},
+		{
+			"id": "tg",
+			"title": "Traditional Games"
+		},
+		{
+			"id": "rec",
+			"title": "Recommendations"
+		},
+		{
+			"id": "wooo",
+			"title": "King of Shitposting"
+		},
+		{
+			"id": "fanfic",
+			"title": "Fanfic"
+		},
+		{
+			"id": "cute",
+			"title": "Cute/2D"
+		},
+		{
+			"id": "vg",
+			"title": "Video Games"
+		},
+		{
+			"id": "tech",
+			"title": "Technology"
+		},
+		{
+			"id": "ebola",
+			"title": "Ebola"
+		},
+		{
+			"id": "support",
+			"title": "Support"
+		}
+	],
+	"api": {
+		"getThread": {
+			"method": "GET",
+			"url": "/{boardId}/res/{threadId}.json",
+			"urlParameters": [{
+				"name": "boardId"
+			}, {
+				"name": "threadId"
+			}]
+		},
+		"getThreads": {
+			"method": "GET",
+			"url": "/{boardId}/catalog.json",
+			"urlParameters": [{
+				"name": "boardId"
+			}]
+		},
+		"getThreadsWithLatestCommentsPage": {
+			"method": "GET",
+			"url": "/{boardId}/{pageIndex}.json",
+			"urlParameters": [{
+				"name": "boardId"
+			}, {
+				"name": "pageIndex"
+			}]
+		}
+	}
+}
