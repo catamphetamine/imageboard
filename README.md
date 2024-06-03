@@ -383,9 +383,21 @@ getPostLinkProperties(comment) {
 Tells whether the imageboard supports a certain feature.
 
 `feature` argument could be one of:
+* `"getBoards"`
 * `"getTopBoards"`
 * `"findBoards"`
 * `"getThreads.sortByRatingDesc"`
+* `"findThreads"`
+* `"findComments"`
+* `"voteForComment"`
+* `"reportComment"`
+* `"createThread"`
+* `"createComment"`
+* `"createBlockBypass"`
+* `"getCaptcha"`
+* `"logIn"`
+* `"logIn.tokenPassword"`
+* `"logOut"`
 
 Returns:
 
@@ -398,7 +410,7 @@ Fetches a list of boards on an imageboard.
 
 Returns an object with properties:
 
-* `boards` — a list of [Boards](#board)
+* `boards` — a list of [Boards](https://gitlab.com/catamphetamine/imageboard/-/blob/master/docs/models/Board.md)
 
 For some imageboards, the list could be huge. For example, `8ch.net (8kun.top)` has about `20,000` boards, and to get just the "top 20 boards" one could use `getTopBoards()` function instead.
 
@@ -408,7 +420,7 @@ Fetches a list of "top" boards on an imageboard.
 
 Returns an object with properties:
 
-* `boards` — a list of [Boards](#board)
+* `boards` — a list of [Boards](https://gitlab.com/catamphetamine/imageboard/-/blob/master/docs/models/Board.md)
 
 For example, `8ch.net (8kun.top)` has about `20,000` boards, so `getTopBoards()` returns just the "top 20 boards" while `getBoards()` returns all `20,000` boards.
 
@@ -422,11 +434,11 @@ Searches for a (non-full) list of boards matching a search `query`. For example,
 
 Parameters object:
 
-* `search: string` — Search query.
+* `search: string` — Search query. Could be an empty string.
 
 Returns an object with properties:
 
-* `boards` — a list of [Boards](#board)
+* `boards` — a list of [Boards](https://gitlab.com/catamphetamine/imageboard/-/blob/master/docs/models/Board.md)
 
 This function isn't currently implemented in any of the supported imageboard engines. To see if a given imageboard supports this function, use `supportsFeature('findBoards')` function.
 
@@ -450,8 +462,24 @@ Parameters object:
 
 Returns an object with properties:
 
-* `threads` — a list of [Threads](#thread)
-* `boards` — (optional) [Board](#board)
+* `threads` — a list of [Threads](https://gitlab.com/catamphetamine/imageboard/-/blob/master/docs/models/Thread.md)
+* `boards` — (optional) [Board](https://gitlab.com/catamphetamine/imageboard/-/blob/master/docs/models/Board.md)
+
+### `findThreads()`
+
+Searches for a (non-full) list of threads on a given board matching a search `query`.
+
+Parameters object:
+
+* `boardId: string` — Board ID
+* `search: string` — Search query. Could be an empty string.
+
+Returns an object with properties:
+
+* `threads` — a list of [Threads](https://gitlab.com/catamphetamine/imageboard/-/blob/master/docs/models/Thread.md)
+* `board` — (optional) [Board](https://gitlab.com/catamphetamine/imageboard/-/blob/master/docs/models/Board.md) info
+
+This function isn't currently implemented in any of the supported imageboard engines. To see if a given imageboard supports this function, use `supportsFeature('findThreads')` function.
 
 ### `getThread()`
 
@@ -473,14 +501,32 @@ Parameters object:
 
 Returns an object with properties:
 
-* `thread` — [Thread](#thread)
-* `board` — (optional) [Board](#board)
+* `thread` — [Thread](https://gitlab.com/catamphetamine/imageboard/-/blob/master/docs/models/Thread.md)
+* `board` — (optional) [Board](https://gitlab.com/catamphetamine/imageboard/-/blob/master/docs/models/Board.md)
 
 <!--
 ### `parseCommentContent(comment: Comment, { boardId: string, threadId: number })`
 
 Parses `comment` content if `parseContent: false` option was used when creating an `imageboard` instance.
 -->
+
+### `findComments()`
+
+Searches for a (non-full) list of comments in a given thread matching a search `query`.
+
+Parameters object:
+
+* `boardId: string` — Board ID
+* `threadId: number` — Thread ID
+* `search: string` — Search query. Could be an empty string.
+
+Returns an object with properties:
+
+* `comments` — a list of [Comments](https://gitlab.com/catamphetamine/imageboard/-/blob/master/docs/models/Comment.md)
+* `thread` — (optional) [Thread](https://gitlab.com/catamphetamine/imageboard/-/blob/master/docs/models/Thread.md) info
+* `board` — (optional) [Board](https://gitlab.com/catamphetamine/imageboard/-/blob/master/docs/models/Board.md) info
+
+This function isn't currently implemented in any of the supported imageboard engines. To see if a given imageboard supports this function, use `supportsFeature('findComments')` function.
 
 ### `voteForComment()`
 
@@ -648,7 +694,7 @@ Can be used in cases when an application for whatever reasons needs to know the 
 
 ### `getCommentText(comment: Comment, options: object?): string?`
 
-Generates a textual representation of [Comment](#comment)'s `content`. This is just a [`getPostText()`](https://gitlab.com/catamphetamine/social-components#getposttext-post-post-options-object-string) function re-exported from [`social-components`](https://gitlab.com/catamphetamine/social-components) for convenience.
+Generates a textual representation of [Comment](https://gitlab.com/catamphetamine/imageboard/-/blob/master/docs/models/Comment.md)'s `content`. This is just a [`getPostText()`](https://gitlab.com/catamphetamine/social-components#getposttext-post-post-options-object-string) function re-exported from [`social-components`](https://gitlab.com/catamphetamine/social-components) for convenience.
 
 Is used in the examples in this document.
 
@@ -819,6 +865,8 @@ Messages used when generating `content` text (autogenerated quotes, autogenerate
 }
 ```
 
+See [`./types/Messages.d.ts`](https://gitlab.com/catamphetamine/imageboard/-/blob/master/types/Messages.d.ts) for the most up-to-date description of the `Messages` structure.
+
 ## Adding a new imageboard
 
 Follow the instructions in [`docs/add-new-imageboard.md`](https://gitlab.com/catamphetamine/imageboard/-/blob/master/docs/add-new-imageboard.md).
@@ -937,7 +985,7 @@ Optional parameters of `createHttpRequestFunction()`:
 
 Chans running on `vichan`:
 
-* [`lainchan.org`](https://github.com/lainchan/lainchan) — Runs on a custom fork of `vichan`
+* [`lainchan.org`](https://github.com/lainchan/lainchan) — Runs on a custom fork of `vichan` called `lainchan`
 <!-- * [`arisuchan.jp`](https://github.com/arisu-dev/arisuchan) -->
 * [`soyjak.party`](https://soyjak.party/)
 * [`vichan.pl`](https://vichan.pl/)

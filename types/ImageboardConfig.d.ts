@@ -1,4 +1,4 @@
-import { HttpRequestMethod } from './HttpRequestMethod.d.js';
+import { HttpRequestMethod } from './HttpRequest.d.js';
 
 type ImageboardEngine =
 	'4chan' |

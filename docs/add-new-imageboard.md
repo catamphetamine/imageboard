@@ -49,13 +49,7 @@ See [`./types/ImageboardConfig.d.ts`](https://gitlab.com/catamphetamine/imageboa
 
   // (required)
   // The engine the imageboard runs on.
-  // Must be supported out-of-the-box (see the `./engine` directory).
-  // Supported engines:
-  // * `"4chan"`
-  // * `"vichan"`
-  // * `"OpenIB"`
-  // * `"lynxchan"`
-  // * `"makaba"`
+  // Must be supported out-of-the-box (see the list of supported engines).
   "engine": "vichan",
 
   // (optional)
@@ -81,84 +75,35 @@ See [`./types/ImageboardConfig.d.ts`](https://gitlab.com/catamphetamine/imageboa
   ],
 
   // (required)
+  // See `./types/ImageboardConfig.d.ts` for the specification of the `api` configuration.
   "api": {
-    // (required if there's no "boards" config parameter)
-    // "Get boards list" API URL.
+    // "Get boards list" API.
     "getBoards": {
-      "method": "GET",
-      "url": "/boards-top20.json"
-    },
-
-    // (optional)
-    // "Find boards by a query" API URL.
-    // `8ch.net (8kun.top)` has about `20,000` boards total,
-    // so "getBoards()" API only returns top 20 of them,
-    // while "findBoards('')" API returns all `20,000` of them.
-    "findBoards": {
       "method": "GET",
       "url": "/boards.json"
     },
 
-    // (required)
-    // "Get threads list" API URL template.
+    // "Get top boards list" API.
+    "getTopBoards": {
+      "method": "GET",
+      "url": "/boards-top20.json"
+    },
+
+    // "Get threads list" API.
     "getThreads": {
       "method": "GET",
       "url": "/{boardId}/catalog.json",
       "urlParameters": [{ "name": "boardId" }]
     },
 
-    // (optional)
-    // "Get threads list including their latest comments" API URL template.
-    "getThreadsWithLatestComments": {
-      "method": "GET",
-      "url": "https://a.4cdn.org/{boardId}/catalog.json",
-      "urlParameters": [{ "name": "boardId" }]
-    },
-
-    // (optional)
-    // "Get threads list (first page) including their latest comments" API URL template.
-    "getThreadsWithLatestCommentsFirstPage": {
-      "method": "GET",
-      "url": "/{boardId}/index.json",
-      "urlParameters": [{ "name": "boardId" }]
-    },
-
-    // (optional)
-    // "Get threads list (N-th page) including their latest comments" API URL template.
-    // Available parameters for the page: `pageIndex`, `page` (= `pageIndex` + 1).
-    "getThreadsWithLatestCommentsPage": {
-      "method": "GET",
-      "url": "/{boardId}/{pageIndex}.json",
-      "urlParameters": [{ "name": "boardId" }, { "name": "pageIndex" }]
-    },
-
-    // (optional)
-    // "Get threads stats" API URL template.
-    "getThreadsStats": {
-      "method": "GET",
-      "url": "/{boardId}/threads.json",
-      "urlParameters": [{ "name": "boardId" }]
-    },
-
-    // (required)
-    // "Get thread comments" API URL template.
+    // "Get thread comments" API.
     "getThread": {
       "method": "GET",
       "url": "/{boardId}/res/{threadId}.json",
       "urlParameters": [{ "name": "boardId" }, { "name": "threadId" }]
     },
 
-    // (optional)
-    // "Get archived thread comments" API URL template.
-    // Some engines (like `4chan`) use the same URLs
-    // for both ongoing and archived threads.
-    // Some engines (like `makaba`) use different URLs
-    // for ongoing and archived threads.
-    "getArchivedThread": {
-      "method": "GET",
-      "url": "/{boardId}/arch/res/{threadId}.json",
-      "urlParameters": [{ "name": "boardId" }, { "name": "threadId" }]
-    }
+    ...
   },
 
   // (required)
@@ -199,30 +144,13 @@ See [`./types/ImageboardConfig.d.ts`](https://gitlab.com/catamphetamine/imageboa
   "attachmentThumbnailUrl": "https://i.4cdn.org/{boardId}/{name}s.jpg",
 
   // (optional)
-  // Imageboards usually store images/videos under random-generated filenames
-  // and all other files under their original filename,
-  // hence the separate "fileAttachmentUrl" parameter.
-  "fileAttachmentUrl": "https://i.4cdn.org/{boardId}/{originalName}{ext}",
-
-  // (is only required by `8ch.net (8kun.top)`)
-  // `8ch.net (8kun.top)` has `fpath: 0/1` parameter for attachments:
-  // `fpath: 1` attachments are hosted at the global
-  // board-agnostic URLs (not having `{boardId}` as part of their URL)
-  // and all other attachments are hosted at board-specific URLs.
-  "attachmentUrlFpath": "https://media.128ducks.com/file_store/{name}{ext}",
-
-  // (is only required by `8ch.net (8kun.top)`)
-  // Attachment thumbnail URL pattern for `fpath: 1` attachments.
-  // Same as "attachmentUrlFpath" but for thumbnails.
-  "attachmentThumbnailUrlFpath": "https://media.128ducks.com/file_store/{name}{ext}",
-
-  // (optional)
   // Most imageboards set author name to some default placeholder
   // like "Anonymous" when no author name has been input.
   // The parser then checks if author name is equal to the
   // "defaultAuthorName" and if it is then it leaves the `authorName` blank.
   // Can be a string or an object of shape `{ boardId: defaultAuthorName }`.
   "defaultAuthorName": "Anonymous",
+  //
   // or on a per-board basis:
   // "defaultAuthorName": {
   //  "*": "Anonymous",
@@ -230,12 +158,6 @@ See [`./types/ImageboardConfig.d.ts`](https://gitlab.com/catamphetamine/imageboa
   //  "christan": "Christanon"
   // }
 
-  // (required for `lynxchan`)
-  // Thumbnail size. Is required for `lynxchan`.
-  // `lynxchan` engine currently has a bug:
-  // it doesn't provide thumbnail dimensions.
-  // To work around that bug, thumbnail dimensions
-  // are derived from the original image aspect ratio.
-  "thumbnailSize": 255
+  ...
 }
 ```
