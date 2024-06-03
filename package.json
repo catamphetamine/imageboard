@@ -1,6 +1,6 @@
 {
   "name": "imageboard",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "An easy uniform wrapper over the popular imageboards' API",
   "main": "index.js",
   "type": "module",
@@ -9,6 +9,14 @@
       "types": "./index.d.ts",
       "default": "./index.js"
     },
+    "./browser": {
+      "types": "./browser/index.d.ts",
+      "import": "./browser/index.js"
+    },
+    "./node": {
+      "types": "./node/index.d.ts",
+      "import": "./node/index.js"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,
@@ -16,6 +24,7 @@
     "@xmldom/xmldom": "^0.8.2",
     "entities": "^4.4.0",
     "lodash": "^4.17.21",
+    "node-fetch": "^3.3.2",
     "set-cookie-parser": "^2.6.0",
     "social-components": "^0.4.11",
     "social-components-parser": "^0.3.1"
@@ -24,7 +33,6 @@
     "chai": "^4.3.6",
     "copyfiles": "^2.1.1",
     "mocha": "^10.0.0",
-    "node-fetch": "^3.2.4",
     "npm-run-all": "^1.4.0"
   },
   "scripts": {

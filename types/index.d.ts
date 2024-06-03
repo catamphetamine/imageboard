@@ -14,6 +14,7 @@ import {
 
 export * from 'social-components';
 
+// When updating this list, also update it in `README.md`.
 export type ImageboardId =
 	'2ch' |
 	'27chan' |
@@ -45,7 +46,8 @@ export interface HttpResponseHeaders {
 	getSetCookie: () => string[];
 }
 
-export type HttpRequestResultBasic = string;
+export type HttpRequestHeaders = Record<string, string>;
+export type HttpRequestCookies = Record<string, string>;
 
 export interface HttpRequestResult {
 	url: string;
@@ -53,7 +55,7 @@ export interface HttpRequestResult {
 	headers?: HttpResponseHeaders;
 }
 
-export interface HttpRequestError extends Error {
+export interface HttpResponseError extends Error {
 	url: string;
 	status: number;
 	headers: HttpResponseHeaders;
@@ -82,16 +84,17 @@ interface ImageboardOptionsOverridable {
 	minimizeGeneratedPostLinkBlockQuotes?: boolean;
 }
 
-export interface HttpRequestOptions {
+export interface HttpRequestParameters {
+	method: HttpRequestMethod,
+	url: string,
 	body?: Record<string, any>;
-	headers: Record<string, string>;
-	cookies?: Record<string, string>;
+	headers: HttpRequestHeaders;
+	cookies?: HttpRequestCookies;
 }
 
-export type HttpRequestFunction = (method: HttpRequestMethod, url: string, options: HttpRequestOptions) => Promise<HttpRequestResultBasic | HttpRequestResult>;
+export type HttpRequestFunction = (parameters: HttpRequestParameters) => Promise<HttpRequestResult>;
 
 export interface ImageboardOptions extends ImageboardOptionsOverridable {
-	request: HttpRequestFunction;
 	commentUrl?: string;
 	threadUrl?: string;
 	messages?: Messages;
@@ -100,6 +103,10 @@ export interface ImageboardOptions extends ImageboardOptionsOverridable {
 	getPostLinkProperties?: (comment?: Comment) => object;
 	getPostLinkText?: (postLink: object) => string | undefined;
 	getSetCookieHeaders?: (parameters: { headers: HttpResponseHeaders }) => string[];
+}
+
+export interface ImageboardOptionsWithHttpRequestFunction extends ImageboardOptions {
+	sendHttpRequest: HttpRequestFunction;
 }
 
 export type BoardId = string;
@@ -249,7 +256,7 @@ export interface GetThreadsParameters extends ImageboardOptionsOverridable {
 	withLatestComments?: boolean;
 	maxLatestCommentsPages?: number;
 	latestCommentLengthLimit?: number;
-	sortByRating?: boolean;
+	sortBy?: 'rating-desc';
 }
 
 export interface GetThreadsResult {
@@ -262,7 +269,7 @@ export interface GetThreadParameters extends ImageboardOptionsOverridable {
 	threadId: ThreadId;
 	archived?: boolean;
 	afterCommentId?: CommentId;
-	afterCommentsCount?: number;
+	afterCommentNumber?: number;
 }
 
 export interface GetThreadResult {
@@ -380,7 +387,11 @@ export interface CreateBlockBypassResult {
 	expiresAt: Date;
 }
 
-export type ImageboardFeature = 'getThreads.sortByRating' | 'getTopBoards' | 'findBoards';
+// When changing this, also change `ImageboardConfigFeature` in `ImageboardConfig.d.ts`.
+export type ImageboardFeature =
+	'getTopBoards' |
+	'findBoards' |
+	'getThreads.sortByRatingDesc';
 
 export interface Imageboard {
 	// This method is not currently public.
@@ -410,6 +421,37 @@ export function getCommentText(comment: Comment, options?: {
 
 export function sortThreadsWithPinnedOnTop<T extends Pick<Thread, 'pinned' | 'pinnedOrder'>>(threads: T[]): T[];
 
-declare function Imageboard(imageboardIdOrConfig: ImageboardId | ImageboardConfig, options: ImageboardOptions): Imageboard;
+declare function Imageboard(imageboardIdOrConfig: ImageboardId | ImageboardConfig, options: ImageboardOptionsWithHttpRequestFunction): Imageboard;
 
 export default Imageboard;
+
+export interface CreateHttpRequestFunctionParameters {
+	fetch: Function,
+	FormData: typeof FormData,
+	setHeaders?: (parameters: {
+		headers: HttpRequestHeaders
+	}) => void;
+	attachCookiesInWebBrowser?: (parameters: {
+		cookies: HttpRequestCookies,
+		headers: HttpRequestHeaders
+	}) => void;
+	getRequestUrl?: (parameters: {
+		url: string
+	}) => string;
+	getResponseStatus?: (response: {
+		status: number,
+		headers: HttpResponseHeaders
+	}) => number;
+	getFinalUrlFromResponse?: (response: {
+		url: string,
+		headers: HttpResponseHeaders
+	}) => string;
+	redirect?: 'follow' | 'manual';
+	mode?: 'cors';
+	credentials?: 'include';
+}
+
+export function createHttpRequestFunction(parameters: CreateHttpRequestFunctionParameters): HttpRequestFunction;
+
+export function isFeatureSupportedBY(imageboardIdOrConfig: ImageboardId | ImageboardConfig, feature: ImageboardFeature): boolean;
+export function supportsFeature(imageboardIdOrConfig: ImageboardId | ImageboardConfig, feature: ImageboardFeature): boolean;

@@ -1,7 +1,18 @@
+0.11.0 / 02.06.2024
+==================
+
+* (breaking change) Renamed `afterCommentsCount` parameter to `afterCommentNumber`.
+* (breaking change) Changed the arguments of the `request()` function: it's now a single `parameters` object.
+* (breaking change) Renamed `request()` parameter to `sendHttpRequest()`.
+* (breaking change) (TypeScript) Renamed `HttpRequestError` to `HttpResponseError`.
+* (breaking change) Renamed `"getThreads.sortByRating"` feature to `"getThreads.sortByRatingDesc"`.
+* (breaking change) Renamed `sortByRating?: boolean` parameter to `sortBy?: 'rating-desc`.
+* There's no requirement to pass a custom `request()` function implementation now: the library now exports a `createHttpRequestFunction()` function that could be used to easily create one. See the readme for more details.
+
 0.10.0 / 01.06.2024
 ==================
 
-* Changed the arguments of functions: `findBoards()`, `getThreads()`, `getThread()`.
+* (breaking change) Changed the arguments of functions: `findBoards()`, `getThreads()`, `getThread()`.
 
 0.9.0 / 27.04.2024
 ==================

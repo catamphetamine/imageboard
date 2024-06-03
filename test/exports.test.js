@@ -3,6 +3,8 @@ import {
 	getConfig,
 	getCommentText,
 	sortThreadsWithPinnedOnTop,
+	createHttpRequestFunction,
+	supportsFeature
 	// generateQuotes,
 	// generatePreview,
 	// generateThreadTitle,
@@ -18,6 +20,8 @@ describe('exports', () => {
 		getConfig('94chan').accessTokenCookieName.should.equal('connect.sid')
 		getCommentText.should.be.a('function')
 		sortThreadsWithPinnedOnTop.should.be.a('function')
+		createHttpRequestFunction.should.be.a('function')
+		supportsFeature.should.be.a('function')
 		// generateQuotes.should.be.a('function')
 		// generatePreview.should.be.a('function')
 		// generateThreadTitle.should.be.a('function')

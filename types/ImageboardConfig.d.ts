@@ -10,9 +10,9 @@ type ImageboardEngine =
 	'lynxchan' |
 	'jschan';
 
+// When changing this, also change `ImageboardFeature` in `index.d.ts`.
 type ImageboardConfigFeature =
-	'Threads.rating' |
-	'ThreadsStats.rating';
+	'getThreads.sortByRatingDesc';
 
 interface ImageboardConfigBoard {
 	id: string;
