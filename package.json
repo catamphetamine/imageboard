@@ -1,6 +1,6 @@
 {
   "name": "imageboard",
-  "version": "0.11.1",
+  "version": "0.11.2",
   "description": "An easy uniform wrapper over the popular imageboards' API",
   "main": "index.js",
   "type": "module",
@@ -26,7 +26,7 @@
     "lodash": "^4.17.21",
     "node-fetch": "^3.3.2",
     "set-cookie-parser": "^2.6.0",
-    "social-components": "^0.4.11",
+    "social-components": "^0.4.13",
     "social-components-parser": "^0.3.1"
   },
   "devDependencies": {

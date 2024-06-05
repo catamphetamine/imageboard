@@ -351,7 +351,7 @@ Available `options`:
 getPostLinkText(postLink) {
   // If the `post` has not been removed.
   // If the application has marked the post as "hidden".
-  if (postLink.postIsHidden) {
+  if (postLink.meta.postIsHidden) {
     return "Hidden comment"
   }
 }
@@ -389,10 +389,14 @@ Tells whether the imageboard supports a certain feature.
 * `"getThreads.sortByRatingDesc"`
 * `"findThreads"`
 * `"findComments"`
+* `"findComments.boardId"` — If `findComments()` supports searching for comments across all threads of a given board.
+* `"findComments.threadId"` — If `findComments()` supports searching for comments in a given thread.
 * `"voteForComment"`
 * `"reportComment"`
 * `"createThread"`
+* `"updateThread"`
 * `"createComment"`
+* `"updateComment"`
 * `"createBlockBypass"`
 * `"getCaptcha"`
 * `"logIn"`
@@ -516,8 +520,8 @@ Searches for a (non-full) list of comments in a given thread matching a search `
 
 Parameters object:
 
-* `boardId: string` — Board ID
-* `threadId: number` — Thread ID
+* `boardId: string` — Board ID.
+* `threadId?: number` — Thread ID. If not specified then searches across all threads on the board.
 * `search: string` — Search query. Could be an empty string.
 
 Returns an object with properties:
@@ -569,6 +573,18 @@ Returns an object:
 
 * `id: number` — Thread ID
 
+### `updateThread()`
+
+Updates a thread.
+
+Parameters object:
+
+* `boardId: string` — Board ID.
+* `threadId: number` — Thread ID.
+* Same other properties as in `createThread()`
+
+This function isn't currently implemented in any of the supported imageboard engines. To see if a given imageboard supports this function, use `supportsFeature('updateThread')` function.
+
 ### `createComment()`
 
 Creates a new comment in a thread.
@@ -593,6 +609,19 @@ Parameters object:
 Returns an object:
 
 * `id: number` — Comment ID
+
+### `updateComment()`
+
+Updates a comment.
+
+Parameters object:
+
+* `boardId: string` — Board ID.
+* `threadId: number` — Thread ID.
+* `commentId: number` — Comment ID.
+* Same other properties as in `createComment()`
+
+This function isn't currently implemented in any of the supported imageboard engines. To see if a given imageboard supports this function, use `supportsFeature('updateComment')` function.
 
 ### `getCaptcha()`
 

@@ -7,6 +7,14 @@
 * (breaking change) (TypeScript) Renamed `HttpRequestError` to `HttpResponseError`.
 * (breaking change) Renamed `"getThreads.sortByRating"` feature to `"getThreads.sortByRatingDesc"`.
 * (breaking change) Renamed `sortByRating?: boolean` parameter to `sortBy?: 'rating-desc`.
+* (breaking change) Renamed `generated: boolean` parameter of `post-link` to `contentGenerated: boolean`.
+* (breaking change) Changed the internal structure of `post-link`s. Added `meta` object property.
+  * `postId` → `meta.commentId`
+  * `threadId` → `meta.threadId`
+  * `boardId` → `meta.boardId`
+  * `postIsRoot` → removed
+  * `postWasDeleted` → `meta.isDeleted`
+  * `postIsExternal` → `meta.isAnotherThread`
 * There's no requirement to pass a custom `request()` function implementation now: the library now exports a `createHttpRequestFunction()` function that could be used to easily create one. See the readme for more details.
 
 0.10.0 / 01.06.2024

@@ -1,7 +1,7 @@
 import { ImageboardConfig } from './ImageboardConfig.d.js';
 export { ImageboardConfig } from './ImageboardConfig.d.js';
 
-export { UserRole, UserRoleScope, CaptchaRule } from './ImageboardConfig.d.js';
+export { ImageboardEngine, UserRole, UserRoleScope, CaptchaRule } from './ImageboardConfig.d.js';
 
 import { HttpResponseHeaders, HttpRequestHeaders, HttpRequestCookies, HttpRequestFunction } from './HttpRequest.d.js';
 export * from './HttpRequest.d.js';
@@ -113,13 +113,10 @@ export interface FindThreadsParameters extends GetThreadsParameters {
 export interface FindThreadsResult extends GetThreadsResult {
 }
 
-interface GetThreadParametersMinimal extends ImageboardOptionsOverridable {
+export interface GetThreadParameters extends ImageboardOptionsOverridable {
 	boardId: BoardId;
 	threadId: ThreadId;
 	archived?: boolean;
-}
-
-export interface GetThreadParameters extends GetThreadParametersMinimal {
 	afterCommentId?: CommentId;
 	afterCommentNumber?: number;
 }
@@ -129,7 +126,10 @@ export interface GetThreadResult {
 	board?: Board;
 }
 
-export interface FindCommentsParameters extends GetThreadParametersMinimal {
+export interface FindCommentsParameters {
+	boardId: BoardId;
+	threadId?: ThreadId;
+	search: string;
 }
 
 export interface FindCommentsResult {
@@ -221,6 +221,12 @@ export interface CreateThreadResult {
 	id: ThreadId;
 }
 
+export interface UpdateThreadParameters extends CreateThreadParameters {
+	threadId: ThreadId;
+}
+
+export type UpdateThreadResult = void
+
 export interface CreateCommentParameters extends CreateThreadParameters {
 	threadId: ThreadId;
 }
@@ -228,6 +234,12 @@ export interface CreateCommentParameters extends CreateThreadParameters {
 export interface CreateCommentResult {
 	id: CommentId;
 }
+
+export interface UpdateCommentParameters extends CreateCommentParameters {
+	commentId: CommentId;
+}
+
+export type UpdateCommentResult = void
 
 export interface LogInParameters {
 	token: string;
@@ -262,10 +274,16 @@ export type ImageboardFeature =
 	'getThreads.sortByRatingDesc' |
 	'findThreads' |
 	'findComments' |
+	// If `findComments()` supports searching for comments across all threads of a given board.
+	'findComments.boardId' |
+	// If `findComments()` supports searching for comments in a given thread.
+	'findComments.threadId' |
 	'voteForComment' |
 	'reportComment' |
 	'createThread' |
+	'updateThread' |
 	'createComment' |
+	'updateComment' |
 	'createBlockBypass' |
 	'getCaptcha' |
 	'logIn' |
@@ -285,7 +303,9 @@ export interface Imageboard {
 	voteForComment: (parameters: VoteForCommentParameters) => Promise<VoteForCommentResult>;
 	reportComment: (parameters: ReportCommentParameters) => Promise<ReportCommentResult>;
 	createThread: (parameters: CreateThreadParameters) => Promise<CreateThreadResult>;
+	updateThread: (parameters: UpdateThreadParameters) => Promise<UpdateThreadResult>;
 	createComment: (parameters: CreateCommentParameters) => Promise<CreateCommentResult>;
+	updateComment: (parameters: UpdateCommentParameters) => Promise<UpdateCommentResult>;
 	logIn: (parameters: LogInParameters) => Promise<LogInResult>;
 	logOut: (parameters?: LogOutParameters) => Promise<LogOutResult>;
 	getCaptcha: (parameters: GetCaptchaParameters) => Promise<GetCaptchaResult>;
@@ -333,5 +353,12 @@ export interface CreateHttpRequestFunctionParameters {
 
 export function createHttpRequestFunction(parameters: CreateHttpRequestFunctionParameters): HttpRequestFunction;
 
-export function isFeatureSupportedBY(imageboardIdOrConfig: ImageboardId | ImageboardConfig, feature: ImageboardFeature): boolean;
 export function supportsFeature(imageboardIdOrConfig: ImageboardId | ImageboardConfig, feature: ImageboardFeature): boolean;
+
+export interface PostLinkMeta {
+	boardId: BoardId;
+	threadId: ThreadId;
+	commentId: CommentId;
+	isAnotherThread?: boolean;
+	isDeleted?: boolean;
+}

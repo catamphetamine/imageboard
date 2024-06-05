@@ -54,8 +54,4 @@ export type RawCommentContent = string;
 // export type ParsedCommentContent = Content;
 export type ParsedCommentContent = ContentBlock[];
 
-// In `ParsedCommentContent`, some structure is modified:
-// * `type: "post-link"` parts have `boardId: string` and `threadId: number` properties.
-// * `type: "quote"` parts have `generated: boolean` properties.
-
 export type GetCommentById = (id: CommentId) => Comment | undefined;
