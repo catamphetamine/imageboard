@@ -431,7 +431,10 @@
 			"url": "https://a.4cdn.org/{boardId}/catalog.json",
 			"urlParameters": [{
 				"name": "boardId"
-			}]
+			}],
+			"features": [
+				"withLatestComments"
+			]
 		},
 		"getThreadsWithLatestComments": {
 			"method": "GET",

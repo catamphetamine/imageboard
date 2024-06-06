@@ -90,7 +90,7 @@
 			"method": "GET",
 			"url": "/api/mobile/v2/boards"
 		},
-		"vote": {
+		"rate": {
 			"method": "GET",
 			"url": "/api/{action}",
 			"urlParameters": [{

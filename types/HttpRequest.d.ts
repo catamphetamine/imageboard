@@ -18,8 +18,9 @@ export interface HttpResponseHeaders {
 export interface HttpRequestParameters {
 	method: HttpRequestMethod,
 	url: string,
+	query?: Record<string, string>;
 	body?: Record<string, any>;
-	headers: HttpRequestHeaders;
+	headers?: HttpRequestHeaders;
 	cookies?: HttpRequestCookies;
 }
 

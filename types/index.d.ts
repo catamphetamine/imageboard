@@ -140,14 +140,14 @@ export interface FindCommentsResult {
 
 export type PostFormAttachment = File | Blob;
 
-export interface VoteForCommentParameters {
+export interface RateCommentParameters {
 	boardId: BoardId;
 	threadId: ThreadId;
 	commentId: CommentId;
 	up: boolean;
 }
 
-export type VoteForCommentResult = boolean
+export type RateCommentResult = boolean
 
 export interface ReportCommentParameters {
 	boardId: BoardId;
@@ -271,6 +271,7 @@ export type ImageboardFeature =
 	'getBoards' |
 	'getTopBoards' |
 	'findBoards' |
+	'getThread.withLatestComments' |
 	'getThreads.sortByRatingDesc' |
 	'findThreads' |
 	'findComments' |
@@ -278,7 +279,7 @@ export type ImageboardFeature =
 	'findComments.boardId' |
 	// If `findComments()` supports searching for comments in a given thread.
 	'findComments.threadId' |
-	'voteForComment' |
+	'rateComment' |
 	'reportComment' |
 	'createThread' |
 	'updateThread' |
@@ -300,7 +301,7 @@ export interface Imageboard {
 	findThreads: (parameters: FindThreadsParameters) => Promise<FindThreadsResult>;
 	getThread: (parameters: GetThreadParameters) => Promise<GetThreadResult>;
 	findComments: (parameters: FindCommentsParameters) => Promise<FindCommentsResult>;
-	voteForComment: (parameters: VoteForCommentParameters) => Promise<VoteForCommentResult>;
+	rateComment: (parameters: RateCommentParameters) => Promise<RateCommentResult>;
 	reportComment: (parameters: ReportCommentParameters) => Promise<ReportCommentResult>;
 	createThread: (parameters: CreateThreadParameters) => Promise<CreateThreadResult>;
 	updateThread: (parameters: UpdateThreadParameters) => Promise<UpdateThreadResult>;

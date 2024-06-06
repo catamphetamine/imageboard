@@ -8,6 +8,7 @@
 * (breaking change) Renamed `"getThreads.sortByRating"` feature to `"getThreads.sortByRatingDesc"`.
 * (breaking change) Renamed `sortByRating?: boolean` parameter to `sortBy?: 'rating-desc`.
 * (breaking change) Renamed `generated: boolean` parameter of `post-link` to `contentGenerated: boolean`.
+* (breaking change) Renamed `voteForComment()` to `rateComment()`.
 * (breaking change) Changed the internal structure of `post-link`s. Added `meta` object property.
   * `postId` → `meta.commentId`
   * `threadId` → `meta.threadId`

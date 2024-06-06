@@ -155,8 +155,8 @@ interface ImageboardApi {
 	// "Get archived thread" API URL template.
 	getArchivedThread?: ImageboardApi<GetArchivedThreadFeatures>;
 
-	// Vote API.
-	vote?: ImageboardApi<VoteFeatures>;
+	// Rate API.
+	rate?: ImageboardApi<RateFeatures>;
 
 	// Post API.
 	// Creates a comment or a thread.
@@ -284,7 +284,9 @@ interface CreateBoardsFeatures {}
 
 interface DeleteBoardsFeatures {}
 
-interface GetThreadsFeatures {}
+interface GetThreadsFeatures {
+	withLatestComments?: boolean;
+}
 
 interface GetThreadsWithLatestCommentsFeatures {}
 
@@ -305,7 +307,7 @@ interface GetThreadIncrementalFeatures {}
 
 interface GetArchivedThreadFeatures {}
 
-interface VoteFeatures {}
+interface RateFeatures {}
 
 interface PostFeatures {}
 
