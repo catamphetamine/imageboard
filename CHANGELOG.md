@@ -16,6 +16,8 @@
   * `postIsRoot` → removed
   * `postWasDeleted` → `meta.isDeleted`
   * `postIsExternal` → `meta.isAnotherThread`
+* Renamed parameter: `latestCommentLengthLimit` → `commentLengthLimitForWithLatestComments`.
+* Renamed parameter: `maxLatestCommentsPages` → `withLatestCommentsMaxPages`.
 * There's no requirement to pass a custom `request()` function implementation now: the library now exports a `createHttpRequestFunction()` function that could be used to easily create one. See the readme for more details.
 
 0.10.0 / 01.06.2024

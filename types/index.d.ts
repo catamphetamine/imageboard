@@ -96,8 +96,8 @@ export interface FindBoardsResult extends GetBoardsResult {
 export interface GetThreadsParameters extends ImageboardOptionsOverridable {
 	boardId: BoardId;
 	withLatestComments?: boolean;
-	maxLatestCommentsPages?: number;
-	latestCommentLengthLimit?: number;
+	withLatestCommentsMaxPages?: number;
+	commentLengthLimitForWithLatestComments?: number;
 	sortBy?: 'rating-desc';
 }
 
