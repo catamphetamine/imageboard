@@ -206,7 +206,7 @@
 			}, {
 				"name": "flag",
 				"input": {
-					"name": "authorBadgeId"
+					"name": "authorIconId"
 				}
 			}, {
 				"name": "message",

@@ -21,7 +21,7 @@
 	"boardUrl": "/{boardId}",
 	"threadUrl": "/{boardId}/thread/{threadId}",
 	"commentUrl": "/{boardId}/thread/{threadId}#p{commentId}",
-	"authorBadgeUrl": "https://s.4cdn.org/image/flags/{boardId}/{flagId}.gif",
+	"authorIconUrl": "https://s.4cdn.org/image/flags/{boardId}/{authorIconId}.gif",
 	"authResetUrl": "/pass?reset",
 	"bannedUrl": "/banned",
 	"captchaFrameUrl": "https://sys.4chan.org/captcha?board={boardId}&thread_id={threadId}&framed=1",
@@ -32,6 +32,15 @@
 	"incrementalThreadUpdateStartsAtCommentsCount": 101,
 	"rulesUrl": "/rules",
 	"boardRulesUrl": "/rules#{boardId}",
+	"boardCategories": {
+		"Japanese Culture": ["a", "c", "w", "m", "cgl", "cm", "f", "n", "jp"],
+		"Video Games": ["v", "vg", "vp", "vr"],
+		"Interests": ["co", "g", "tv", "k", "o", "an", "tg", "sp", "asp", "sci", "his", "int", "out", "toy"],
+		"Creative": ["i", "po", "p", "ck", "ic", "wg", "lit", "mu", "fa", "3", "gd", "diy", "wsg", "qst"],
+		"Miscellaneous": ["b", "r9k", "pol", "bant", "soc", "s4s"],
+		"Adult": ["s", "hc", "hm", "h", "e", "u", "d", "y", "t", "hr", "gif", "aco", "r"],
+		"Other": ["*"]
+	},
 	"reportReasonIdForLegalViolation": 31,
 	"reportReasons": [{
 		"id": 1,

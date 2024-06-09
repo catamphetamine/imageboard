@@ -1,4 +1,10 @@
 import { HttpRequestMethod } from './HttpRequest.d.js';
+import { BoardId } from './Board.d.js';
+
+type DomainByBoardAny = '*'
+type DomainByBoardNotSafeForWork = '<nsfw>'
+
+type BoardIdAny = '*'
 
 export interface ImageboardConfig {
 	// Imageboard ID.
@@ -9,7 +15,13 @@ export interface ImageboardConfig {
 
 	// On `4chan.org`, different sets of boards use different domains.
 	// That was done to separate "SFW" and "NSFW" content for potential advertisement purposes.
-	domainByBoard?: Record<string, string>;
+	//
+	// The keys could be:
+	// * "*" — any board.
+	// * "<nsfw>" — any NSFW board.
+	// * Board ID
+	//
+	domainByBoard?: Record<DomainByBoardAny | DomainByBoardNotSafeForWork, string>;
 
 	// The engine.
 	engine: ImageboardEngine;
@@ -47,7 +59,7 @@ export interface ImageboardConfig {
 	thumbnailSize?: number;
 
 	// A template to get a "badge" icon of a comment's author.
-	authorBadgeUrl?: string;
+	authorIconUrl?: string;
 
 	// A URL to send a POST request to in order to log out.
 	authResetUrl?: string;
@@ -103,6 +115,15 @@ export interface ImageboardConfig {
 
 	// A template for board rules page URL.
 	boardRulesUrl?: string;
+
+	// A mapping from board category name to a list of board IDs.
+	boardCategories?: Record<string, (BoardId | BoardIdAny)[]>;
+
+	// A list of categories in which all boards may (or are meant to) contain "expicit content".
+	explicitContentBoardCategories?: string[];
+
+	// A list of IDs of boards that may (or are meant to) contain "expicit content".
+	explicitContentBoards?: BoardId[];
 }
 
 interface ImageboardApi {

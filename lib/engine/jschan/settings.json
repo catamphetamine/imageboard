@@ -4,7 +4,7 @@
 	"commentUrl": "/{boardId}/thread/{threadId}.html#{commentId}",
 	"attachmentUrl": "/file/{name}{ext}",
 	"attachmentThumbnailUrl": "/file/thumb/{name}{ext}",
-	"authorBadgeUrl": "/flag/{boardId}/{filename}",
+	"authorIconUrl": "/flag/{boardId}/{authorIconFileSubpath}",
   "blockBypassIdCookieName": "bypassid",
 	"captchaIdCookieName": "captchaid",
 	"captchaImageUrl": "/captcha/{id}.jpg",
@@ -165,7 +165,7 @@
 			}, {
 				"name": "customflag",
 				"input": {
-					"name": "authorBadgeId"
+					"name": "authorIconId"
 				}
 			}, {
 				"name": "captcha",

@@ -467,6 +467,8 @@ Parameters object:
 
 * Any other properties here will override the corresponding properties of the `options` object that was passed to the `Imageboard()` function when creating an imageboard instance.
 
+  * `defaultAuthorName?: string` — If `board` object is available and has a `board.features.defaultAuthorName` property, it could be passed here to parse the default author name as an empty one.
+
 Returns an object with properties:
 
 * `threads` — a list of [Threads](https://gitlab.com/catamphetamine/imageboard/-/blob/master/docs/models/Thread.md)
@@ -480,6 +482,10 @@ Parameters object:
 
 * `boardId: string` — Board ID
 * `search: string` — Search query. Could be an empty string.
+
+* Any other properties here will override the corresponding properties of the `options` object that was passed to the `Imageboard()` function when creating an imageboard instance.
+
+  * `defaultAuthorName?: string` — If `board` object is available and has a `board.features.defaultAuthorName` property, it could be passed here to parse the default author name as an empty one.
 
 Returns an object with properties:
 
@@ -505,6 +511,8 @@ Parameters object:
 * `afterCommentNumber?: number` — (optional) (experimental) Could be used to only fetch comments after a certain comments count (counting from the first comment in the thread).
 
 * Any other properties here will override the corresponding properties of the `options` object that was passed to the `Imageboard()` function when creating an imageboard instance.
+
+  * `defaultAuthorName?: string` — If `board` object is available and has a `board.features.defaultAuthorName` property, it could be passed here to parse the default author name as an empty one.
 
 Returns an object with properties:
 
@@ -566,7 +574,7 @@ Parameters object:
 * `content?: string` — Comment content (text).
 * `makaba`-specific properties:
   * `authorIsThreadAuthor?: boolean` — "Comment author is the thread author" flag.
-  * `authorBadgeId?: number` — Comment author icon ID.
+  * `authorIconId?: number | string` — Comment author icon ID.
   * `tags?: string[]` — Thread tags.
   * `captchaType?: string` — CAPTCHA type. Possible values: `"2chcaptcha"`.
   * `captchaId?: string` — CAPTCHA ID.
@@ -604,7 +612,7 @@ Parameters object:
 * `content?: string` — Comment content (text).
 * `makaba`-specific properties:
   * `authorIsThreadAuthor?: boolean` — "Comment author is the thread author" flag.
-  * `authorBadgeId?: number` — Comment author icon ID.
+  * `authorIconId?: number | string` — Comment author icon ID.
   * `captchaType?: string` — CAPTCHA type. Possible values: `"2chcaptcha"`.
   * `captchaId?: string` — CAPTCHA ID.
   * `captchaSolution?: string` — CAPTCHA solution.

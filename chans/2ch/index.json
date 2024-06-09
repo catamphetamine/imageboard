@@ -22,6 +22,13 @@
 	"rulesUrl": "/static/rules.html",
 	"boardRulesUrl": "/static/rules.html#{boardId}",
 	"accessTokenCookieName": "passcode_auth",
+	"explicitContentBoardCategories": [
+		"Взрослым"
+	],
+	"explicitContentBoards": [
+		"b",
+		"nf"
+	],
 	"api": {
 		"getThread": {
 			"method": "GET",
@@ -174,7 +181,7 @@
 				"name": "icon",
 				"defaultValue": -1,
 				"input": {
-					"name": "authorBadgeId"
+					"name": "authorIconId"
 				}
 			}, {
 				"name": "comment",

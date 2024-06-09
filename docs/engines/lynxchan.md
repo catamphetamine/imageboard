@@ -557,6 +557,7 @@ Response:
       // (optional)
       // Indicates the board has been marked inactive
       // due to its owner not logging in for too long.
+      // I guess this property doesn't really have any meaning and could be ignored.
       inactive: false
     }, ...]
   }

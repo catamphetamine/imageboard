@@ -1,3 +1,76 @@
+0.11.5 / 08.06.2024
+==================
+
+* Board
+  * `board.features.sage` → `board.features.authorEmailSage`
+  * `board.features.votes` → `board.features.commentRating`
+  * `board.badges` → `board.authorBadges`
+  * `board.notSafeForWork` → `board.explicitContent`
+  * `board.commentsPerHour` → `board.stats.commentsPerHour`
+  * `board.commentsPerDay` → `board.stats.commentsPerDay`
+  * `board.uniquePostersPerDay` → `board.stats.uniquePostersPerDay`
+  * `board.attachmentTypes` → `board.post.attachmentTypes`
+  * `board.attachmentTypes`: `"imageAnimated"` → `"image:animated"`
+  * `board.commentContentMinLength` → `board.post.contentMinLength`
+  * `board.commentContentMaxLength` → `board.post.contentMaxLength`
+  * `board.mainCommentContentMinLength` → `board.post.mainCommentContentMinLength`
+  * `board.mainCommentContentMaxLength` → `board.post.mainCommentContentMaxLength`
+  * `board.attachmentTypes` → `board.post.attachmentFileTypes`
+  * Added `board.attachmentFileTypes`
+  * `board.attachmentMaxSize` → `board.post.attachmentMaxSize`
+  * `board.attachmentsMaxTotalSize` → `board.post.attachmentsMaxSize`
+  * `board.attachmentsMaxCount` → `board.post.attachmentsMaxCount`
+
+  * `board.bumpLimit` → `board.features.bumpLimit`
+
+  * `board.mainCommentContentRequired` → `board.post.mainCommentContentRequired`
+  * `board.mainCommentAttachmentsRequired` → `board.post.mainCommentAttachmentsRequired`
+
+  * `board.features.threadTitle` → `board.post.threadTitle`
+  * `board.features.commentTitle` → `board.post.commentTitle`
+
+  * `board.features.authorName` → `board.post.authorName`
+  * `board.features.authorEmail` → `board.post.authorEmail`
+  * `board.features.authorEmailSage` → `board.post.authorEmailSage`
+  * `board.features.authorTripCode` → `board.post.authorTripCode`
+  * `board.features.commentAttachments` → `board.post.commentAttachments`
+  * `board.features.threadAttachments` → `board.post.threadAttachments`
+  * `board.features.threadAttachmentsRequired` → `board.post.threadAttachmentsRequired`
+
+  * `board.threadTitleRequired` → `board.post.threadTitleRequired`
+
+  * `board.videoAttachmentMaxSize` → `board.post.videoAttachmentMaxSize`
+  * `board.videoAttachmentMaxDuration` → `board.post.videoAttachmentMaxDuration`
+
+  * `board.createThreadMinInterval` → `board.post.threadMinInterval`
+  * `board.createCommentMinInterval` → `board.post.commentMinInterval`
+  * `board.createCommentWithAttachmentMinInterval` → `board.post.commentWithAttachmentsMinInterval`
+
+  * `board.threadAttachmentsMaxCount` → `board.post.threadAttachmentsMaxCount`
+
+  * `board.defaultAuthorName` → `board.features.defaultAuthorName`
+
+  * `board.badges` → `board.post.authorIcons`
+  * `BoardBadge` → `CommentAuthorIcon`
+
+  * Added `board.attachmentFileExtensions`
+  * Removed `commentTitle` concept from `Board` type — only a `Thread` could have a `title`.
+
+* Thread
+  * `thread.attachmentLimitReached` → `thread.attachmentsMaxCountLimitReached`
+
+* Comment
+  * `comment.authorBadgeUrl` → `comment.authorIconUrl`
+  * `comment.authorBadgeName` → `comment.authorIconName`
+  * `comment.authorBan` → `{ reason?: ... }`
+
+* `ImageboardConfig`
+  * `authorBadgeUrl` → `authorIconUrl`
+  * `ImageboardConfig.captchaRules` → `board.post.captchaRequired` / `board.post.threadCaptchaRequired`
+  * `ImageboardConfig.domainByBoard`: `"notSafeForWork"` → `"<nsfw>"`
+
+* `postLink.meta.isRootComment` → `postLink.meta.isMainComment`
+
 0.11.0 / 02.06.2024
 ==================
 

@@ -1,7 +1,5 @@
 import { ImageboardConfig } from './ImageboardConfig.d.js';
-export { ImageboardConfig } from './ImageboardConfig.d.js';
-
-export { ImageboardEngine, UserRole, UserRoleScope, CaptchaRule } from './ImageboardConfig.d.js';
+export * from './ImageboardConfig.d.js';
 
 import { HttpResponseHeaders, HttpRequestHeaders, HttpRequestCookies, HttpRequestFunction } from './HttpRequest.d.js';
 export * from './HttpRequest.d.js';
@@ -208,9 +206,7 @@ export interface CreateThreadParameters {
 	attachments?: PostFormAttachment[];
 	title?: string;
 	content?: string;
-
-	// `makaba`-specific properties:
-	authorBadgeId?: number;
+	authorIconId?: number | string;
 	tags?: string[];
 	captchaType?: string;
 	captchaId?: string;
